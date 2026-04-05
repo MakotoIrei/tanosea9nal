@@ -8,161 +8,145 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --turquoise:#0fb5b0;
-  --turquoise-dark:#0a8e8a;
-  --coral:#f07c6c;
-  --coral-light:#f9a89e;
-  --sand:#fff8f0;
+  --black:#1d1d1f;
+  --gray-text:#6e6e73;
+  --gray-bg:#f5f5f7;
   --white:#ffffff;
-  --dark:#2c2c2c;
-  --gray:#666;
-  --light-gray:#f5f5f5;
+  --link:#0071e3;
 }
 html{scroll-behavior:smooth;font-size:16px}
-body{font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;color:var(--dark);line-height:1.8;overflow-x:hidden}
+body{
+  font-family:"Helvetica Neue","游ゴシック体","Yu Gothic",YuGothic,sans-serif;
+  color:var(--black);line-height:1.8;overflow-x:hidden;-webkit-font-smoothing:antialiased
+}
 a{text-decoration:none;color:inherit}
-img{max-width:100%;height:auto}
+img{max-width:100%;height:auto;display:block}
 ul{list-style:none}
 
 /* ===== HEADER / NAV ===== */
 header{
   position:fixed;top:0;left:0;width:100%;z-index:1000;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
-  box-shadow:0 1px 8px rgba(0,0,0,.08);transition:background .3s
+  background:rgba(251,251,253,.88);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(0,0,0,.08)
 }
-nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.5rem}
-.logo{font-size:1.25rem;font-weight:700;color:var(--turquoise)}
-.logo span{color:var(--coral)}
-.nav-links{display:flex;gap:1.6rem}
-.nav-links a{font-size:.9rem;font-weight:500;color:var(--dark);position:relative;transition:color .3s}
-.nav-links a::after{content:"";position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--coral);transition:width .3s}
-.nav-links a:hover{color:var(--turquoise)}
-.nav-links a:hover::after{width:100%}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
-.hamburger span{display:block;width:24px;height:2px;background:var(--dark);transition:all .3s}
+nav{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:48px}
+.logo{font-size:1.1rem;font-weight:700;color:var(--black);letter-spacing:-.02em}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{font-size:.8rem;font-weight:400;color:var(--gray-text);transition:color .3s}
+.nav-links a:hover{color:var(--black)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:18px;height:1.5px;background:var(--black);transition:all .3s}
 
 /* ===== HERO ===== */
 .hero{
   min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;
-  background:linear-gradient(135deg,#e0f7f6 0%,#fff8f0 40%,#fde8e4 100%);
-  padding:6rem 1.5rem 4rem;position:relative;overflow:hidden
+  background:var(--white);padding:8rem 1.5rem 6rem
 }
-.hero::before{
-  content:"";position:absolute;top:-60%;right:-30%;width:80vw;height:80vw;
-  background:radial-gradient(circle,rgba(15,181,176,.08) 0%,transparent 70%);
-  border-radius:50%;pointer-events:none
+.hero-inner{max-width:720px}
+.hero-sub{font-size:.85rem;color:var(--gray-text);font-weight:400;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{
+  font-size:clamp(2rem,5.5vw,3.5rem);font-weight:700;line-height:1.35;
+  margin-bottom:1.5rem;color:var(--black);letter-spacing:-.03em
 }
-.hero::after{
-  content:"";position:absolute;bottom:-40%;left:-20%;width:60vw;height:60vw;
-  background:radial-gradient(circle,rgba(240,124,108,.07) 0%,transparent 70%);
-  border-radius:50%;pointer-events:none
+.hero-catch{font-size:clamp(.95rem,2vw,1.2rem);color:var(--gray-text);max-width:560px;margin:0 auto 3rem;line-height:1.9;font-weight:300}
+.hero-cta{
+  display:inline-block;padding:.75rem 2rem;background:var(--black);color:#fff;
+  border-radius:980px;font-weight:400;font-size:.9rem;transition:all .4s;
+  letter-spacing:.02em
 }
-.hero-inner{position:relative;z-index:1;max-width:800px}
-.hero-sub{font-size:.95rem;color:var(--turquoise);font-weight:600;letter-spacing:.15em;margin-bottom:1rem}
-.hero h1{font-size:clamp(1.8rem,5vw,3.2rem);font-weight:800;line-height:1.4;margin-bottom:1.5rem;color:var(--dark)}
-.hero h1 em{font-style:normal;color:var(--coral)}
-.hero-catch{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--gray);max-width:600px;margin:0 auto 2.5rem;line-height:2}
-.hero-cta{display:inline-block;padding:.9rem 2.4rem;background:var(--turquoise);color:#fff;border-radius:50px;font-weight:600;font-size:1rem;transition:all .3s;box-shadow:0 4px 16px rgba(15,181,176,.3)}
-.hero-cta:hover{background:var(--turquoise-dark);transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,181,176,.4)}
+.hero-cta:hover{background:#333;transform:scale(1.02)}
 
 /* ===== SECTIONS ===== */
-section{padding:5rem 1.5rem}
-.section-inner{max-width:1000px;margin:0 auto}
-.section-title{text-align:center;margin-bottom:3rem}
-.section-title h2{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;color:var(--dark);margin-bottom:.5rem}
-.section-title .accent-line{width:50px;height:3px;background:linear-gradient(90deg,var(--turquoise),var(--coral));margin:.8rem auto 0;border-radius:2px}
-.section-title p{color:var(--gray);margin-top:.8rem;font-size:.95rem}
+section{padding:6rem 1.5rem}
+.section-inner{max-width:980px;margin:0 auto}
+.section-title{text-align:center;margin-bottom:4rem}
+.section-title h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--black);letter-spacing:-.03em;margin-bottom:.5rem}
+.section-title p{color:var(--gray-text);font-size:.9rem;font-weight:300}
 
-/* ABOUT */
-.about{background:var(--white)}
-.about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:start}
-.about-photo{
-  background:linear-gradient(135deg,var(--turquoise),var(--coral));
-  border-radius:16px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:4rem;position:relative;overflow:hidden
-}
-.about-photo::after{
-  content:"";position:absolute;inset:6px;border:2px solid rgba(255,255,255,.3);border-radius:12px
-}
-.about-name{font-size:1.4rem;font-weight:700;margin-bottom:.3rem}
-.about-name-en{font-size:.85rem;color:var(--gray);margin-bottom:1.2rem}
-.about-text{color:var(--gray);font-size:.95rem;margin-bottom:1.5rem}
-.about-list{display:flex;flex-direction:column;gap:.6rem}
-.about-list li{font-size:.9rem;color:var(--dark);padding-left:1.4rem;position:relative}
-.about-list li::before{content:"";position:absolute;left:0;top:.6rem;width:8px;height:8px;background:var(--coral);border-radius:50%}
+/* ===== ABOUT ===== */
+.about{background:var(--gray-bg)}
+.about-grid{display:grid;grid-template-columns:.85fr 1fr;gap:4rem;align-items:start}
+.about-photo{border-radius:20px;overflow:hidden}
+.about-photo img{width:100%;height:auto;object-fit:cover;aspect-ratio:3/4}
+.about-content{padding-top:.5rem}
+.about-name{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
+.about-name-en{font-size:.8rem;color:var(--gray-text);font-weight:300;margin-bottom:1.5rem;letter-spacing:.05em}
+.about-text{color:var(--gray-text);font-size:.95rem;margin-bottom:2rem;line-height:2;font-weight:300}
+.about-list{display:flex;flex-direction:column;gap:.7rem}
+.about-list li{font-size:.88rem;color:var(--black);padding-left:1.2rem;position:relative;font-weight:400}
+.about-list li::before{content:"";position:absolute;left:0;top:.65rem;width:5px;height:5px;background:var(--black);border-radius:50%}
 
-/* SERVICE */
-.service{background:var(--sand)}
-.service-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+/* ===== SERVICE ===== */
+.service{background:var(--white)}
+.service-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .service-card{
-  background:#fff;border-radius:16px;padding:2.5rem 2rem;text-align:center;
-  box-shadow:0 2px 20px rgba(0,0,0,.04);transition:transform .3s,box-shadow .3s;
-  position:relative;overflow:hidden
+  background:var(--gray-bg);border-radius:20px;padding:2.5rem 2rem;
+  transition:transform .4s cubic-bezier(.25,.1,.25,1)
 }
-.service-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:4px;
-  background:linear-gradient(90deg,var(--turquoise),var(--coral))
-}
-.service-card:hover{transform:translateY(-6px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
-.service-icon{font-size:2.8rem;margin-bottom:1rem}
-.service-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.8rem;color:var(--dark)}
-.service-card p{font-size:.88rem;color:var(--gray);line-height:1.8}
+.service-card:hover{transform:scale(1.02)}
+.service-num{font-size:.75rem;color:var(--gray-text);font-weight:600;letter-spacing:.1em;margin-bottom:1rem}
+.service-card h3{font-size:1.15rem;font-weight:700;margin-bottom:1rem;color:var(--black);letter-spacing:-.01em}
+.service-card p{font-size:.85rem;color:var(--gray-text);line-height:1.9;font-weight:300}
 
-/* WORKS */
-.works{background:var(--white)}
-.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+/* ===== WORKS ===== */
+.works{background:var(--gray-bg)}
+.works-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:4rem}
 .work-item{
-  background:var(--light-gray);border-radius:16px;padding:2rem;
-  transition:transform .3s;position:relative
+  background:var(--white);border-radius:20px;padding:2.5rem 2rem;text-align:center;
+  transition:transform .4s cubic-bezier(.25,.1,.25,1)
 }
-.work-item:hover{transform:translateY(-4px)}
-.work-num{font-size:2.2rem;font-weight:800;color:var(--turquoise);line-height:1.2}
-.work-unit{font-size:.85rem;color:var(--turquoise);font-weight:600}
-.work-label{font-size:.9rem;color:var(--dark);margin-top:.5rem;font-weight:600}
-.work-desc{font-size:.82rem;color:var(--gray);margin-top:.3rem}
+.work-item:hover{transform:scale(1.02)}
+.work-num{font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--black);line-height:1.1;letter-spacing:-.03em}
+.work-unit{font-size:.85rem;color:var(--gray-text);font-weight:300}
+.work-label{font-size:.9rem;color:var(--black);margin-top:.8rem;font-weight:600}
+.work-desc{font-size:.8rem;color:var(--gray-text);margin-top:.3rem;font-weight:300}
 
-/* CONTACT */
-.contact{background:linear-gradient(135deg,var(--turquoise),#0ccfc9);color:#fff;text-align:center}
-.contact .section-title h2{color:#fff}
-.contact .section-title p{color:rgba(255,255,255,.85)}
-.contact .accent-line{background:rgba(255,255,255,.5) !important}
-.contact-text{font-size:1.05rem;margin-bottom:2rem;line-height:2;color:rgba(255,255,255,.9)}
+.clients{text-align:center}
+.clients-label{font-size:.8rem;color:var(--gray-text);font-weight:400;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2rem}
+.clients-list{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem 3rem}
+.clients-list a{font-size:1rem;font-weight:500;color:var(--black);white-space:nowrap;transition:color .3s}
+.clients-list a:hover{color:var(--gray-text)}
+a.work-item{display:block}
+
+/* ===== CONTACT ===== */
+.contact{background:var(--white);text-align:center}
+.contact-lead{font-size:clamp(1.2rem,3vw,1.8rem);font-weight:700;color:var(--black);margin-bottom:1rem;letter-spacing:-.02em}
+.contact-text{font-size:.95rem;color:var(--gray-text);margin-bottom:2.5rem;line-height:2;font-weight:300}
 .contact-btn{
-  display:inline-block;padding:1rem 3rem;background:#fff;color:var(--turquoise);
-  border-radius:50px;font-weight:700;font-size:1.05rem;transition:all .3s;
-  box-shadow:0 4px 16px rgba(0,0,0,.1)
+  display:inline-block;padding:.75rem 2.5rem;background:var(--black);color:#fff;
+  border-radius:980px;font-weight:400;font-size:.9rem;transition:all .4s;
+  letter-spacing:.02em
 }
-.contact-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.15)}
-.contact-info{margin-top:3rem;font-size:.9rem;color:rgba(255,255,255,.8);line-height:2}
+.contact-btn:hover{background:#333;transform:scale(1.02)}
+.contact-info{margin-top:3rem;font-size:.82rem;color:var(--gray-text);line-height:2.2;font-weight:300}
 
-/* FOOTER */
-footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;padding:2rem 1.5rem;font-size:.82rem}
+/* ===== FOOTER ===== */
+footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align:center;padding:1.5rem;font-size:.75rem;color:var(--gray-text);font-weight:300}
 
 /* ===== ANIMATIONS ===== */
-.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.25,.1,.25,1),transform .8s cubic-bezier(.25,.1,.25,1)}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   .hamburger{display:flex}
   .nav-links{
-    position:fixed;top:0;right:-100%;width:70%;max-width:300px;height:100vh;
-    background:#fff;flex-direction:column;padding:5rem 2rem 2rem;gap:2rem;
-    box-shadow:-4px 0 20px rgba(0,0,0,.1);transition:right .3s
+    position:fixed;top:0;right:-100%;width:100%;height:100vh;
+    background:rgba(251,251,253,.98);backdrop-filter:blur(20px);
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:2.5rem;transition:right .4s cubic-bezier(.25,.1,.25,1)
   }
   .nav-links.open{right:0}
-  .nav-links a{font-size:1.1rem}
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:998}
+  .nav-links a{font-size:1.2rem;font-weight:400;color:var(--black)}
+  .overlay{display:none;position:fixed;inset:0;z-index:998}
   .overlay.show{display:block}
-  .about-grid{grid-template-columns:1fr;text-align:center}
-  .about-photo{max-width:200px;margin:0 auto}
-  .about-list{align-items:center}
+  .about-grid{grid-template-columns:1fr;gap:2.5rem}
+  .about-photo{max-width:320px;margin:0 auto}
   .service-cards{grid-template-columns:1fr}
-  .works-grid{grid-template-columns:1fr 1fr}
-  section{padding:3.5rem 1.2rem}
-}
-@media(max-width:480px){
-  .works-grid{grid-template-columns:1fr}
+  .works-numbers{grid-template-columns:1fr}
+  section{padding:4rem 1.2rem}
+  .section-title{margin-bottom:2.5rem}
+  .clients-list{gap:1rem 2rem}
 }
 </style>
 </head>
@@ -171,12 +155,12 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <!-- HEADER -->
 <header>
 <nav>
-  <a href="#top" class="logo">楽しくなる<span>合同会社</span></a>
+  <a href="#top" class="logo">楽しくなる合同会社</a>
   <div class="nav-links" id="navLinks">
-    <a href="#about">ABOUT</a>
-    <a href="#service">SERVICE</a>
-    <a href="#works">WORKS</a>
-    <a href="#contact">CONTACT</a>
+    <a href="#about">About</a>
+    <a href="#service">Service</a>
+    <a href="#works">Works</a>
+    <a href="#contact">Contact</a>
   </div>
   <button class="hamburger" id="hamburger" aria-label="メニュー">
     <span></span><span></span><span></span>
@@ -188,8 +172,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <!-- HERO -->
 <section class="hero" id="top">
 <div class="hero-inner fade-up">
-  <p class="hero-sub">TANOSHIKUNARU LLC.</p>
-  <h1>世の中の常識を<br>少しだけ<em>ずらして</em>見る力が、<br>仕事も人生も<em>楽しく</em>する</h1>
+  <p class="hero-sub">Tanoshikunaru LLC.</p>
+  <h1>世の中の常識を<br>少しだけずらして見る力が、<br>仕事も人生も楽しくする</h1>
   <p class="hero-catch">広告・マーケティング × 地域振興 × 福祉。<br>沖縄から「楽しくなる」を届けます。</p>
   <a href="#contact" class="hero-cta">お問い合わせ</a>
 </div>
@@ -199,18 +183,19 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <section class="about" id="about">
 <div class="section-inner">
   <div class="section-title fade-up">
-    <h2>ABOUT</h2>
-    <div class="accent-line"></div>
+    <h2>About</h2>
     <p>代表紹介</p>
   </div>
   <div class="about-grid">
-    <div class="about-photo fade-up">&#127925;</div>
-    <div class="fade-up">
-      <p class="about-name">伊禮 真（いれい まこと）</p>
-      <p class="about-name-en">Makoto Irei / Founder & CEO</p>
+    <div class="about-photo fade-up">
+      <img src="profile.jpg" alt="伊禮 真" loading="lazy">
+    </div>
+    <div class="about-content fade-up">
+      <p class="about-name">伊禮 真</p>
+      <p class="about-name-en">Makoto Irei / Founder &amp; CEO</p>
       <p class="about-text">琉球銀行で38年間、広告・マーケティング・DXの最前線に立ち続け、2024年に楽しくなる合同会社を設立。「楽しくなる」をキーワードに、広告・地域振興・福祉の三つの領域で活動しています。</p>
       <ul class="about-list">
-        <li>琉球銀行初のテレビCM「リュウギンロボ」企画（2002年）</li>
+        <li>琉球銀行初のテレビCM「りゅうぎんロボ」企画（2002年）</li>
         <li>ACC賞 沖縄初のブロンズ賞受賞（2015年）</li>
         <li>AWS・Facebook Workplace 日本の銀行初導入</li>
         <li>Spotify 日本CM出演</li>
@@ -227,23 +212,22 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <section class="service" id="service">
 <div class="section-inner">
   <div class="section-title fade-up">
-    <h2>SERVICE</h2>
-    <div class="accent-line"></div>
+    <h2>Service</h2>
     <p>事業内容</p>
   </div>
   <div class="service-cards">
     <div class="service-card fade-up">
-      <div class="service-icon">&#127908;</div>
+      <p class="service-num">01</p>
       <h3>広告・マーケティング支援</h3>
       <p>SNS運用・動画制作・キャラクター開発・キャンペーン設計。38年の広告経験と最新のデジタルマーケティングで、お客様のビジネスを「楽しく」成長させます。</p>
     </div>
     <div class="service-card fade-up">
-      <div class="service-icon">&#127796;</div>
+      <p class="service-num">02</p>
       <h3>地域振興</h3>
       <p>東村ふるさと振興株式会社 取締役として、つつじエコパークの運営に参画。沖縄北部の自然と文化を活かした持続可能な地域づくりに取り組んでいます。</p>
     </div>
     <div class="service-card fade-up">
-      <div class="service-icon">&#129309;</div>
+      <p class="service-num">03</p>
       <h3>福祉支援・地域貢献</h3>
       <p>沖縄県セルフセンター常務理事として、福祉支援と地域貢献活動を推進。20年以上のボランティア経験を活かし、誰もが「楽しくなる」社会を目指します。</p>
     </div>
@@ -255,25 +239,43 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <section class="works" id="works">
 <div class="section-inner">
   <div class="section-title fade-up">
-    <h2>WORKS</h2>
-    <div class="accent-line"></div>
+    <h2>Works</h2>
     <p>実績</p>
   </div>
-  <div class="works-grid">
+  <div class="works-numbers">
     <div class="work-item fade-up">
-      <div class="work-num">595<span class="work-unit">件</span></div>
+      <div class="work-num">595<span class="work-unit"> 件</span></div>
       <p class="work-label">東江ガスキャンペーン応募数</p>
       <p class="work-desc">HP総PV 5,093・SNS視聴7,304以上</p>
     </div>
     <div class="work-item fade-up">
-      <div class="work-num">138.7<span class="work-unit">万回</span></div>
+      <div class="work-num">138.7<span class="work-unit"> 万回</span></div>
       <p class="work-label">YouTube総視聴回数</p>
       <p class="work-desc">沖縄63箇所アーカイブ</p>
     </div>
     <div class="work-item fade-up">
-      <div class="work-num">29<span class="work-unit">施設</span></div>
+      <div class="work-num">29<span class="work-unit"> 施設</span></div>
       <p class="work-label">農福連携マルシェ2026</p>
       <p class="work-desc">福祉施設と農業をつなぐイベント</p>
+    </div>
+    <a href="https://youtu.be/htHu4ipfAZE" target="_blank" rel="noopener" class="work-item fade-up">
+      <p class="work-label">ナンポー テレビCM制作</p>
+      <p class="work-desc">沖縄の老舗企業ナンポーのテレビコマーシャル制作をディレクション</p>
+    </a>
+    <a href="https://www.agariegas.co.jp/topics/1775204698/" target="_blank" rel="noopener" class="work-item fade-up">
+      <p class="work-label">東江ガス キャラクター開発支援</p>
+      <p class="work-desc">東江ガスのキャラクター開発・命名をディレクション</p>
+    </a>
+  </div>
+  <div class="clients fade-up">
+    <p class="clients-label">Major Clients</p>
+    <div class="clients-list">
+      <a href="https://www.agariegas.co.jp/" target="_blank" rel="noopener">東江ガス</a>
+      <a href="https://www.ryugin.co.jp/" target="_blank" rel="noopener">琉球銀行</a>
+      <a href="https://www.yui-rail.co.jp/" target="_blank" rel="noopener">沖縄都市モノレール</a>
+      <a href="https://e-nampo.com/" target="_blank" rel="noopener">ナンポー</a>
+      <a href="https://www.fmokinawa.co.jp/" target="_blank" rel="noopener">FM沖縄</a>
+      <a href="https://inforich.net/" target="_blank" rel="noopener">インフォリッチ（ChargeSPOT）</a>
     </div>
   </div>
 </div>
@@ -282,13 +284,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 <!-- CONTACT -->
 <section class="contact" id="contact">
 <div class="section-inner">
-  <div class="section-title fade-up">
-    <h2>CONTACT</h2>
-    <div class="accent-line"></div>
-    <p>お問い合わせ</p>
-  </div>
   <div class="fade-up">
-    <p class="contact-text">お仕事のご相談・ご質問など、<br>お気軽にお問い合わせください。</p>
+    <p class="contact-lead">お気軽にご相談ください。</p>
+    <p class="contact-text">お仕事のご相談・ご質問など、<br>まずはメールでお問い合わせください。</p>
     <a href="mailto:mako10@tanosea9nal.com" class="contact-btn">メールで問い合わせる</a>
     <div class="contact-info">
       <p>楽しくなる合同会社</p>
@@ -305,7 +303,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);text-align:center;paddi
 </footer>
 
 <script>
-// ===== Mobile Menu =====
+// Mobile Menu
 const hamburger=document.getElementById("hamburger");
 const navLinks=document.getElementById("navLinks");
 const overlay=document.getElementById("overlay");
@@ -324,10 +322,10 @@ document.querySelectorAll(".nav-links a").forEach(a=>{
   });
 });
 
-// ===== Scroll Fade-Up =====
+// Scroll Fade-Up
 const observer=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");observer.unobserve(e.target)}});
-},{threshold:0.15});
+},{threshold:0.1});
 document.querySelectorAll(".fade-up").forEach(el=>observer.observe(el));
 </script>
 </body>
