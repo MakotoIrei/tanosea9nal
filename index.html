@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>楽しくなる合同会社 | 世の中の常識を少しだけずらして見る力</title>
 <meta name="description" content="楽しくなる合同会社 - 広告・マーケティング支援、地域振興、福祉支援。沖縄から「楽しくなる」を届けます。">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -30,7 +31,8 @@ header{
   border-bottom:1px solid rgba(0,0,0,.08)
 }
 nav{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:48px}
-.logo{font-size:1.1rem;font-weight:700;color:var(--black);letter-spacing:-.02em}
+.logo{display:flex;align-items:center}
+.logo img{height:40px;width:auto;object-fit:contain}
 .nav-links{display:flex;gap:2rem}
 .nav-links a{font-size:.8rem;font-weight:400;color:var(--gray-text);transition:color .3s}
 .nav-links a:hover{color:var(--black)}
@@ -55,6 +57,7 @@ nav{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-conten
   letter-spacing:.02em
 }
 .hero-cta:hover{background:#333;transform:scale(1.02)}
+.hero-tagline{font-size:.85rem;color:var(--gray-text);font-style:italic;font-weight:300;margin-top:2rem;letter-spacing:.02em}
 
 /* ===== SECTIONS ===== */
 section{padding:6rem 1.5rem}
@@ -70,7 +73,8 @@ section{padding:6rem 1.5rem}
 .about-photo img{width:100%;height:auto;object-fit:cover;aspect-ratio:3/4}
 .about-content{padding-top:.5rem}
 .about-name{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
-.about-name-en{font-size:.8rem;color:var(--gray-text);font-weight:300;margin-bottom:1.5rem;letter-spacing:.05em}
+.about-name-en{font-size:.8rem;color:var(--gray-text);font-weight:300;margin-bottom:.8rem;letter-spacing:.05em}
+.about-titles{font-size:.85rem;color:var(--gray-text);font-weight:300;margin-bottom:1.5rem;line-height:2}
 .about-text{color:var(--gray-text);font-size:.95rem;margin-bottom:2rem;line-height:2;font-weight:300}
 .about-list{display:flex;flex-direction:column;gap:.7rem}
 .about-list li{font-size:.88rem;color:var(--black);padding-left:1.2rem;position:relative;font-weight:400}
@@ -108,20 +112,58 @@ section{padding:6rem 1.5rem}
 .clients-list a:hover{color:var(--gray-text)}
 a.work-item{display:block}
 
+/* ===== SNS / MEDIA ===== */
+.media{background:var(--gray-bg)}
+.sns-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.sns-card{
+  background:var(--white);border-radius:20px;padding:2rem 1.8rem;
+  display:flex;flex-direction:column;gap:.8rem;
+  transition:transform .4s cubic-bezier(.25,.1,.25,1)
+}
+.sns-card:hover{transform:scale(1.02)}
+.sns-header{display:flex;align-items:center;gap:.8rem}
+.sns-icon{width:36px;height:36px;flex-shrink:0}
+.sns-icon svg{width:36px;height:36px}
+.sns-name{font-size:.95rem;font-weight:600;color:var(--black)}
+.sns-handle{font-size:.78rem;color:var(--gray-text);font-weight:300}
+.sns-desc{font-size:.82rem;color:var(--gray-text);font-weight:300;line-height:1.7}
+.sns-btn{
+  display:inline-block;align-self:flex-start;padding:.45rem 1.4rem;
+  background:var(--black);color:#fff;border-radius:980px;
+  font-size:.78rem;font-weight:400;transition:all .4s;letter-spacing:.02em;margin-top:auto
+}
+.sns-btn:hover{background:#333;transform:scale(1.02)}
+
 /* ===== CONTACT ===== */
 .contact{background:var(--white);text-align:center}
 .contact-lead{font-size:clamp(1.2rem,3vw,1.8rem);font-weight:700;color:var(--black);margin-bottom:1rem;letter-spacing:-.02em}
 .contact-text{font-size:.95rem;color:var(--gray-text);margin-bottom:2.5rem;line-height:2;font-weight:300}
-.contact-btn{
-  display:inline-block;padding:.75rem 2.5rem;background:var(--black);color:#fff;
-  border-radius:980px;font-weight:400;font-size:.9rem;transition:all .4s;
-  letter-spacing:.02em
+.contact-form{max-width:540px;margin:0 auto;text-align:left}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;font-size:.82rem;font-weight:500;color:var(--black);margin-bottom:.4rem}
+.form-group label .optional{font-size:.75rem;color:var(--gray-text);font-weight:300;margin-left:.3rem}
+.form-group input,.form-group textarea{
+  width:100%;padding:.7rem 1rem;border:1px solid #d2d2d7;border-radius:12px;
+  font-family:inherit;font-size:.9rem;color:var(--black);background:var(--white);
+  transition:border-color .3s;outline:none;-webkit-appearance:none
 }
-.contact-btn:hover{background:#333;transform:scale(1.02)}
-.contact-info{margin-top:3rem;font-size:.82rem;color:var(--gray-text);line-height:2.2;font-weight:300}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--black)}
+.form-group textarea{resize:vertical;min-height:140px;line-height:1.8}
+.form-submit{
+  display:inline-block;padding:.75rem 2.5rem;background:var(--black);color:#fff;
+  border:none;border-radius:980px;font-family:inherit;font-weight:400;font-size:.9rem;
+  cursor:pointer;transition:all .4s;letter-spacing:.02em
+}
+.form-submit:hover{background:#333;transform:scale(1.02)}
+.form-submit-wrap{text-align:center;margin-top:2rem}
+.contact-company-info{text-align:center;margin-bottom:2.5rem;font-size:.9rem;color:var(--gray-text);line-height:2.2;font-weight:300}
+.contact-info{margin-top:3rem;font-size:.82rem;color:var(--gray-text);line-height:2.2;font-weight:300;text-align:center}
 
 /* ===== FOOTER ===== */
-footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align:center;padding:1.5rem;font-size:.75rem;color:var(--gray-text);font-weight:300}
+footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align:center;padding:2rem 1.5rem;font-size:.75rem;color:var(--gray-text);font-weight:300;line-height:2.2}
+footer .footer-tagline{font-style:italic;margin-bottom:.5rem}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:.5rem}
+.footer-logo img{height:32px;width:auto;object-fit:contain}
 
 /* ===== ANIMATIONS ===== */
 .fade-up{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.25,.1,.25,1),transform .8s cubic-bezier(.25,.1,.25,1)}
@@ -147,6 +189,7 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
   section{padding:4rem 1.2rem}
   .section-title{margin-bottom:2.5rem}
   .clients-list{gap:1rem 2rem}
+  .sns-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -155,11 +198,12 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
 <!-- HEADER -->
 <header>
 <nav>
-  <a href="#top" class="logo">楽しくなる合同会社</a>
+  <a href="#top" class="logo"><img src="logo_yoko.jpg" alt="楽しくなる合同会社"></a>
   <div class="nav-links" id="navLinks">
     <a href="#about">About</a>
     <a href="#service">Service</a>
     <a href="#works">Works</a>
+    <a href="#media">Media</a>
     <a href="#contact">Contact</a>
   </div>
   <button class="hamburger" id="hamburger" aria-label="メニュー">
@@ -176,6 +220,7 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
   <h1>世の中の常識を<br>少しだけずらして見る力が、<br>仕事も人生も楽しくする</h1>
   <p class="hero-catch">広告・マーケティング × 地域振興 × 福祉。<br>沖縄から「楽しくなる」を届けます。</p>
   <a href="#contact" class="hero-cta">お問い合わせ</a>
+  <p class="hero-tagline">"We don't smile because it's fun; it's fun because we smile."</p>
 </div>
 </section>
 
@@ -193,6 +238,7 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
     <div class="about-content fade-up">
       <p class="about-name">伊禮 真</p>
       <p class="about-name-en">Makoto Irei / Founder &amp; CEO</p>
+      <p class="about-titles">東村ふるさと振興株式会社 取締役<br>一般財団法人 沖縄県セルプセンター 理事<br>沖縄県立芸術大学 非常勤講師<br>りゅうぎんロボの父</p>
       <p class="about-text">琉球銀行で38年間、広告・マーケティング・DXの最前線に立ち続け、2024年に楽しくなる合同会社を設立。「楽しくなる」をキーワードに、広告・地域振興・福祉の三つの領域で活動しています。</p>
       <ul class="about-list">
         <li>琉球銀行初のテレビCM「りゅうぎんロボ」企画（2002年）</li>
@@ -281,13 +327,116 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
 </div>
 </section>
 
+<!-- SNS / MEDIA -->
+<section class="media" id="media">
+<div class="section-inner">
+  <div class="section-title fade-up">
+    <h2>SNS / Media</h2>
+    <p>各種メディア・SNSアカウント</p>
+  </div>
+  <div class="sns-grid">
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg></div>
+        <div>
+          <p class="sns-name">琉球楽しくなるチャンネル</p>
+          <p class="sns-handle">@ryukyutanosea9nal</p>
+        </div>
+      </div>
+      <p class="sns-desc">グッドニュース専門・沖縄風景・福祉貢献・ラジオ</p>
+      <a href="https://www.youtube.com/@ryukyutanosea9nal" target="_blank" rel="noopener" class="sns-btn">チャンネルを見る</a>
+    </div>
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg></div>
+        <div>
+          <p class="sns-name">にゃむ286ch</p>
+          <p class="sns-handle">@okinawa286channel</p>
+        </div>
+      </div>
+      <p class="sns-desc">保護猫カフェ連携・癒しの睡眠BGMチャンネル</p>
+      <a href="https://www.youtube.com/@okinawa286channel" target="_blank" rel="noopener" class="sns-btn">チャンネルを見る</a>
+    </div>
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#feda75"/><stop offset="25%" stop-color="#fa7e1e"/><stop offset="50%" stop-color="#d62976"/><stop offset="75%" stop-color="#962fbf"/><stop offset="100%" stop-color="#4f5bd5"/></linearGradient></defs><path fill="url(#ig)" d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div>
+        <div>
+          <p class="sns-name">楽しくなる合同会社</p>
+          <p class="sns-handle">@ryukyu.tanosea9nal.c</p>
+        </div>
+      </div>
+      <p class="sns-desc">沖縄の日常・仕事・イベント情報を発信</p>
+      <a href="https://www.instagram.com/ryukyu.tanosea9nal.c" target="_blank" rel="noopener" class="sns-btn">フォローする</a>
+    </div>
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><path fill="#000000" d="M12.5 2c-3 0-3.5.7-3.5 3v2H6c-2 0-3 1-3 3v1.5c0 .8.5 1.8 1.5 2.5-.4 1.2-.5 2.5-.5 4 0 4 3 6 8 6s8-2 8-6c0-1.5-.1-2.8-.5-4 1-.7 1.5-1.7 1.5-2.5V11c0-2-1-3-3-3h-3V5c0-2.3-.5-3-3.5-3zM9.5 10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/></svg></div>
+        <div>
+          <p class="sns-name">TikTok</p>
+          <p class="sns-handle">@ryukyu.tanosea9nal</p>
+        </div>
+      </div>
+      <p class="sns-desc">沖縄発のショート動画</p>
+      <a href="https://www.tiktok.com/@ryukyu.tanosea9nal" target="_blank" rel="noopener" class="sns-btn">フォローする</a>
+    </div>
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><path fill="#000000" d="M18.2 2.25h3.5l-7.6 8.7 9 11.8h-7l-5.5-7.2-6.3 7.2H.8l8.2-9.3-8.7-11.4h7.2l5 6.6 5.7-6.6zm-1.2 18.5h2L7.1 4.3H5l12 16.45z"/></svg></div>
+        <div>
+          <p class="sns-name">X / Twitter</p>
+          <p class="sns-handle">@Mako10tanosea9</p>
+        </div>
+      </div>
+      <p class="sns-desc">日々の気づき・ビジネス・沖縄情報</p>
+      <a href="https://x.com/Mako10tanosea9" target="_blank" rel="noopener" class="sns-btn">フォローする</a>
+    </div>
+    <div class="sns-card fade-up">
+      <div class="sns-header">
+        <div class="sns-icon"><svg viewBox="0 0 24 24"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#feda75"/><stop offset="25%" stop-color="#fa7e1e"/><stop offset="50%" stop-color="#d62976"/><stop offset="75%" stop-color="#962fbf"/><stop offset="100%" stop-color="#4f5bd5"/></linearGradient></defs><path fill="url(#ig2)" d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div>
+        <div>
+          <p class="sns-name">1フォロー＝1円寄付</p>
+          <p class="sns-handle">@1fw1en_okinawa</p>
+        </div>
+      </div>
+      <p class="sns-desc">フォローするだけで沖縄の福祉団体に寄付されます&#127802;</p>
+      <a href="https://www.instagram.com/1fw1en_okinawa" target="_blank" rel="noopener" class="sns-btn">フォローする</a>
+    </div>
+  </div>
+</div>
+</section>
+
 <!-- CONTACT -->
 <section class="contact" id="contact">
 <div class="section-inner">
   <div class="fade-up">
     <p class="contact-lead">お気軽にご相談ください。</p>
-    <p class="contact-text">お仕事のご相談・ご質問など、<br>まずはメールでお問い合わせください。</p>
-    <a href="mailto:mako10@tanosea9nal.com" class="contact-btn">メールで問い合わせる</a>
+    <p class="contact-text">お仕事のご相談・ご質問など、<br>以下のフォームからお問い合わせください。</p>
+    <div class="contact-company-info">
+      <p>〒900-2225 沖縄県宜野湾市大謝名1-4-25 2F</p>
+      <p>Tel: <a href="tel:08031863911" style="color:var(--gray-text)">080-3186-3911</a></p>
+      <p>Email: mako10@tanosea9nal.com</p>
+    </div>
+    <form class="contact-form" action="https://formspree.io/f/xgoprrwr" method="POST">
+      <div class="form-group">
+        <label>お名前</label>
+        <input type="text" name="name" required placeholder="山田 太郎">
+      </div>
+      <div class="form-group">
+        <label>会社名<span class="optional">（任意）</span></label>
+        <input type="text" name="company" placeholder="株式会社○○">
+      </div>
+      <div class="form-group">
+        <label>メールアドレス</label>
+        <input type="email" name="email" required placeholder="example@mail.com">
+      </div>
+      <div class="form-group">
+        <label>お問い合わせ内容</label>
+        <textarea name="message" required placeholder="お気軽にご記入ください"></textarea>
+      </div>
+      <div class="form-submit-wrap">
+        <button type="submit" class="form-submit">送信する</button>
+      </div>
+    </form>
     <div class="contact-info">
       <p>楽しくなる合同会社</p>
       <p>沖縄県宜野湾市 ｜ 設立 2024年3月</p>
@@ -299,6 +448,9 @@ footer{background:var(--gray-bg);border-top:1px solid rgba(0,0,0,.06);text-align
 
 <!-- FOOTER -->
 <footer>
+  <div class="footer-logo"><img src="logo_yoko.jpg" alt="楽しくなる合同会社"></div>
+  <p class="footer-tagline">"We don't smile because it's fun; it's fun because we smile."</p>
+  <p>〒900-2225 沖縄県宜野湾市大謝名1-4-25 2F</p>
   <p>&copy; 2024 楽しくなる合同会社 All Rights Reserved.</p>
 </footer>
 
