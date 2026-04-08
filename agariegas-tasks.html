@@ -115,6 +115,10 @@ header .header-inner{position:relative}
 .base-item .item-date{color:var(--text-sub);font-size:11px;white-space:nowrap}
 .base-item .item-hours{font-weight:700;color:var(--blue);white-space:nowrap;min-width:30px;text-align:right}
 .base-item .item-price{font-weight:700;color:var(--navy);white-space:nowrap;min-width:60px;text-align:right;font-size:12px}
+.base-item .item-del{color:var(--red);background:none;border:none;font-size:16px;cursor:pointer;padding:0 4px;font-family:inherit}
+.btn-add-work{width:100%;padding:10px;border:2px dashed var(--blue);border-radius:8px;background:transparent;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:all .2s}
+.btn-add-work:active{background:var(--blue-bg)}
+.base-tpl{font-size:11px;color:#9ca3af;font-style:italic;padding:2px 0}
 .base-progress{padding:12px 16px;border-top:2px solid #f0f0f0}
 .progress-bar-bg{background:#e5e7eb;border-radius:10px;height:12px;overflow:hidden;margin:8px 0}
 .progress-bar-fill{background:linear-gradient(90deg,var(--blue),#3b82f6);height:100%;border-radius:10px;transition:width .5s}
@@ -167,28 +171,50 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v10';
+const STORAGE_KEY = 'agariegas_tasks_v11';
 const SESSION_KEY = 'agariegas_session';
 const CLOSED_KEY = 'agariegas_closed_v1';
+const BASE_WORK_KEY = 'agariegas_basework_v1';
 const ADMIN_PASS = 'makoto2026';
 const VIEWER_PASS = 'agarie2026';
 
-const BASE_WORK = {
-  price: 100000,
-  totalHours: 20,
-  hourlyRate: 5000,
-  usedHours: 14,
-  usedPrice: 70000,
-  remainHours: 6,
-  remainPrice: 30000,
-  items: [
-    {title:'ネーミング確定調整（アンケート集計・役員会向け分析レポート）',date:'2026-04-01',hours:4,price:20000},
-    {title:'「決定しました」バナー・HPお知らせページ・作業指示書',date:'2026-04-01',hours:5,price:25000},
-    {title:'キャラクター決定バナー（仮）制作',date:'2026-04-02',hours:2,price:10000},
-    {title:'キャラクター紹介ページ（仮）制作',date:'2026-04-02',hours:2,price:10000},
-    {title:'打ち合わせ（タスクリスト・スケジュール確認）',date:'2026-04-07',hours:1,price:5000}
-  ]
-};
+const BASE_CONF = {price:100000,totalHours:20,hourlyRate:5000};
+const CARRYOVER = {price:100000,hours:20,hourlyRate:5000,applyMonth:'apr'};
+const ACTIVE_MONTHS = ['apr','may','jun'];
+const MONTH_LABELS = {apr:'2026年4月',may:'2026年5月',jun:'2026年6月'};
+
+const MONTHLY_TEMPLATE = [
+  {title:'ミーティング（月2回）',date:'',hours:0,price:0},
+  {title:'LINE対応・調整',date:'',hours:0,price:0},
+  {title:'企画立案・レポート',date:'',hours:0,price:0},
+  {title:'SNS投稿文・概要欄作成',date:'',hours:0,price:0}
+];
+
+const APR_INITIAL_ITEMS = [
+  {title:'ネーミング確定調整（アンケート集計・役員会向け分析レポート）',date:'2026-04-01',hours:4,price:20000},
+  {title:'「決定しました」バナー・HPお知らせページ・作業指示書',date:'2026-04-01',hours:5,price:25000},
+  {title:'キャラクター決定バナー（仮）制作',date:'2026-04-02',hours:2,price:10000},
+  {title:'キャラクター紹介ページ（仮）制作',date:'2026-04-02',hours:2,price:10000},
+  {title:'打ち合わせ（タスクリスト・スケジュール確認）',date:'2026-04-07',hours:1,price:5000}
+];
+
+function loadBaseWork(){
+  const d=localStorage.getItem(BASE_WORK_KEY);
+  if(d) return JSON.parse(d);
+  const init={};
+  ACTIVE_MONTHS.forEach(m=>{
+    if(m==='apr') init[m]=[...APR_INITIAL_ITEMS,...MONTHLY_TEMPLATE.map(t=>({...t}))];
+    else init[m]=MONTHLY_TEMPLATE.map(t=>({...t}));
+  });
+  saveBaseWork(init);
+  return init;
+}
+function saveBaseWork(data){localStorage.setItem(BASE_WORK_KEY,JSON.stringify(data));}
+function getBaseStats(items){
+  const usedH=items.reduce((s,i)=>s+i.hours,0);
+  const usedP=items.reduce((s,i)=>s+i.price,0);
+  return {usedHours:usedH,usedPrice:usedP,remainHours:BASE_CONF.totalHours-usedH,remainPrice:BASE_CONF.price-usedP};
+}
 
 const INCLUDED_IN_BASE = [
   {title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14'},
@@ -273,11 +299,10 @@ function doLogin(){
 function renderApp(role){
   const tasks=loadTasks();
   const closedMonths=loadClosed();
-  const CARRYOVER={price:100000,hours:20,hourlyRate:5000};
+  const baseWork=loadBaseWork();
   const isAdmin=role==='admin';
   const roleName=isAdmin?'伊禮（管理者）':'東江常務（東江ガス）';
 
-  // Split active tasks (exclude closed)
   const activeTasks=tasks.filter(t=>t.status!=='closed');
   const aprTasks=activeTasks.filter(t=>(t.month||'apr')==='apr');
   const mayTasks=activeTasks.filter(t=>(t.month||'apr')==='may');
@@ -285,8 +310,9 @@ function renderApp(role){
   const mayApproved=mayTasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
   const aprPending=aprTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
   const mayPending=mayTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
-  const aprBilling=BASE_WORK.price+CARRYOVER.price+aprApproved;
-  const mayBilling=mayApproved;
+  const hasCarryover=(m)=>m===CARRYOVER.applyMonth;
+  const aprBilling=BASE_CONF.price+(hasCarryover('apr')?CARRYOVER.price:0)+aprApproved;
+  const mayBilling=BASE_CONF.price+(hasCarryover('may')?CARRYOVER.price:0)+mayApproved;
   const aprApprovedCount=aprTasks.filter(t=>t.status==='approved').length;
 
   let html=`
@@ -315,13 +341,13 @@ function renderApp(role){
         <div class="billing-month apr">
           <div class="billing-label">2026年4月 請求予定額</div>
           <div class="billing-total">${formatPrice(aprBilling)}</div>
-          <div class="billing-breakdown">基本${formatPrice(BASE_WORK.price)}+繰越${formatPrice(CARRYOVER.price)}+承認済${formatPrice(aprApproved)}</div>
+          <div class="billing-breakdown">基本${formatPrice(BASE_CONF.price)}+繰越${formatPrice(CARRYOVER.price)}+承認済${formatPrice(aprApproved)}</div>
           ${aprPending>0?`<div class="billing-breakdown" style="color:#999;margin-top:2px">確認待ち ${formatPrice(aprPending)}</div>`:''}
         </div>
         <div class="billing-month may">
           <div class="billing-label">2026年5月〜 請求予定額</div>
           <div class="billing-total">${formatPrice(mayBilling)}</div>
-          <div class="billing-breakdown">承認済スポット ${formatPrice(mayApproved)}</div>
+          <div class="billing-breakdown">基本${formatPrice(BASE_CONF.price)}+承認済${formatPrice(mayApproved)}</div>
           ${mayPending>0?`<div class="billing-breakdown" style="color:#999;margin-top:2px">確認待ち ${formatPrice(mayPending)}</div>`:''}
         </div>
       </div>
@@ -382,63 +408,72 @@ function renderApp(role){
     </div>`;
   });
 
-  // ── 基本業務セクション ──
-  const progressPct=Math.round(BASE_WORK.usedHours/BASE_WORK.totalHours*100);
-  html+=`
-    <div class="section-header">基本業務<span class="section-tag section-tag-blue">${formatPrice(BASE_WORK.price)}</span></div>
+  // ── 基本業務セクション（月別） ──
+  ACTIVE_MONTHS.forEach(mk=>{
+    const items=baseWork[mk]||[];
+    const stats=getBaseStats(items);
+    const pct=Math.min(100,Math.round(stats.usedHours/BASE_CONF.totalHours*100));
+    const ml=MONTH_LABELS[mk]||mk;
+    html+=`
+    <div class="section-header">基本業務（${ml}）<span class="section-tag section-tag-blue">固定 ${formatPrice(BASE_CONF.price)}</span></div>
     <div class="base-section">
       <div class="base-section-header">
-        <h3>基本業務 ${formatPrice(BASE_WORK.price)}（${BASE_WORK.totalHours}h・${formatPrice(BASE_WORK.hourlyRate)}/h）</h3>
+        <h3>${ml} 基本業務 ${formatPrice(BASE_CONF.price)}（${BASE_CONF.totalHours}h・${formatPrice(BASE_CONF.hourlyRate)}/h）</h3>
         <div class="base-meta">
-          <span>消化 ${BASE_WORK.usedHours}h / ${BASE_WORK.totalHours}h</span>
-          <span>残り ${BASE_WORK.remainHours}h</span>
+          <span>消化 ${stats.usedHours}h / ${BASE_CONF.totalHours}h</span>
+          <span>残り ${stats.remainHours}h</span>
         </div>
       </div>
       <div class="base-section-body">`;
-
-  BASE_WORK.items.forEach(item=>{
-    html+=`
-        <div class="base-item">
-          <span class="item-title">${escHtml(item.title)}</span>
-          <span class="item-date">${formatDate(item.date)}</span>
+    items.forEach((item,idx)=>{
+      const isTemplate=item.hours===0&&item.price===0&&!item.date;
+      html+=`
+        <div class="base-item${isTemplate?' base-tpl':''}">
+          <span class="item-title">${escHtml(item.title)}${isTemplate?' （未入力）':''}</span>
+          <span class="item-date">${item.date?formatDate(item.date):''}</span>
           <span class="item-hours">${item.hours}h</span>
-          <span class="item-price">${formatPrice(item.price)}</span>
+          <span class="item-price">${item.price?formatPrice(item.price):'-'}</span>
+          ${isAdmin?`<button class="item-del" onclick="deleteBaseItem('${mk}',${idx})" title="削除">×</button>`:''}
         </div>`;
-  });
-
-  html+=`
+    });
+    if(isAdmin){
+      html+=`<button class="btn-add-work" onclick="addBaseItem('${mk}')">＋ 作業を追加</button>`;
+    }
+    html+=`
       </div>
       <div class="base-progress">
         <div class="progress-info">
-          <span>稼働時間 ${BASE_WORK.usedHours}h / ${BASE_WORK.totalHours}h</span>
-          <span class="remaining">残り ${BASE_WORK.remainHours}h</span>
+          <span>稼働時間 ${stats.usedHours}h / ${BASE_CONF.totalHours}h</span>
+          <span class="remaining">残り ${stats.remainHours}h</span>
         </div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width:${progressPct}%"></div>
+          <div class="progress-bar-fill" style="width:${pct}%"></div>
         </div>
         <div class="progress-summary">
-          <span class="used">消化済み：${BASE_WORK.usedHours}h ${formatPrice(BASE_WORK.usedPrice)}</span>
-          <span class="remain">残り：${BASE_WORK.remainHours}h ${formatPrice(BASE_WORK.remainPrice)}</span>
+          <span class="used">消化済み：${stats.usedHours}h ${formatPrice(stats.usedPrice)}</span>
+          <span class="remain">残り：${stats.remainHours}h ${formatPrice(stats.remainPrice)}</span>
         </div>
       </div>
     </div>`;
+  });
 
-  // ── 繰越超過時間 ──
+  // ── 繰越超過時間（4月のみ表示） ──
   html+=`
     <div class="carryover-card">
       <div class="carryover-header">
-        <h3>【繰越】3月分 超過業務時間</h3>
+        <h3>【繰越】3月分 超過業務時間（4月のみ）</h3>
         <div class="carryover-price">${formatPrice(CARRYOVER.price)}（${CARRYOVER.hours}h × ${formatPrice(CARRYOVER.hourlyRate)}）</div>
       </div>
       <div class="carryover-body">
         1月〜3月の累計超過時間 ${CARRYOVER.hours}h分を4月基本業務に繰り越し済み
-        <br><span class="carryover-badge">繰越済み</span>
+        <br><span class="carryover-badge">繰越済み・4月請求のみ</span>
       </div>
     </div>`;
 
-  // ── 基本業務の残り6hで対応セクション ──
+  // ── 基本業務の残り時間で対応セクション ──
+  const aprStats=getBaseStats(baseWork['apr']||[]);
   html+=`
-    <div class="section-header">基本業務の残り${BASE_WORK.remainHours}h以内で対応予定<span class="section-tag section-tag-blue">追加費用なし</span></div>`;
+    <div class="section-header">基本業務の残り${aprStats.remainHours}h以内で対応予定<span class="section-tag section-tag-blue">追加費用なし</span></div>`;
 
   INCLUDED_IN_BASE.forEach((item,i)=>{
     const overdue=isOverdue(item.deadline);
@@ -520,7 +555,7 @@ function renderApp(role){
     aprTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
     html+=`
       <div class="month-subtotal">
-        <div class="subtotal-label">4月 請求予定 小計</div>
+        <div class="subtotal-label">4月請求 小計</div>
         <div class="subtotal-value">${formatPrice(aprBilling)}</div>
       </div>
       ${aprPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(aprPending)} は含まず）</div>`:''}`;
@@ -723,8 +758,8 @@ function closeMonth(monthKey,label){
     label: label,
     monthKey: monthKey,
     closedAt: new Date().toISOString(),
-    basePrice: 100000,
-    carryoverPrice: 100000,
+    basePrice: BASE_CONF.price,
+    carryoverPrice: monthKey===CARRYOVER.applyMonth?CARRYOVER.price:0,
     approvedTotal: approvedTotal,
     tasks: approvedTasks.map(t=>({title:t.title,price:t.price,deadline:t.deadline}))
   });
@@ -793,6 +828,27 @@ function downloadJSON(idx){
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function addBaseItem(monthKey){
+  const title=prompt('作業名を入力してください：');
+  if(!title)return;
+  const dateStr=prompt('日付（例：2026-04-10）：','')||'';
+  const hours=parseFloat(prompt('作業時間（h）：','0'))||0;
+  const price=hours*BASE_CONF.hourlyRate;
+  const bw=loadBaseWork();
+  if(!bw[monthKey])bw[monthKey]=[];
+  bw[monthKey].push({title,date:dateStr,hours,price});
+  saveBaseWork(bw);
+  render();
+}
+
+function deleteBaseItem(monthKey,idx){
+  if(!confirm('この作業を削除しますか？'))return;
+  const bw=loadBaseWork();
+  if(bw[monthKey])bw[monthKey].splice(idx,1);
+  saveBaseWork(bw);
+  render();
 }
 
 function downloadAllHistory(){
