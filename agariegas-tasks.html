@@ -147,6 +147,19 @@ header .header-inner{position:relative}
 .closed-body{overflow:hidden;transition:max-height .4s ease;max-height:0}
 .closed-body.open{max-height:2000px}
 .closed-body-inner{padding:12px 0}
+.dl-buttons{display:flex;gap:8px;padding:8px 0}
+.btn-dl{flex:1;padding:10px;border:2px solid #d0d0d0;border-radius:8px;background:#f8f8f8;color:#374151;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;transition:all .2s}
+.btn-dl:active{transform:scale(.96);background:#e5e7eb}
+.btn-dl-csv{border-color:var(--green);color:var(--green)}
+.btn-dl-json{border-color:var(--blue);color:var(--blue)}
+.history-section{margin-top:16px}
+.history-header{font-size:14px;font-weight:900;color:#6b7280;padding:12px 0 8px;border-bottom:2px solid #d0d0d0;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.history-card{background:#f8f8f8;border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;border:1px solid #e5e7eb;cursor:pointer;transition:background .2s}
+.history-card:active{background:#e5e7eb}
+.history-card .h-top{display:flex;justify-content:space-between;align-items:center}
+.history-card .h-label{font-size:14px;font-weight:900;color:#374151}
+.history-card .h-amount{font-size:16px;font-weight:900;color:var(--navy)}
+.history-card .h-meta{font-size:11px;color:#9ca3af;margin-top:4px}
 </style>
 </head>
 <body>
@@ -356,6 +369,13 @@ function renderApp(role){
             </div>
           </div>`;
     });
+    if(isAdmin){
+      html+=`
+          <div class="dl-buttons">
+            <button class="btn-dl btn-dl-csv" onclick="downloadCSV(${ci})">CSV ダウンロード</button>
+            <button class="btn-dl btn-dl-json" onclick="downloadJSON(${ci})">JSON ダウンロード</button>
+          </div>`;
+    }
     html+=`
         </div>
       </div>
@@ -516,6 +536,31 @@ function renderApp(role){
       <div class="subtotal-value">${formatPrice(mayBilling)}</div>
     </div>
     ${mayPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(mayPending)} は含まず）</div>`:''}`;
+
+  // ── 過去の請求履歴（管理者のみ） ──
+  if(isAdmin && closedMonths.length>0){
+    html+=`
+    <div class="history-section">
+      <div class="history-header">過去の請求履歴<span class="section-tag" style="background:#e5e7eb;color:#6b7280">${closedMonths.length}件</span></div>`;
+    closedMonths.forEach((cm,ci)=>{
+      const total=cm.basePrice+cm.carryoverPrice+cm.approvedTotal;
+      const closedDate=cm.closedAt?new Date(cm.closedAt):null;
+      const dateStr=closedDate?(closedDate.getFullYear()+'/'+(closedDate.getMonth()+1)+'/'+closedDate.getDate()+' '+String(closedDate.getHours()).padStart(2,'0')+':'+String(closedDate.getMinutes()).padStart(2,'0')):'';
+      html+=`
+      <div class="history-card" onclick="toggleClosed(${ci});document.getElementById('closed_${ci}').scrollIntoView({behavior:'smooth'})">
+        <div class="h-top">
+          <div class="h-label">${cm.label}</div>
+          <div class="h-amount">${formatPrice(total)}</div>
+        </div>
+        <div class="h-meta">確定日: ${dateStr} / ${cm.tasks.length}件 / スポット承認: ${formatPrice(cm.approvedTotal)}</div>
+      </div>`;
+    });
+    html+=`
+      <div class="dl-buttons" style="margin-top:8px">
+        <button class="btn-dl btn-dl-json" onclick="downloadAllHistory()">全履歴JSON ダウンロード</button>
+      </div>
+    </div>`;
+  }
 
   html+=`</div>`;
 
@@ -692,7 +737,82 @@ function closeMonth(monthKey,label){
     }
   });
   saveTasks(tasks);
+
+  // Auto-download CSV
+  downloadCSV(closed.length-1);
+
   render();
+}
+
+function generateCSV(cm){
+  const total=cm.basePrice+cm.carryoverPrice+cm.approvedTotal;
+  const closedDate=cm.closedAt?new Date(cm.closedAt).toLocaleString('ja-JP'):'';
+  let csv='\ufeff';// BOM for Excel
+  csv+='東江ガス 確定請求書,'+cm.label+'分\r\n';
+  csv+='締め日時,'+closedDate+'\r\n';
+  csv+='\r\n';
+  csv+='項目,金額,ステータス\r\n';
+  csv+='基本業務（20h×¥5,000/h）,'+cm.basePrice+',確定\r\n';
+  csv+='繰越（3月分超過業務）,'+cm.carryoverPrice+',確定\r\n';
+  cm.tasks.forEach(t=>{
+    csv+='"'+t.title.replace(/"/g,'""')+'",'+t.price+',承認済・確定\r\n';
+  });
+  csv+='\r\n';
+  csv+='承認済みスポット合計,'+cm.approvedTotal+'\r\n';
+  csv+=cm.label+'分 確定請求額合計,'+total+'\r\n';
+  return csv;
+}
+
+function downloadCSV(idx){
+  const closed=loadClosed();
+  if(idx<0||idx>=closed.length)return;
+  const cm=closed[idx];
+  const csv=generateCSV(cm);
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='agariegas_'+cm.label+'_確定請求.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadJSON(idx){
+  const closed=loadClosed();
+  if(idx<0||idx>=closed.length)return;
+  const cm=closed[idx];
+  const json=JSON.stringify(cm,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='agariegas_'+cm.label+'_請求データ.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadAllHistory(){
+  const closed=loadClosed();
+  const history={
+    company:'東江ガス',
+    contractor:'楽しくなる合同会社',
+    exportedAt:new Date().toISOString(),
+    months:closed
+  };
+  const json=JSON.stringify(history,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='agariegas_history.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 render();
