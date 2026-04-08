@@ -253,12 +253,12 @@ function renderApp(role){
 
   const aprTasks=tasks.filter(t=>(t.month||'apr')==='apr');
   const mayTasks=tasks.filter(t=>(t.month||'apr')==='may');
-  const aprSpot=aprTasks.reduce((s,t)=>s+t.price,0);
-  const maySpot=mayTasks.reduce((s,t)=>s+t.price,0);
-  const aprTotal=BASE_WORK.price+CARRYOVER.price+aprSpot;
-  const mayTotal=maySpot;
   const aprApproved=aprTasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
   const mayApproved=mayTasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
+  const aprPending=aprTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
+  const mayPending=mayTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
+  const aprBilling=BASE_WORK.price+CARRYOVER.price+aprApproved;
+  const mayBilling=mayApproved;
 
   let html=`
     <header>
@@ -275,13 +275,15 @@ function renderApp(role){
       <div class="billing-months">
         <div class="billing-month apr">
           <div class="billing-label">2026年4月 請求予定額</div>
-          <div class="billing-total">${formatPrice(aprTotal)}</div>
-          <div class="billing-breakdown">基本${formatPrice(BASE_WORK.price)}+繰越${formatPrice(CARRYOVER.price)}+スポット${formatPrice(aprSpot)}</div>
+          <div class="billing-total">${formatPrice(aprBilling)}</div>
+          <div class="billing-breakdown">基本${formatPrice(BASE_WORK.price)}+繰越${formatPrice(CARRYOVER.price)}+承認済${formatPrice(aprApproved)}</div>
+          ${aprPending>0?`<div class="billing-breakdown" style="color:#999;margin-top:2px">確認待ち ${formatPrice(aprPending)}</div>`:''}
         </div>
         <div class="billing-month may">
           <div class="billing-label">2026年5月〜 請求予定額</div>
-          <div class="billing-total">${formatPrice(mayTotal)}</div>
-          <div class="billing-breakdown">スポット案件 ${formatPrice(maySpot)}</div>
+          <div class="billing-total">${formatPrice(mayBilling)}</div>
+          <div class="billing-breakdown">承認済スポット ${formatPrice(mayApproved)}</div>
+          ${mayPending>0?`<div class="billing-breakdown" style="color:#999;margin-top:2px">確認待ち ${formatPrice(mayPending)}</div>`:''}
         </div>
       </div>
     </div>`;
@@ -425,23 +427,25 @@ function renderApp(role){
 
   // ── 4月中に実施予定 スポット案件 ──
   html+=`
-    <div class="section-header" style="margin-top:8px">4月中に実施予定（スポット）<span class="section-tag section-tag-gold">${formatPrice(aprSpot)}</span></div>`;
+    <div class="section-header" style="margin-top:8px">4月中に実施予定（スポット）<span class="section-tag section-tag-gold">承認済 ${formatPrice(aprApproved)}</span></div>`;
   aprTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
   html+=`
     <div class="month-subtotal">
       <div class="subtotal-label">4月 請求予定 小計</div>
-      <div class="subtotal-value">${formatPrice(aprTotal)}</div>
-    </div>`;
+      <div class="subtotal-value">${formatPrice(aprBilling)}</div>
+    </div>
+    ${aprPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(aprPending)} は含まず）</div>`:''}`;
 
   // ── 5月以降に実施予定 スポット案件 ──
   html+=`
-    <div class="section-header">5月以降に実施予定（スポット）<span class="section-tag section-tag-gold">${formatPrice(maySpot)}</span></div>`;
+    <div class="section-header">5月以降に実施予定（スポット）<span class="section-tag section-tag-gold">承認済 ${formatPrice(mayApproved)}</span></div>`;
   mayTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
   html+=`
     <div class="month-subtotal">
       <div class="subtotal-label">5月〜 請求予定 小計</div>
-      <div class="subtotal-value">${formatPrice(mayTotal)}</div>
-    </div>`;
+      <div class="subtotal-value">${formatPrice(mayBilling)}</div>
+    </div>
+    ${mayPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(mayPending)} は含まず）</div>`:''}`;
 
   html+=`</div>`;
 
@@ -449,18 +453,18 @@ function renderApp(role){
   html+=`
     <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
       <div>
-        <span style="font-size:10px;opacity:.7">4月</span>
-        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(BASE_WORK.price+CARRYOVER.price+aprApproved)}</span>
+        <span style="font-size:10px;opacity:.7">4月請求</span>
+        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(aprBilling)}</span>
       </div>
       <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
       <div>
-        <span style="font-size:10px;opacity:.7">5月〜</span>
-        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(mayApproved)}</span>
+        <span style="font-size:10px;opacity:.7">5月〜請求</span>
+        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(mayBilling)}</span>
       </div>
       <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
       <div style="text-align:right">
-        <span style="font-size:10px;opacity:.5">承認済合計</span><br>
-        <span style="font-size:18px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price+CARRYOVER.price+aprApproved+mayApproved)}</span>
+        <span style="font-size:10px;opacity:.5">請求予定合計</span><br>
+        <span style="font-size:18px;font-weight:900;color:var(--gold)">${formatPrice(aprBilling+mayBilling)}</span>
       </div>
     </div>`;
 
