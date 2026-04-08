@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東江ガス タスク発注管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#002a78;--navy-light:#003a9e;--navy-dark:#001a52;--gold:#ffd740;--gold-light:#ffe680;--gold-dark:#c8a600;--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--text-sub:#5a6070;--green:#16a34a;--green-bg:#dcfce7;--red:#dc2626;--red-bg:#fee2e2;--orange:#ea580c;--orange-bg:#fff7ed;--radius:12px;--shadow:0 2px 12px rgba(0,42,120,.08)}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:100px}
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:#fff;padding:20px 16px 16px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,42,120,.3)}
+header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+header h1 span.gold{color:var(--gold);font-weight:900}
+header .subtitle{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
+header .user-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.summary-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid #e5e7eb}
+.summary-item{text-align:center}
+.summary-item .label{font-size:10px;color:var(--text-sub);font-weight:500}
+.summary-item .value{font-size:18px;font-weight:900;color:var(--navy)}
+.summary-item .value.gold-text{color:var(--gold-dark)}
+.summary-item .value.green-text{color:var(--green)}
+.container{max-width:640px;margin:0 auto;padding:12px}
+.task-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border-left:4px solid var(--navy)}
+.task-card.approved{border-left-color:var(--green)}
+.task-card.rejected{border-left-color:var(--red);opacity:.7}
+.task-card.pending{border-left-color:var(--orange)}
+.task-header{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.task-num{font-size:11px;font-weight:700;color:#fff;background:var(--navy);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.task-card.approved .task-num{background:var(--green)}
+.task-card.rejected .task-num{background:var(--red)}
+.task-card.pending .task-num{background:var(--orange)}
+.task-title{font-size:14px;font-weight:700;flex:1;line-height:1.5}
+.task-price{font-size:16px;font-weight:900;color:var(--navy);white-space:nowrap}
+.task-meta{padding:0 16px 10px;display:flex;gap:12px;font-size:12px;color:var(--text-sub)}
+.task-meta .deadline{display:flex;align-items:center;gap:4px}
+.task-meta .deadline.overdue{color:var(--red);font-weight:700}
+.task-actions{padding:8px 16px 14px;display:flex;gap:6px;flex-wrap:wrap}
+.radio-group{display:flex;gap:6px;width:100%}
+.radio-btn{flex:1;position:relative}
+.radio-btn input{position:absolute;opacity:0;width:0;height:0}
+.radio-btn label{display:block;text-align:center;padding:10px 8px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid #e5e7eb;transition:all .2s;user-select:none}
+.radio-btn input:checked+label.approve-label{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.radio-btn input:checked+label.pending-label{background:var(--orange-bg);border-color:var(--orange);color:var(--orange)}
+.radio-btn input:checked+label.reject-label{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.radio-btn label:active{transform:scale(.96)}
+.admin-controls{padding:8px 16px 14px;display:flex;gap:8px;border-top:1px solid #f0f0f0}
+.btn{padding:8px 16px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn:active{transform:scale(.96)}
+.btn-edit{background:#e0e7ff;color:var(--navy)}
+.btn-delete{background:var(--red-bg);color:var(--red)}
+.btn-primary{background:var(--navy);color:#fff;width:100%}
+.btn-primary:hover{background:var(--navy-light)}
+.btn-gold{background:var(--gold);color:var(--navy);width:100%;font-size:14px;padding:14px}
+.status-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block}
+.status-badge.approved{background:var(--green-bg);color:var(--green)}
+.status-badge.pending{background:var(--orange-bg);color:var(--orange)}
+.status-badge.rejected{background:var(--red-bg);color:var(--red)}
+.status-badge.none{background:#f0f0f0;color:#999}
+.fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--navy);border:none;font-size:28px;font-weight:900;box-shadow:0 4px 20px rgba(0,0,0,.25);cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.fab:active{transform:scale(.9)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:85vh;overflow-y:auto;padding:24px 20px 40px;transform:translateY(100%);transition:transform .3s}
+.modal-overlay.active .modal{transform:translateY(0)}
+.modal h2{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;transition:border-color .2s}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--navy)}
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions .btn{flex:1;padding:14px}
+.btn-cancel{background:#f0f0f0;color:var(--text-sub)}
+/* Login */
+.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 50%,var(--navy-light) 100%);padding:24px}
+.login-box{background:#fff;border-radius:var(--radius);padding:32px 24px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.login-box h2{text-align:center;color:var(--navy);font-size:20px;margin-bottom:4px}
+.login-box .login-sub{text-align:center;color:var(--text-sub);font-size:12px;margin-bottom:24px}
+.login-box .form-group{margin-bottom:16px}
+.login-box .btn-primary{margin-top:8px}
+.login-logo{color:var(--gold);font-size:32px;font-weight:900;text-align:center;margin-bottom:24px;letter-spacing:2px}
+.login-logo span{color:#fff;font-weight:400;font-size:14px;display:block;letter-spacing:0;margin-top:4px}
+.error-msg{color:var(--red);font-size:12px;text-align:center;margin-top:8px;min-height:18px}
+.logout-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+header{position:sticky;top:0}
+header .header-inner{position:relative}
+.note-text{font-size:11px;color:var(--text-sub);text-align:center;padding:8px 16px;background:#fff9e6;border-bottom:1px solid #f0e6c0}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-sub)}
+.empty-state .icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const STORAGE_KEY = 'agariegas_tasks_v2';
+const SESSION_KEY = 'agariegas_session';
+const ADMIN_PASS = 'makoto2024';
+const VIEWER_PASS = 'agarie2024';
+
+const DEFAULT_TASKS = [
+  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:''},
+  {id:2,title:'ショート動画B 制作・配信',price:80000,deadline:'2026-04-14',status:'none',note:''},
+  {id:3,title:'キャラクター決定バナー 正式版制作',price:20000,deadline:'2026-04-14',status:'none',note:''},
+  {id:4,title:'キャラクター紹介ページ 制作・Web公開',price:30000,deadline:'2026-04-14',status:'none',note:''},
+  {id:5,title:'当選者登録Googleフォーム 制作・運用',price:20000,deadline:'2026-04-14',status:'none',note:''},
+  {id:6,title:'PRプレスリリース 原稿作成・配信',price:30000,deadline:'2026-04-15',status:'none',note:''},
+  {id:7,title:'Instagram公式アカウント 立ち上げ',price:30000,deadline:'2026-04-15',status:'none',note:''},
+  {id:8,title:'YouTube公式チャンネル 立ち上げ',price:50000,deadline:'2026-04-15',status:'none',note:''}
+];
+
+function loadTasks(){
+  const d=localStorage.getItem(STORAGE_KEY);
+  if(!d){saveTasks(DEFAULT_TASKS);return DEFAULT_TASKS;}
+  return JSON.parse(d);
+}
+function saveTasks(tasks){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks));}
+function getSession(){return sessionStorage.getItem(SESSION_KEY);}
+function setSession(role){sessionStorage.setItem(SESSION_KEY,role);}
+function clearSession(){sessionStorage.removeItem(SESSION_KEY);}
+
+function formatPrice(n){return '¥'+n.toLocaleString();}
+function formatDate(d){
+  if(!d)return '';
+  const parts=d.split('-');
+  return parseInt(parts[1])+'/'+parseInt(parts[2]);
+}
+function isOverdue(d){
+  if(!d)return false;
+  const today=new Date();today.setHours(0,0,0,0);
+  return new Date(d)<today;
+}
+
+function render(){
+  const role=getSession();
+  if(!role){renderLogin();return;}
+  renderApp(role);
+}
+
+function renderLogin(){
+  document.getElementById('app').innerHTML=`
+    <div class="login-screen">
+      <div class="login-logo">AGARIEGAS<span>タスク発注管理システム</span></div>
+      <div class="login-box">
+        <h2>ログイン</h2>
+        <p class="login-sub">パスワードを入力してください</p>
+        <div class="form-group">
+          <label>パスワード</label>
+          <input type="password" id="loginPass" placeholder="パスワード" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" onclick="doLogin()">ログイン</button>
+        <div class="error-msg" id="loginError"></div>
+      </div>
+    </div>`;
+  document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('loginPass').focus();
+}
+
+function doLogin(){
+  const pass=document.getElementById('loginPass').value;
+  if(pass===ADMIN_PASS){setSession('admin');render();}
+  else if(pass===VIEWER_PASS){setSession('viewer');render();}
+  else{document.getElementById('loginError').textContent='パスワードが正しくありません';}
+}
+
+function renderApp(role){
+  const tasks=loadTasks();
+  const total=tasks.reduce((s,t)=>s+t.price,0);
+  const approved=tasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
+  const approvedCount=tasks.filter(t=>t.status==='approved').length;
+  const isAdmin=role==='admin';
+  const roleName=isAdmin?'まこと（管理者）':'かくはる（東江ガス）';
+
+  let html=`
+    <header>
+      <div class="header-inner">
+        <h1><span class="gold">AGARIEGAS</span> タスク管理</h1>
+        <div class="subtitle">東江ガス × 琉球楽しくなるチャンネル</div>
+        <div class="user-badge">${roleName}</div>
+        <button class="logout-btn" onclick="clearSession();render();">ログアウト</button>
+      </div>
+    </header>
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="label">全タスク</div>
+        <div class="value">${tasks.length}<small style="font-size:11px;font-weight:400"> 件</small></div>
+      </div>
+      <div class="summary-item">
+        <div class="label">総額</div>
+        <div class="value gold-text">${formatPrice(total)}</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">承認済</div>
+        <div class="value green-text">${formatPrice(approved)}</div>
+      </div>
+    </div>`;
+
+  if(!isAdmin){
+    html+=`<div class="note-text">各タスクの承認・保留・却下を選択してください</div>`;
+  }
+
+  html+=`<div class="container">`;
+
+  if(tasks.length===0){
+    html+=`<div class="empty-state"><div class="icon">📋</div><p>タスクがありません</p></div>`;
+  }
+
+  tasks.forEach((t,i)=>{
+    const statusClass=t.status==='approved'?'approved':t.status==='rejected'?'rejected':t.status==='pending'?'pending':'';
+    const statusLabel=t.status==='approved'?'承認済':t.status==='rejected'?'却下':t.status==='pending'?'保留':'未確認';
+    const statusBadgeClass=t.status||'none';
+    const overdue=isOverdue(t.deadline)&&t.status!=='approved';
+
+    html+=`
+      <div class="task-card ${statusClass}">
+        <div class="task-header">
+          <div class="task-num">${i+1}</div>
+          <div class="task-title">${escHtml(t.title)}</div>
+          <div class="task-price">${formatPrice(t.price)}</div>
+        </div>
+        <div class="task-meta">
+          <div class="deadline ${overdue?'overdue':''}">
+            ${overdue?'⚠':'📅'} ${t.deadline?('締切 '+formatDate(t.deadline)):'期限なし'}
+          </div>
+          <span class="status-badge ${statusBadgeClass}">${statusLabel}</span>
+        </div>`;
+
+    if(!isAdmin){
+      html+=`
+        <div class="task-actions">
+          <div class="radio-group">
+            <div class="radio-btn">
+              <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
+              <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
+            </div>
+            <div class="radio-btn">
+              <input type="radio" name="status_${t.id}" id="pending_${t.id}" value="pending" ${t.status==='pending'?'checked':''} onchange="updateStatus(${t.id},'pending')">
+              <label for="pending_${t.id}" class="pending-label">⏸ 保留</label>
+            </div>
+            <div class="radio-btn">
+              <input type="radio" name="status_${t.id}" id="reject_${t.id}" value="rejected" ${t.status==='rejected'?'checked':''} onchange="updateStatus(${t.id},'rejected')">
+              <label for="reject_${t.id}" class="reject-label">✕ 却下</label>
+            </div>
+          </div>
+        </div>`;
+    } else {
+      html+=`
+        <div class="admin-controls">
+          <button class="btn btn-edit" onclick="openEditModal(${t.id})">✏️ 編集</button>
+          <button class="btn btn-delete" onclick="deleteTask(${t.id})">🗑 削除</button>
+        </div>`;
+    }
+
+    html+=`</div>`;
+  });
+
+  html+=`</div>`;
+
+  // 承認済み合計フッター
+  html+=`
+    <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
+      <div><span style="font-size:11px;opacity:.7">承認済み合計</span><br><span style="font-size:10px;opacity:.5">${approvedCount} / ${tasks.length} 件承認</span></div>
+      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(approved)}</div>
+    </div>`;
+
+  if(isAdmin){
+    html+=`<button class="fab" onclick="openAddModal()" title="タスク追加">+</button>`;
+  }
+
+  // モーダル
+  html+=`
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+      <div class="modal" id="modalContent">
+        <h2 id="modalTitle">タスク追加</h2>
+        <div class="form-group">
+          <label>タスク名</label>
+          <input type="text" id="mTitle" placeholder="例：ショート動画 制作・配信">
+        </div>
+        <div class="form-group">
+          <label>金額（円）</label>
+          <input type="number" id="mPrice" placeholder="例：80000" min="0" step="1000">
+        </div>
+        <div class="form-group">
+          <label>締切日</label>
+          <input type="date" id="mDeadline">
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-cancel" onclick="closeModal()">キャンセル</button>
+          <button class="btn btn-primary" id="mSubmit" onclick="submitTask()">追加</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('app').innerHTML=html;
+}
+
+function escHtml(s){
+  const d=document.createElement('div');d.textContent=s;return d.innerHTML;
+}
+
+let editingId=null;
+
+function openAddModal(){
+  editingId=null;
+  setTimeout(()=>{
+    document.getElementById('modalTitle').textContent='タスク追加';
+    document.getElementById('mTitle').value='';
+    document.getElementById('mPrice').value='';
+    document.getElementById('mDeadline').value='';
+    document.getElementById('mSubmit').textContent='追加';
+    document.getElementById('modalOverlay').classList.add('active');
+    document.getElementById('mTitle').focus();
+  },10);
+}
+
+function openEditModal(id){
+  const tasks=loadTasks();
+  const t=tasks.find(x=>x.id===id);
+  if(!t)return;
+  editingId=id;
+  setTimeout(()=>{
+    document.getElementById('modalTitle').textContent='タスク編集';
+    document.getElementById('mTitle').value=t.title;
+    document.getElementById('mPrice').value=t.price;
+    document.getElementById('mDeadline').value=t.deadline||'';
+    document.getElementById('mSubmit').textContent='保存';
+    document.getElementById('modalOverlay').classList.add('active');
+    document.getElementById('mTitle').focus();
+  },10);
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('active');
+  editingId=null;
+}
+
+function closeModalOutside(e){
+  if(e.target===document.getElementById('modalOverlay'))closeModal();
+}
+
+function submitTask(){
+  const title=document.getElementById('mTitle').value.trim();
+  const price=parseInt(document.getElementById('mPrice').value)||0;
+  const deadline=document.getElementById('mDeadline').value;
+  if(!title){alert('タスク名を入力してください');return;}
+  if(price<=0){alert('金額を入力してください');return;}
+
+  const tasks=loadTasks();
+  if(editingId!==null){
+    const t=tasks.find(x=>x.id===editingId);
+    if(t){t.title=title;t.price=price;t.deadline=deadline;}
+  }else{
+    const maxId=tasks.reduce((m,t)=>Math.max(m,t.id),0);
+    tasks.push({id:maxId+1,title,price,deadline,status:'none',note:''});
+  }
+  saveTasks(tasks);
+  closeModal();
+  render();
+}
+
+function deleteTask(id){
+  if(!confirm('このタスクを削除しますか？'))return;
+  const tasks=loadTasks().filter(t=>t.id!==id);
+  saveTasks(tasks);
+  render();
+}
+
+function updateStatus(id,status){
+  const tasks=loadTasks();
+  const t=tasks.find(x=>x.id===id);
+  if(t){t.status=status;saveTasks(tasks);render();}
+}
+
+render();
+</script>
+</body>
+</html>
