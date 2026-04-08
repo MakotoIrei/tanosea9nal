@@ -177,7 +177,7 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v11';
+const STORAGE_KEY = 'agariegas_tasks_v12';
 const SESSION_KEY = 'agariegas_session';
 const CLOSED_KEY = 'agariegas_closed_v1';
 const BASE_WORK_KEY = 'agariegas_basework_v1';
@@ -222,12 +222,11 @@ function getBaseStats(items){
   return {usedHours:usedH,usedPrice:usedP,remainHours:BASE_CONF.totalHours-usedH,remainPrice:BASE_CONF.price-usedP};
 }
 
-const INCL_KEY = 'agariegas_included_v1';
+const INCL_KEY = 'agariegas_included_v2';
 const DEFAULT_INCLUDED = [
   {id:101,title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14',status:'none',hours:2},
   {id:102,title:'キャラクター紹介ページ 制作・Web公開',deadline:'2026-04-14',status:'none',hours:2},
-  {id:103,title:'当選者登録Googleフォーム 制作・運用',deadline:'2026-04-14',status:'none',hours:1},
-  {id:104,title:'PRプレスリリース 原稿作成',deadline:'2026-04-15',status:'none',hours:1}
+  {id:103,title:'当選者登録Googleフォーム 制作',deadline:'2026-04-14',status:'none',hours:2}
 ];
 function loadIncluded(){
   const d=localStorage.getItem(INCL_KEY);
@@ -264,6 +263,7 @@ const DEFAULT_TASKS = [
   {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,deadline:'2026-04-15',status:'none',note:'',month:'apr'},
   {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用',month:'apr'},
   {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画（ショート動画Bを投稿予定）',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用',month:'apr'},
+  {id:12,title:'PRプレスリリース 原稿作成',price:5000,deadline:'2026-04-15',status:'none',note:'',month:'apr'},
   {id:10,title:'キャラクター活用マニュアル制作',price:80000,deadline:'2026-04-30',status:'none',note:'',desc:'ロゴ・表記ルール\nカラー・ボイス規定\nSNS運用ルール・使用禁止事項\nポージング・グッズ展開ルール\n市場相場：¥150,000〜¥300,000',month:'may'},
   {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,deadline:'2026-05-15',status:'none',note:'',desc:'LINE公式アカウント 開設・初期設定・リッチメニュー制作\nあがりえん＆ほかまる LINEスタンプ16種 制作・申請・販売設定\n初回メッセージ配信設定込み\n市場相場¥200,000〜¥350,000のところセット価格でご提供\n※単体でのご依頼の場合：LINE公式¥50,000＋スタンプ¥80,000＝¥130,000と同額',month:'may'},
   {id:11,title:'定期アンケート（夏）',price:30000,deadline:'2026-07-31',status:'none',note:'',desc:'夏季キャンペーン向け顧客アンケート実施',month:'may'}
