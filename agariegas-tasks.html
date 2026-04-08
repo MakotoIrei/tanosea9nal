@@ -15,11 +15,18 @@ header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px
 header h1 span.gold{color:var(--gold);font-weight:900}
 header .subtitle{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
 header .user-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
-.billing-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px;text-align:center}
-.billing-bar .billing-label{font-size:11px;color:var(--text-sub);font-weight:700}
-.billing-bar .billing-total{font-size:28px;font-weight:900;color:var(--navy);margin:4px 0}
-.billing-bar .billing-breakdown{font-size:11px;color:var(--text-sub);margin-bottom:4px}
-.billing-bar .billing-updated{font-size:10px;color:#999}
+.billing-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px}
+.billing-bar .billing-updated{font-size:10px;color:#999;text-align:center;margin-bottom:10px}
+.billing-months{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.billing-month{text-align:center;padding:10px;border-radius:10px}
+.billing-month.apr{background:linear-gradient(135deg,#eef2ff,#dbeafe)}
+.billing-month.may{background:linear-gradient(135deg,#fef9e7,#fff7e0)}
+.billing-month .billing-label{font-size:11px;color:var(--text-sub);font-weight:700}
+.billing-month .billing-total{font-size:22px;font-weight:900;color:var(--navy);margin:4px 0}
+.billing-month .billing-breakdown{font-size:10px;color:var(--text-sub)}
+.month-subtotal{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;border:2px dashed #d0d0d0}
+.month-subtotal .subtotal-label{font-size:13px;font-weight:700;color:var(--text-sub)}
+.month-subtotal .subtotal-value{font-size:18px;font-weight:900;color:var(--navy)}
 .summary-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;background:#fafafa;border-bottom:1px solid #e5e7eb}
 .summary-item{text-align:center}
 .summary-item .label{font-size:10px;color:var(--text-sub);font-weight:500}
@@ -136,7 +143,7 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v8';
+const STORAGE_KEY = 'agariegas_tasks_v9';
 const SESSION_KEY = 'agariegas_session';
 const ADMIN_PASS = 'makoto2026';
 const VIEWER_PASS = 'agarie2026';
@@ -166,12 +173,13 @@ const INCLUDED_IN_BASE = [
 ];
 
 const DEFAULT_TASKS = [
-  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:'',desc:'4/1制作、YouTube、Instagram、TikTok、Xに配信済み',approveOnly:true},
-  {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,deadline:'2026-04-14',status:'none',note:''},
-  {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用'},
-  {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画（ショート動画Bを投稿予定）',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用'},
-  {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,deadline:'2026-05-15',status:'none',note:'',desc:'LINE公式アカウント 開設・初期設定・リッチメニュー制作\nあがりえん＆ほかまる LINEスタンプ16種 制作・申請・販売設定\n初回メッセージ配信設定込み\n市場相場¥200,000〜¥350,000のところセット価格でご提供\n※単体でのご依頼の場合：LINE公式¥50,000＋スタンプ¥80,000＝¥130,000と同額'},
-  {id:10,title:'キャラクター活用マニュアル制作',price:80000,deadline:'2026-04-30',status:'none',note:'',desc:'ロゴ・表記ルール\nカラー・ボイス規定\nSNS運用ルール・使用禁止事項\nポージング・グッズ展開ルール\n市場相場：¥150,000〜¥300,000'}
+  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:'',desc:'4/1制作、YouTube、Instagram、TikTok、Xに配信済み',approveOnly:true,month:'apr'},
+  {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,deadline:'2026-04-15',status:'none',note:'',month:'apr'},
+  {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用',month:'apr'},
+  {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画（ショート動画Bを投稿予定）',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用',month:'apr'},
+  {id:10,title:'キャラクター活用マニュアル制作',price:80000,deadline:'2026-04-30',status:'none',note:'',desc:'ロゴ・表記ルール\nカラー・ボイス規定\nSNS運用ルール・使用禁止事項\nポージング・グッズ展開ルール\n市場相場：¥150,000〜¥300,000',month:'may'},
+  {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,deadline:'2026-05-15',status:'none',note:'',desc:'LINE公式アカウント 開設・初期設定・リッチメニュー制作\nあがりえん＆ほかまる LINEスタンプ16種 制作・申請・販売設定\n初回メッセージ配信設定込み\n市場相場¥200,000〜¥350,000のところセット価格でご提供\n※単体でのご依頼の場合：LINE公式¥50,000＋スタンプ¥80,000＝¥130,000と同額',month:'may'},
+  {id:11,title:'定期アンケート（夏）',price:30000,deadline:'2026-07-31',status:'none',note:'',desc:'夏季キャンペーン向け顧客アンケート実施',month:'may'}
 ];
 
 function loadTasks(){
@@ -240,12 +248,17 @@ function doLogin(){
 function renderApp(role){
   const tasks=loadTasks();
   const CARRYOVER={price:100000,hours:20,hourlyRate:5000};
-  const spotTotal=tasks.reduce((s,t)=>s+t.price,0);
-  const approved=tasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
-  const approvedCount=tasks.filter(t=>t.status==='approved').length;
-  const grandTotal=BASE_WORK.price+CARRYOVER.price+spotTotal;
   const isAdmin=role==='admin';
   const roleName=isAdmin?'伊禮（管理者）':'東江常務（東江ガス）';
+
+  const aprTasks=tasks.filter(t=>(t.month||'apr')==='apr');
+  const mayTasks=tasks.filter(t=>(t.month||'apr')==='may');
+  const aprSpot=aprTasks.reduce((s,t)=>s+t.price,0);
+  const maySpot=mayTasks.reduce((s,t)=>s+t.price,0);
+  const aprTotal=BASE_WORK.price+CARRYOVER.price+aprSpot;
+  const mayTotal=maySpot;
+  const aprApproved=aprTasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
+  const mayApproved=mayTasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
 
   let html=`
     <header>
@@ -258,24 +271,18 @@ function renderApp(role){
     </header>
 
     <div class="billing-bar">
-      <div class="billing-label">2026年4月 請求予定額</div>
-      <div class="billing-total">${formatPrice(grandTotal)}</div>
-      <div class="billing-breakdown">基本業務 ${formatPrice(BASE_WORK.price)} ＋ 繰越 ${formatPrice(CARRYOVER.price)} ＋ スポット ${formatPrice(spotTotal)}</div>
       <div class="billing-updated">${getNowString()}</div>
-    </div>
-
-    <div class="summary-bar">
-      <div class="summary-item">
-        <div class="label">基本+繰越</div>
-        <div class="value" style="color:var(--blue)">${formatPrice(BASE_WORK.price+CARRYOVER.price)}</div>
-      </div>
-      <div class="summary-item">
-        <div class="label">スポット合計</div>
-        <div class="value gold-text">${formatPrice(spotTotal)}</div>
-      </div>
-      <div class="summary-item">
-        <div class="label">スポット承認済</div>
-        <div class="value green-text">${formatPrice(approved)}</div>
+      <div class="billing-months">
+        <div class="billing-month apr">
+          <div class="billing-label">2026年4月 請求予定額</div>
+          <div class="billing-total">${formatPrice(aprTotal)}</div>
+          <div class="billing-breakdown">基本${formatPrice(BASE_WORK.price)}+繰越${formatPrice(CARRYOVER.price)}+スポット${formatPrice(aprSpot)}</div>
+        </div>
+        <div class="billing-month may">
+          <div class="billing-label">2026年5月〜 請求予定額</div>
+          <div class="billing-total">${formatPrice(mayTotal)}</div>
+          <div class="billing-breakdown">スポット案件 ${formatPrice(maySpot)}</div>
+        </div>
       </div>
     </div>`;
 
@@ -361,24 +368,16 @@ function renderApp(role){
       </div>`;
   });
 
-  // ── スポット案件セクション ──
-  html+=`
-    <div class="section-header" style="margin-top:8px">スポット案件<span class="section-tag section-tag-gold">${formatPrice(spotTotal)}</span></div>`;
-
-  if(tasks.length===0){
-    html+=`<div class="empty-state"><div class="icon">📋</div><p>スポット案件がありません</p></div>`;
-  }
-
-  tasks.forEach((t,i)=>{
+  // ── render task card helper ──
+  function renderTaskCard(t,num){
     const statusClass=t.status==='approved'?'approved':t.status==='rejected'?'rejected':t.status==='pending'?'pending':'';
     const statusLabel=t.status==='approved'?'承認済':t.status==='rejected'?'却下':t.status==='pending'?'保留':'未確認';
     const statusBadgeClass=t.status||'none';
     const overdue=isOverdue(t.deadline)&&t.status!=='approved';
-
-    html+=`
+    let c=`
       <div class="task-card ${statusClass}">
         <div class="task-header">
-          <div class="task-num">${i+1}</div>
+          <div class="task-num">${num}</div>
           <div class="task-title">${escHtml(t.title)}</div>
           <div class="task-price">${formatPrice(t.price)}</div>
         </div>
@@ -388,63 +387,81 @@ function renderApp(role){
           </div>
           <span class="status-badge ${statusBadgeClass}">${statusLabel}</span>
         </div>`;
-
     if(t.desc){
       const descClass=t.approveOnly?'task-desc':'task-desc normal';
-      html+=`<div class="${descClass}">${escHtml(t.desc).replace(/\n/g,'<br>')}</div>`;
+      c+=`<div class="${descClass}">${escHtml(t.desc).replace(/\n/g,'<br>')}</div>`;
     }
-
     if(!isAdmin){
       if(t.approveOnly){
-        html+=`
-        <div class="task-actions">
-          <div class="radio-group">
-            <div class="radio-btn">
-              <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
-              <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
-            </div>
-          </div>
-        </div>`;
+        c+=`<div class="task-actions"><div class="radio-group">
+          <div class="radio-btn">
+            <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
+            <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
+          </div></div></div>`;
       } else {
-        html+=`
-        <div class="task-actions">
-          <div class="radio-group">
-            <div class="radio-btn">
-              <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
-              <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
-            </div>
-            <div class="radio-btn">
-              <input type="radio" name="status_${t.id}" id="pending_${t.id}" value="pending" ${t.status==='pending'?'checked':''} onchange="updateStatus(${t.id},'pending')">
-              <label for="pending_${t.id}" class="pending-label">⏸ 保留</label>
-            </div>
-            <div class="radio-btn">
-              <input type="radio" name="status_${t.id}" id="reject_${t.id}" value="rejected" ${t.status==='rejected'?'checked':''} onchange="updateStatus(${t.id},'rejected')">
-              <label for="reject_${t.id}" class="reject-label">✕ 却下</label>
-            </div>
+        c+=`<div class="task-actions"><div class="radio-group">
+          <div class="radio-btn">
+            <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
+            <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
           </div>
-        </div>`;
+          <div class="radio-btn">
+            <input type="radio" name="status_${t.id}" id="pending_${t.id}" value="pending" ${t.status==='pending'?'checked':''} onchange="updateStatus(${t.id},'pending')">
+            <label for="pending_${t.id}" class="pending-label">⏸ 保留</label>
+          </div>
+          <div class="radio-btn">
+            <input type="radio" name="status_${t.id}" id="reject_${t.id}" value="rejected" ${t.status==='rejected'?'checked':''} onchange="updateStatus(${t.id},'rejected')">
+            <label for="reject_${t.id}" class="reject-label">✕ 却下</label>
+          </div></div></div>`;
       }
     } else {
-      html+=`
-        <div class="admin-controls">
-          <button class="btn btn-edit" onclick="openEditModal(${t.id})">✏️ 編集</button>
-          <button class="btn btn-delete" onclick="deleteTask(${t.id})">🗑 削除</button>
-        </div>`;
+      c+=`<div class="admin-controls">
+        <button class="btn btn-edit" onclick="openEditModal(${t.id})">✏️ 編集</button>
+        <button class="btn btn-delete" onclick="deleteTask(${t.id})">🗑 削除</button>
+      </div>`;
     }
+    c+=`</div>`;
+    return c;
+  }
 
-    html+=`</div>`;
-  });
+  // ── 4月中に実施予定 スポット案件 ──
+  html+=`
+    <div class="section-header" style="margin-top:8px">4月中に実施予定（スポット）<span class="section-tag section-tag-gold">${formatPrice(aprSpot)}</span></div>`;
+  aprTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
+  html+=`
+    <div class="month-subtotal">
+      <div class="subtotal-label">4月 請求予定 小計</div>
+      <div class="subtotal-value">${formatPrice(aprTotal)}</div>
+    </div>`;
+
+  // ── 5月以降に実施予定 スポット案件 ──
+  html+=`
+    <div class="section-header">5月以降に実施予定（スポット）<span class="section-tag section-tag-gold">${formatPrice(maySpot)}</span></div>`;
+  mayTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
+  html+=`
+    <div class="month-subtotal">
+      <div class="subtotal-label">5月〜 請求予定 小計</div>
+      <div class="subtotal-value">${formatPrice(mayTotal)}</div>
+    </div>`;
 
   html+=`</div>`;
 
   // フッター
   html+=`
-    <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
+    <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
       <div>
-        <span style="font-size:11px;opacity:.7">4月 請求予定額</span><br>
-        <span style="font-size:10px;opacity:.5">基本 ${formatPrice(BASE_WORK.price)} + 繰越 ${formatPrice(CARRYOVER.price)} + スポット承認 ${formatPrice(approved)}</span>
+        <span style="font-size:10px;opacity:.7">4月</span>
+        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(BASE_WORK.price+CARRYOVER.price+aprApproved)}</span>
       </div>
-      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price + CARRYOVER.price + approved)}</div>
+      <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
+      <div>
+        <span style="font-size:10px;opacity:.7">5月〜</span>
+        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(mayApproved)}</span>
+      </div>
+      <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
+      <div style="text-align:right">
+        <span style="font-size:10px;opacity:.5">承認済合計</span><br>
+        <span style="font-size:18px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price+CARRYOVER.price+aprApproved+mayApproved)}</span>
+      </div>
     </div>`;
 
   if(isAdmin){
