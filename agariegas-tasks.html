@@ -8,31 +8,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--navy:#002a78;--navy-light:#003a9e;--navy-dark:#001a52;--gold:#ffd740;--gold-light:#ffe680;--gold-dark:#c8a600;--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--text-sub:#5a6070;--green:#16a34a;--green-bg:#dcfce7;--red:#dc2626;--red-bg:#fee2e2;--orange:#ea580c;--orange-bg:#fff7ed;--radius:12px;--shadow:0 2px 12px rgba(0,42,120,.08)}
+:root{--navy:#002a78;--navy-light:#003a9e;--navy-dark:#001a52;--gold:#ffd740;--gold-light:#ffe680;--gold-dark:#c8a600;--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--text-sub:#5a6070;--green:#16a34a;--green-bg:#dcfce7;--red:#dc2626;--red-bg:#fee2e2;--orange:#ea580c;--orange-bg:#fff7ed;--blue:#2563eb;--blue-bg:#dbeafe;--radius:12px;--shadow:0 2px 12px rgba(0,42,120,.08)}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:100px}
 header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:#fff;padding:20px 16px 16px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,42,120,.3)}
 header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
 header h1 span.gold{color:var(--gold);font-weight:900}
 header .subtitle{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
 header .user-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
-.summary-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid #e5e7eb}
+.billing-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px;text-align:center}
+.billing-bar .billing-label{font-size:11px;color:var(--text-sub);font-weight:700}
+.billing-bar .billing-total{font-size:28px;font-weight:900;color:var(--navy);margin:4px 0}
+.billing-bar .billing-breakdown{font-size:11px;color:var(--text-sub);margin-bottom:4px}
+.billing-bar .billing-updated{font-size:10px;color:#999}
+.summary-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;background:#fafafa;border-bottom:1px solid #e5e7eb}
 .summary-item{text-align:center}
 .summary-item .label{font-size:10px;color:var(--text-sub);font-weight:500}
-.summary-item .value{font-size:18px;font-weight:900;color:var(--navy)}
+.summary-item .value{font-size:16px;font-weight:900;color:var(--navy)}
 .summary-item .value.gold-text{color:var(--gold-dark)}
 .summary-item .value.green-text{color:var(--green)}
 .container{max-width:640px;margin:0 auto;padding:12px}
+.section-header{font-size:14px;font-weight:900;color:var(--navy);padding:16px 0 8px;border-bottom:2px solid var(--navy);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.section-header .section-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.section-tag-blue{background:var(--blue-bg);color:var(--blue)}
+.section-tag-gold{background:#fff7e0;color:var(--gold-dark)}
 .task-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border-left:4px solid var(--navy)}
 .task-card.approved{border-left-color:var(--green)}
 .task-card.rejected{border-left-color:var(--red);opacity:.7}
 .task-card.pending{border-left-color:var(--orange)}
+.task-card.included{border-left-color:var(--blue)}
 .task-header{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .task-num{font-size:11px;font-weight:700;color:#fff;background:var(--navy);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .task-card.approved .task-num{background:var(--green)}
 .task-card.rejected .task-num{background:var(--red)}
 .task-card.pending .task-num{background:var(--orange)}
+.task-card.included .task-num{background:var(--blue)}
 .task-title{font-size:14px;font-weight:700;flex:1;line-height:1.5}
 .task-price{font-size:16px;font-weight:900;color:var(--navy);white-space:nowrap}
+.task-price-included{font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap}
 .task-meta{padding:0 16px 10px;display:flex;gap:12px;font-size:12px;color:var(--text-sub)}
 .task-meta .deadline{display:flex;align-items:center;gap:4px}
 .task-meta .deadline.overdue{color:var(--red);font-weight:700}
@@ -52,12 +64,12 @@ header .user-badge{display:inline-block;background:var(--gold);color:var(--navy)
 .btn-delete{background:var(--red-bg);color:var(--red)}
 .btn-primary{background:var(--navy);color:#fff;width:100%}
 .btn-primary:hover{background:var(--navy-light)}
-.btn-gold{background:var(--gold);color:var(--navy);width:100%;font-size:14px;padding:14px}
 .status-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block}
 .status-badge.approved{background:var(--green-bg);color:var(--green)}
 .status-badge.pending{background:var(--orange-bg);color:var(--orange)}
 .status-badge.rejected{background:var(--red-bg);color:var(--red)}
 .status-badge.none{background:#f0f0f0;color:#999}
+.status-badge.included{background:var(--blue-bg);color:var(--blue)}
 .fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--navy);border:none;font-size:28px;font-weight:900;box-shadow:0 4px 20px rgba(0,0,0,.25);cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .fab:active{transform:scale(.9)}
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -72,7 +84,6 @@ header .user-badge{display:inline-block;background:var(--gold);color:var(--navy)
 .modal-actions{display:flex;gap:8px;margin-top:20px}
 .modal-actions .btn{flex:1;padding:14px}
 .btn-cancel{background:#f0f0f0;color:var(--text-sub)}
-/* Login */
 .login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 50%,var(--navy-light) 100%);padding:24px}
 .login-box{background:#fff;border-radius:var(--radius);padding:32px 24px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,.3)}
 .login-box h2{text-align:center;color:var(--navy);font-size:20px;margin-bottom:4px}
@@ -89,6 +100,26 @@ header .header-inner{position:relative}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text-sub)}
 .empty-state .icon{font-size:48px;margin-bottom:12px}
 .empty-state p{font-size:14px}
+/* 基本業務セクション */
+.base-section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;border:2px solid var(--blue)}
+.base-section-header{background:linear-gradient(135deg,var(--blue) 0%,#3b82f6 100%);color:#fff;padding:14px 16px}
+.base-section-header h3{font-size:15px;font-weight:900}
+.base-section-header .base-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px;opacity:.9}
+.base-section-body{padding:12px 16px}
+.base-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px;gap:6px}
+.base-item:last-child{border-bottom:none}
+.base-item .item-title{flex:1;line-height:1.4}
+.base-item .item-date{color:var(--text-sub);font-size:11px;white-space:nowrap}
+.base-item .item-hours{font-weight:700;color:var(--blue);white-space:nowrap;min-width:30px;text-align:right}
+.base-item .item-price{font-weight:700;color:var(--navy);white-space:nowrap;min-width:60px;text-align:right;font-size:12px}
+.base-progress{padding:12px 16px;border-top:2px solid #f0f0f0}
+.progress-bar-bg{background:#e5e7eb;border-radius:10px;height:12px;overflow:hidden;margin:8px 0}
+.progress-bar-fill{background:linear-gradient(90deg,var(--blue),#3b82f6);height:100%;border-radius:10px;transition:width .5s}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;color:var(--text-sub)}
+.progress-info .remaining{color:var(--blue);font-weight:700}
+.progress-summary{display:flex;justify-content:space-between;font-size:12px;margin-top:6px;padding-top:6px;border-top:1px dashed #e0e0e0}
+.progress-summary .used{color:var(--text-sub)}
+.progress-summary .remain{color:var(--blue);font-weight:700}
 </style>
 </head>
 <body>
@@ -96,18 +127,38 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v2';
+const STORAGE_KEY = 'agariegas_tasks_v4';
 const SESSION_KEY = 'agariegas_session';
 const ADMIN_PASS = 'makoto2026';
 const VIEWER_PASS = 'agarie2026';
 
+const BASE_WORK = {
+  price: 100000,
+  totalHours: 20,
+  hourlyRate: 5000,
+  usedHours: 14,
+  usedPrice: 70000,
+  remainHours: 6,
+  remainPrice: 30000,
+  items: [
+    {title:'ネーミング確定調整（アンケート集計・役員会向け分析レポート）',date:'2026-04-01',hours:4,price:20000},
+    {title:'「決定しました」バナー・HPお知らせページ・作業指示書',date:'2026-04-01',hours:5,price:25000},
+    {title:'キャラクター決定バナー（仮）制作',date:'2026-04-02',hours:2,price:10000},
+    {title:'キャラクター紹介ページ（仮）制作',date:'2026-04-02',hours:2,price:10000},
+    {title:'打ち合わせ（タスクリスト・スケジュール確認）',date:'2026-04-07',hours:1,price:5000}
+  ]
+};
+
+const INCLUDED_IN_BASE = [
+  {title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14'},
+  {title:'キャラクター紹介ページ 制作・Web公開',deadline:'2026-04-14'},
+  {title:'当選者登録Googleフォーム 制作・運用',deadline:'2026-04-14'},
+  {title:'PRプレスリリース 原稿作成・配信',deadline:'2026-04-15'}
+];
+
 const DEFAULT_TASKS = [
   {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:''},
   {id:2,title:'ショート動画B 制作・配信',price:80000,deadline:'2026-04-14',status:'none',note:''},
-  {id:3,title:'キャラクター決定バナー 正式版制作',price:20000,deadline:'2026-04-14',status:'none',note:''},
-  {id:4,title:'キャラクター紹介ページ 制作・Web公開',price:30000,deadline:'2026-04-14',status:'none',note:''},
-  {id:5,title:'当選者登録Googleフォーム 制作・運用',price:20000,deadline:'2026-04-14',status:'none',note:''},
-  {id:6,title:'PRプレスリリース 原稿作成・配信',price:30000,deadline:'2026-04-15',status:'none',note:''},
   {id:7,title:'Instagram公式アカウント 立ち上げ',price:30000,deadline:'2026-04-15',status:'none',note:''},
   {id:8,title:'YouTube公式チャンネル 立ち上げ',price:50000,deadline:'2026-04-15',status:'none',note:''}
 ];
@@ -122,7 +173,7 @@ function getSession(){return sessionStorage.getItem(SESSION_KEY);}
 function setSession(role){sessionStorage.setItem(SESSION_KEY,role);}
 function clearSession(){sessionStorage.removeItem(SESSION_KEY);}
 
-function formatPrice(n){return '¥'+n.toLocaleString();}
+function formatPrice(n){return '\u00a5'+n.toLocaleString();}
 function formatDate(d){
   if(!d)return '';
   const parts=d.split('-');
@@ -132,6 +183,15 @@ function isOverdue(d){
   if(!d)return false;
   const today=new Date();today.setHours(0,0,0,0);
   return new Date(d)<today;
+}
+function getNowString(){
+  const now=new Date();
+  const y=now.getFullYear();
+  const mo=String(now.getMonth()+1).padStart(2,'0');
+  const da=String(now.getDate()).padStart(2,'0');
+  const h=String(now.getHours()).padStart(2,'0');
+  const mi=String(now.getMinutes()).padStart(2,'0');
+  return y+'年'+parseInt(mo)+'月'+parseInt(da)+'日 '+h+':'+mi+'現在';
 }
 
 function render(){
@@ -168,44 +228,120 @@ function doLogin(){
 
 function renderApp(role){
   const tasks=loadTasks();
-  const total=tasks.reduce((s,t)=>s+t.price,0);
+  const spotTotal=tasks.reduce((s,t)=>s+t.price,0);
   const approved=tasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
   const approvedCount=tasks.filter(t=>t.status==='approved').length;
+  const grandTotal=BASE_WORK.price+spotTotal;
   const isAdmin=role==='admin';
-  const roleName=isAdmin?'まこと（管理者）':'かくはる（東江ガス）';
+  const roleName=isAdmin?'伊禮（管理者）':'かくはる（東江ガス）';
 
   let html=`
     <header>
       <div class="header-inner">
         <h1><span class="gold">AGARIEGAS</span> タスク管理</h1>
-        <div class="subtitle">東江ガス × 琉球楽しくなるチャンネル</div>
+        <div class="subtitle">東江ガス × 楽しくなる合同会社</div>
         <div class="user-badge">${roleName}</div>
         <button class="logout-btn" onclick="clearSession();render();">ログアウト</button>
       </div>
     </header>
+
+    <div class="billing-bar">
+      <div class="billing-label">2026年4月 請求予定額</div>
+      <div class="billing-total">${formatPrice(grandTotal)}</div>
+      <div class="billing-breakdown">基本業務 ${formatPrice(BASE_WORK.price)} ＋ スポット案件 ${formatPrice(spotTotal)}</div>
+      <div class="billing-updated">${getNowString()}</div>
+    </div>
+
     <div class="summary-bar">
       <div class="summary-item">
-        <div class="label">全タスク</div>
-        <div class="value">${tasks.length}<small style="font-size:11px;font-weight:400"> 件</small></div>
+        <div class="label">基本業務</div>
+        <div class="value" style="color:var(--blue)">${formatPrice(BASE_WORK.price)}</div>
       </div>
       <div class="summary-item">
-        <div class="label">総額</div>
-        <div class="value gold-text">${formatPrice(total)}</div>
+        <div class="label">スポット合計</div>
+        <div class="value gold-text">${formatPrice(spotTotal)}</div>
       </div>
       <div class="summary-item">
-        <div class="label">承認済</div>
+        <div class="label">スポット承認済</div>
         <div class="value green-text">${formatPrice(approved)}</div>
       </div>
     </div>`;
 
   if(!isAdmin){
-    html+=`<div class="note-text">各タスクの承認・保留・却下を選択してください</div>`;
+    html+=`<div class="note-text">スポット案件の承認・保留・却下を選択してください</div>`;
   }
 
   html+=`<div class="container">`;
 
+  // ── 基本業務セクション ──
+  const progressPct=Math.round(BASE_WORK.usedHours/BASE_WORK.totalHours*100);
+  html+=`
+    <div class="section-header">基本業務<span class="section-tag section-tag-blue">${formatPrice(BASE_WORK.price)}</span></div>
+    <div class="base-section">
+      <div class="base-section-header">
+        <h3>基本業務 ${formatPrice(BASE_WORK.price)}（${BASE_WORK.totalHours}h・${formatPrice(BASE_WORK.hourlyRate)}/h）</h3>
+        <div class="base-meta">
+          <span>消化 ${BASE_WORK.usedHours}h / ${BASE_WORK.totalHours}h</span>
+          <span>残り ${BASE_WORK.remainHours}h</span>
+        </div>
+      </div>
+      <div class="base-section-body">`;
+
+  BASE_WORK.items.forEach(item=>{
+    html+=`
+        <div class="base-item">
+          <span class="item-title">${escHtml(item.title)}</span>
+          <span class="item-date">${formatDate(item.date)}</span>
+          <span class="item-hours">${item.hours}h</span>
+          <span class="item-price">${formatPrice(item.price)}</span>
+        </div>`;
+  });
+
+  html+=`
+      </div>
+      <div class="base-progress">
+        <div class="progress-info">
+          <span>稼働時間 ${BASE_WORK.usedHours}h / ${BASE_WORK.totalHours}h</span>
+          <span class="remaining">残り ${BASE_WORK.remainHours}h</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:${progressPct}%"></div>
+        </div>
+        <div class="progress-summary">
+          <span class="used">消化済み：${BASE_WORK.usedHours}h ${formatPrice(BASE_WORK.usedPrice)}</span>
+          <span class="remain">残り：${BASE_WORK.remainHours}h ${formatPrice(BASE_WORK.remainPrice)}</span>
+        </div>
+      </div>
+    </div>`;
+
+  // ── 基本業務の残り6hで対応セクション ──
+  html+=`
+    <div class="section-header">基本業務の残り${BASE_WORK.remainHours}h以内で対応予定<span class="section-tag section-tag-blue">追加費用なし</span></div>`;
+
+  INCLUDED_IN_BASE.forEach((item,i)=>{
+    const overdue=isOverdue(item.deadline);
+    html+=`
+      <div class="task-card included">
+        <div class="task-header">
+          <div class="task-num">${i+1}</div>
+          <div class="task-title">${escHtml(item.title)}</div>
+          <div class="task-price-included">基本業務内</div>
+        </div>
+        <div class="task-meta">
+          <div class="deadline ${overdue?'overdue':''}">
+            ${overdue?'⚠':'📅'} 締切 ${formatDate(item.deadline)}
+          </div>
+          <span class="status-badge included">基本業務で対応</span>
+        </div>
+      </div>`;
+  });
+
+  // ── スポット案件セクション ──
+  html+=`
+    <div class="section-header" style="margin-top:8px">スポット案件<span class="section-tag section-tag-gold">${formatPrice(spotTotal)}</span></div>`;
+
   if(tasks.length===0){
-    html+=`<div class="empty-state"><div class="icon">📋</div><p>タスクがありません</p></div>`;
+    html+=`<div class="empty-state"><div class="icon">📋</div><p>スポット案件がありません</p></div>`;
   }
 
   tasks.forEach((t,i)=>{
@@ -259,11 +395,14 @@ function renderApp(role){
 
   html+=`</div>`;
 
-  // 承認済み合計フッター
+  // フッター
   html+=`
     <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-      <div><span style="font-size:11px;opacity:.7">承認済み合計</span><br><span style="font-size:10px;opacity:.5">${approvedCount} / ${tasks.length} 件承認</span></div>
-      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(approved)}</div>
+      <div>
+        <span style="font-size:11px;opacity:.7">4月 請求予定額</span><br>
+        <span style="font-size:10px;opacity:.5">基本 ${formatPrice(BASE_WORK.price)} + スポット承認 ${formatPrice(approved)}</span>
+      </div>
+      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price + approved)}</div>
     </div>`;
 
   if(isAdmin){
