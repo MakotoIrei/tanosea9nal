@@ -216,12 +216,42 @@ function getBaseStats(items){
   return {usedHours:usedH,usedPrice:usedP,remainHours:BASE_CONF.totalHours-usedH,remainPrice:BASE_CONF.price-usedP};
 }
 
-const INCLUDED_IN_BASE = [
-  {title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14'},
-  {title:'キャラクター紹介ページ 制作・Web公開',deadline:'2026-04-14'},
-  {title:'当選者登録Googleフォーム 制作・運用',deadline:'2026-04-14'},
-  {title:'PRプレスリリース 原稿作成・配信',deadline:'2026-04-15'}
+const INCL_KEY = 'agariegas_included_v1';
+const DEFAULT_INCLUDED = [
+  {id:101,title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14',status:'none',hours:2},
+  {id:102,title:'キャラクター紹介ページ 制作・Web公開',deadline:'2026-04-14',status:'none',hours:2},
+  {id:103,title:'当選者登録Googleフォーム 制作・運用',deadline:'2026-04-14',status:'none',hours:1},
+  {id:104,title:'PRプレスリリース 原稿作成・配信',deadline:'2026-04-15',status:'none',hours:1}
 ];
+function loadIncluded(){
+  const d=localStorage.getItem(INCL_KEY);
+  if(!d){saveIncluded(DEFAULT_INCLUDED);return DEFAULT_INCLUDED;}
+  return JSON.parse(d);
+}
+function saveIncluded(data){localStorage.setItem(INCL_KEY,JSON.stringify(data));}
+
+function approveIncluded(id){
+  const items=loadIncluded();
+  const item=items.find(x=>x.id===id);
+  if(!item)return;
+  item.status='approved';
+  saveIncluded(items);
+  // Add to base work April items
+  const bw=loadBaseWork();
+  if(!bw['apr'])bw['apr']=[];
+  bw['apr'].push({title:item.title,date:item.deadline,hours:item.hours,price:item.hours*BASE_CONF.hourlyRate});
+  saveBaseWork(bw);
+  render();
+}
+function updateIncludedStatus(id,status){
+  const items=loadIncluded();
+  const item=items.find(x=>x.id===id);
+  if(!item)return;
+  if(status==='approved'){approveIncluded(id);return;}
+  item.status=status;
+  saveIncluded(items);
+  render();
+}
 
 const DEFAULT_TASKS = [
   {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:'',desc:'4/1制作、YouTube、Instagram、TikTok、Xに配信済み',approveOnly:true,month:'apr'},
@@ -472,26 +502,58 @@ function renderApp(role){
 
   // ── 基本業務の残り時間で対応セクション ──
   const aprStats=getBaseStats(baseWork['apr']||[]);
-  html+=`
-    <div class="section-header">基本業務の残り${aprStats.remainHours}h以内で対応予定<span class="section-tag section-tag-blue">追加費用なし</span></div>`;
+  const inclItems=loadIncluded();
+  const visibleIncl=inclItems.filter(x=>x.status!=='approved');
+  const pendingIncl=visibleIncl.filter(x=>x.status==='none'||!x.status);
 
-  INCLUDED_IN_BASE.forEach((item,i)=>{
-    const overdue=isOverdue(item.deadline);
+  if(visibleIncl.length>0){
     html+=`
-      <div class="task-card included">
+    <div class="section-header">基本業務の残り${aprStats.remainHours}h以内で対応予定${pendingIncl.length>0?'（承認をお願いします）':''}<span class="section-tag" style="background:var(--orange-bg);color:var(--orange)">${pendingIncl.length}件 要承認</span></div>`;
+
+    visibleIncl.forEach((item,i)=>{
+      const overdue=isOverdue(item.deadline)&&item.status!=='rejected';
+      const isRejected=item.status==='rejected';
+      const isPending=item.status==='pending';
+      const isNone=!item.status||item.status==='none';
+      const cardClass=isRejected?'rejected':isPending?'pending':'included';
+      const badgeClass=isRejected?'rejected':isPending?'pending':'none';
+      const badgeLabel=isRejected?'対応しない':isPending?'保留':'要承認';
+
+      html+=`
+      <div class="task-card ${cardClass}">
         <div class="task-header">
           <div class="task-num">${i+1}</div>
           <div class="task-title">${escHtml(item.title)}</div>
-          <div class="task-price-included">基本業務内</div>
+          <div class="task-price-included">基本業務内（${item.hours}h）</div>
         </div>
         <div class="task-meta">
           <div class="deadline ${overdue?'overdue':''}">
             ${overdue?'⚠':'📅'} 締切 ${formatDate(item.deadline)}
           </div>
-          <span class="status-badge included">基本業務で対応</span>
-        </div>
-      </div>`;
-  });
+          <span class="status-badge ${badgeClass}" ${isNone?'style="background:var(--orange-bg);color:var(--orange)"':''}>${badgeLabel}</span>
+        </div>`;
+
+      if(!isAdmin && !isRejected){
+        html+=`
+        <div class="task-actions"><div class="radio-group">
+          <div class="radio-btn">
+            <input type="radio" name="incl_${item.id}" id="incl_a_${item.id}" value="approved" onchange="updateIncludedStatus(${item.id},'approved')">
+            <label for="incl_a_${item.id}" class="approve-label">✓ 承認</label>
+          </div>
+          <div class="radio-btn">
+            <input type="radio" name="incl_${item.id}" id="incl_p_${item.id}" value="pending" ${isPending?'checked':''} onchange="updateIncludedStatus(${item.id},'pending')">
+            <label for="incl_p_${item.id}" class="pending-label">⏸ 保留</label>
+          </div>
+          <div class="radio-btn">
+            <input type="radio" name="incl_${item.id}" id="incl_r_${item.id}" value="rejected" onchange="updateIncludedStatus(${item.id},'rejected')">
+            <label for="incl_r_${item.id}" class="reject-label">✕ 却下</label>
+          </div>
+        </div></div>`;
+      }
+
+      html+=`</div>`;
+    });
+  }
 
   // ── render task card helper ──
   function renderTaskCard(t,num){
