@@ -674,22 +674,26 @@ function renderApp(role){
   html+=`</div>`;
 
   // フッター
+  const totalPending=aprPending+mayPending;
   html+=`
-    <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-      <div>
-        <span style="font-size:10px;opacity:.7">4月請求</span>
-        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(aprBilling)}</span>
+    <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:8px 16px;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <span style="font-size:10px;opacity:.7">4月請求</span><br>
+          <span style="font-size:15px;font-weight:900;color:var(--gold)">${formatPrice(aprBilling)}</span>
+        </div>
+        <div style="width:1px;height:28px;background:rgba(255,255,255,.15)"></div>
+        <div>
+          <span style="font-size:10px;opacity:.7">5月〜請求</span><br>
+          <span style="font-size:15px;font-weight:900;color:var(--gold)">${formatPrice(mayBilling)}</span>
+        </div>
+        <div style="width:1px;height:28px;background:rgba(255,255,255,.15)"></div>
+        <div style="text-align:right">
+          <span style="font-size:10px;opacity:.5">今月請求予定合計</span><br>
+          <span style="font-size:18px;font-weight:900;color:var(--gold)">${formatPrice(aprBilling)}</span>
+        </div>
       </div>
-      <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
-      <div>
-        <span style="font-size:10px;opacity:.7">5月〜請求</span>
-        <span style="font-size:16px;font-weight:900;color:var(--gold);margin-left:4px">${formatPrice(mayBilling)}</span>
-      </div>
-      <div style="width:1px;height:24px;background:rgba(255,255,255,.2)"></div>
-      <div style="text-align:right">
-        <span style="font-size:10px;opacity:.5">請求予定合計</span><br>
-        <span style="font-size:18px;font-weight:900;color:var(--gold)">${formatPrice(aprBilling+mayBilling)}</span>
-      </div>
+      ${totalPending>0?`<div style="text-align:center;font-size:10px;color:rgba(255,255,255,.4);margin-top:4px">確認待ち合計：${formatPrice(totalPending)}</div>`:''}
     </div>`;
 
   if(isAdmin){
