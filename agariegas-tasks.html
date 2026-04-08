@@ -120,6 +120,15 @@ header .header-inner{position:relative}
 .progress-summary{display:flex;justify-content:space-between;font-size:12px;margin-top:6px;padding-top:6px;border-top:1px dashed #e0e0e0}
 .progress-summary .used{color:var(--text-sub)}
 .progress-summary .remain{color:var(--blue);font-weight:700}
+.task-desc{padding:0 16px 8px;font-size:12px;color:var(--red);font-weight:700;line-height:1.4}
+.task-desc.normal{color:var(--text-sub);font-weight:400}
+/* 繰越セクション */
+.carryover-card{background:#f8f8f8;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;border:2px solid #d0d0d0}
+.carryover-header{background:linear-gradient(135deg,#6b7280 0%,#9ca3af 100%);color:#fff;padding:14px 16px}
+.carryover-header h3{font-size:14px;font-weight:900}
+.carryover-header .carryover-price{font-size:18px;font-weight:900;margin-top:4px}
+.carryover-body{padding:14px 16px;font-size:13px;color:var(--text-sub);line-height:1.6}
+.carryover-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#e5e7eb;color:#6b7280;margin-top:8px}
 </style>
 </head>
 <body>
@@ -127,7 +136,7 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v4';
+const STORAGE_KEY = 'agariegas_tasks_v5';
 const SESSION_KEY = 'agariegas_session';
 const ADMIN_PASS = 'makoto2026';
 const VIEWER_PASS = 'agarie2026';
@@ -157,10 +166,10 @@ const INCLUDED_IN_BASE = [
 ];
 
 const DEFAULT_TASKS = [
-  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:''},
+  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:'',desc:'4/1制作、YouTube、Instagram、TikTok、Xに配信済み',approveOnly:true},
   {id:2,title:'ショート動画B 制作・配信',price:80000,deadline:'2026-04-14',status:'none',note:''},
-  {id:7,title:'Instagram公式アカウント 立ち上げ',price:30000,deadline:'2026-04-15',status:'none',note:''},
-  {id:8,title:'YouTube公式チャンネル 立ち上げ',price:50000,deadline:'2026-04-15',status:'none',note:''}
+  {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用'},
+  {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用'}
 ];
 
 function loadTasks(){
@@ -228,12 +237,13 @@ function doLogin(){
 
 function renderApp(role){
   const tasks=loadTasks();
+  const CARRYOVER={price:100000,hours:20,hourlyRate:5000};
   const spotTotal=tasks.reduce((s,t)=>s+t.price,0);
   const approved=tasks.filter(t=>t.status==='approved').reduce((s,t)=>s+t.price,0);
   const approvedCount=tasks.filter(t=>t.status==='approved').length;
-  const grandTotal=BASE_WORK.price+spotTotal;
+  const grandTotal=BASE_WORK.price+CARRYOVER.price+spotTotal;
   const isAdmin=role==='admin';
-  const roleName=isAdmin?'伊禮（管理者）':'かくはる（東江ガス）';
+  const roleName=isAdmin?'伊禮（管理者）':'東江常務（東江ガス）';
 
   let html=`
     <header>
@@ -248,14 +258,14 @@ function renderApp(role){
     <div class="billing-bar">
       <div class="billing-label">2026年4月 請求予定額</div>
       <div class="billing-total">${formatPrice(grandTotal)}</div>
-      <div class="billing-breakdown">基本業務 ${formatPrice(BASE_WORK.price)} ＋ スポット案件 ${formatPrice(spotTotal)}</div>
+      <div class="billing-breakdown">基本業務 ${formatPrice(BASE_WORK.price)} ＋ 繰越 ${formatPrice(CARRYOVER.price)} ＋ スポット ${formatPrice(spotTotal)}</div>
       <div class="billing-updated">${getNowString()}</div>
     </div>
 
     <div class="summary-bar">
       <div class="summary-item">
-        <div class="label">基本業務</div>
-        <div class="value" style="color:var(--blue)">${formatPrice(BASE_WORK.price)}</div>
+        <div class="label">基本+繰越</div>
+        <div class="value" style="color:var(--blue)">${formatPrice(BASE_WORK.price+CARRYOVER.price)}</div>
       </div>
       <div class="summary-item">
         <div class="label">スポット合計</div>
@@ -314,6 +324,19 @@ function renderApp(role){
       </div>
     </div>`;
 
+  // ── 繰越超過時間 ──
+  html+=`
+    <div class="carryover-card">
+      <div class="carryover-header">
+        <h3>【繰越】3月分 超過業務時間</h3>
+        <div class="carryover-price">${formatPrice(CARRYOVER.price)}（${CARRYOVER.hours}h × ${formatPrice(CARRYOVER.hourlyRate)}）</div>
+      </div>
+      <div class="carryover-body">
+        1月〜3月の累計超過時間 ${CARRYOVER.hours}h分を4月基本業務に繰り越し済み
+        <br><span class="carryover-badge">繰越済み</span>
+      </div>
+    </div>`;
+
   // ── 基本業務の残り6hで対応セクション ──
   html+=`
     <div class="section-header">基本業務の残り${BASE_WORK.remainHours}h以内で対応予定<span class="section-tag section-tag-blue">追加費用なし</span></div>`;
@@ -364,8 +387,24 @@ function renderApp(role){
           <span class="status-badge ${statusBadgeClass}">${statusLabel}</span>
         </div>`;
 
+    if(t.desc){
+      const descClass=t.approveOnly?'task-desc':'task-desc normal';
+      html+=`<div class="${descClass}">${escHtml(t.desc)}</div>`;
+    }
+
     if(!isAdmin){
-      html+=`
+      if(t.approveOnly){
+        html+=`
+        <div class="task-actions">
+          <div class="radio-group">
+            <div class="radio-btn">
+              <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
+              <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
+            </div>
+          </div>
+        </div>`;
+      } else {
+        html+=`
         <div class="task-actions">
           <div class="radio-group">
             <div class="radio-btn">
@@ -382,6 +421,7 @@ function renderApp(role){
             </div>
           </div>
         </div>`;
+      }
     } else {
       html+=`
         <div class="admin-controls">
@@ -400,9 +440,9 @@ function renderApp(role){
     <div style="position:fixed;bottom:0;left:0;right:0;background:var(--navy);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:90;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
       <div>
         <span style="font-size:11px;opacity:.7">4月 請求予定額</span><br>
-        <span style="font-size:10px;opacity:.5">基本 ${formatPrice(BASE_WORK.price)} + スポット承認 ${formatPrice(approved)}</span>
+        <span style="font-size:10px;opacity:.5">基本 ${formatPrice(BASE_WORK.price)} + 繰越 ${formatPrice(CARRYOVER.price)} + スポット承認 ${formatPrice(approved)}</span>
       </div>
-      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price + approved)}</div>
+      <div style="font-size:22px;font-weight:900;color:var(--gold)">${formatPrice(BASE_WORK.price + CARRYOVER.price + approved)}</div>
     </div>`;
 
   if(isAdmin){
