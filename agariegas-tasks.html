@@ -119,6 +119,12 @@ header .header-inner{position:relative}
 .btn-add-work{width:100%;padding:10px;border:2px dashed var(--blue);border-radius:8px;background:transparent;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:all .2s}
 .btn-add-work:active{background:var(--blue-bg)}
 .base-tpl{font-size:11px;color:#9ca3af;font-style:italic;padding:2px 0}
+.base-collapse-toggle{cursor:pointer;user-select:none}
+.base-collapse-toggle .toggle-row{display:flex;justify-content:space-between;align-items:center}
+.base-collapse-toggle .toggle-arrow-bw{font-size:11px;color:rgba(255,255,255,.7);margin-left:8px;transition:transform .3s;display:inline-block}
+.base-collapse-toggle .toggle-arrow-bw.open{transform:rotate(90deg)}
+.base-collapse-body{overflow:hidden;transition:max-height .4s ease;max-height:0}
+.base-collapse-body.open{max-height:3000px}
 .base-progress{padding:12px 16px;border-top:2px solid #f0f0f0}
 .progress-bar-bg{background:#e5e7eb;border-radius:10px;height:12px;overflow:hidden;margin:8px 0}
 .progress-bar-fill{background:linear-gradient(90deg,var(--blue),#3b82f6);height:100%;border-radius:10px;transition:width .5s}
@@ -444,16 +450,21 @@ function renderApp(role){
     const stats=getBaseStats(items);
     const pct=Math.min(100,Math.round(stats.usedHours/BASE_CONF.totalHours*100));
     const ml=MONTH_LABELS[mk]||mk;
+    const defaultOpen=mk==='apr';
     html+=`
     <div class="section-header">基本業務（${ml}）<span class="section-tag section-tag-blue">固定 ${formatPrice(BASE_CONF.price)}</span></div>
     <div class="base-section">
-      <div class="base-section-header">
-        <h3>${ml} 基本業務 ${formatPrice(BASE_CONF.price)}（${BASE_CONF.totalHours}h・${formatPrice(BASE_CONF.hourlyRate)}/h）</h3>
+      <div class="base-section-header base-collapse-toggle" onclick="toggleBaseMonth('${mk}')">
+        <div class="toggle-row">
+          <h3>${ml} 基本業務 ${formatPrice(BASE_CONF.price)}（${BASE_CONF.totalHours}h・${formatPrice(BASE_CONF.hourlyRate)}/h）</h3>
+          <span class="toggle-arrow-bw${defaultOpen?' open':''}" id="bw_arrow_${mk}">▶</span>
+        </div>
         <div class="base-meta">
           <span>消化 ${stats.usedHours}h / ${BASE_CONF.totalHours}h</span>
           <span>残り ${stats.remainHours}h</span>
         </div>
       </div>
+      <div class="base-collapse-body${defaultOpen?' open':''}" id="bw_body_${mk}">
       <div class="base-section-body">`;
     items.forEach((item,idx)=>{
       const isTemplate=item.hours===0&&item.price===0&&!item.date;
@@ -483,6 +494,7 @@ function renderApp(role){
           <span class="used">消化済み：${stats.usedHours}h ${formatPrice(stats.usedPrice)}</span>
           <span class="remain">残り：${stats.remainHours}h ${formatPrice(stats.remainPrice)}</span>
         </div>
+      </div>
       </div>
     </div>`;
   });
@@ -786,6 +798,18 @@ function updateStatus(id,status){
   const tasks=loadTasks();
   const t=tasks.find(x=>x.id===id);
   if(t){t.status=status;saveTasks(tasks);render();}
+}
+
+function toggleBaseMonth(mk){
+  const el=document.getElementById('bw_body_'+mk);
+  const arrow=document.getElementById('bw_arrow_'+mk);
+  if(el.classList.contains('open')){
+    el.classList.remove('open');
+    arrow.classList.remove('open');
+  }else{
+    el.classList.add('open');
+    arrow.classList.add('open');
+  }
 }
 
 function toggleClosed(idx){
