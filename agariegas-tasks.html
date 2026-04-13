@@ -170,6 +170,32 @@ header .header-inner{position:relative}
 .history-card .h-label{font-size:14px;font-weight:900;color:#374151}
 .history-card .h-amount{font-size:16px;font-weight:900;color:var(--navy)}
 .history-card .h-meta{font-size:11px;color:#9ca3af;margin-top:4px}
+/* 改善されたボタン */
+.action-group{display:flex;flex-direction:column;gap:6px;width:100%}
+.btn-approve-big{width:100%;padding:14px;border:none;border-radius:10px;background:#22b573;color:#fff;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
+.btn-approve-big:active{transform:scale(.97);background:#1a9d63}
+.action-row{display:flex;gap:8px}
+.btn-hold{flex:1;padding:10px;border:none;border-radius:8px;background:#f4a522;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
+.btn-hold:active{transform:scale(.97)}
+.btn-skip{flex:1;padding:10px;border:none;border-radius:8px;background:#e0e0e0;color:#666;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
+.btn-skip:active{transform:scale(.97)}
+.btn-approve-big.selected{background:#dcfce7;color:#16a34a;border:2px solid #16a34a}
+.btn-hold.selected{background:#fff7ed;color:#ea580c;border:2px solid #ea580c}
+.btn-skip.selected{background:#f0f0f0;color:#999;border:2px solid #ccc}
+/* 説明バー */
+.guide-bar{background:linear-gradient(135deg,#fffbeb,#fef3c7);padding:16px;border-bottom:1px solid #f0e6c0}
+.guide-bar p{font-size:13px;color:#92400e;line-height:1.8}
+/* 承認済みトースト */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#22b573;color:#fff;padding:20px 32px;border-radius:16px;font-size:16px;font-weight:900;z-index:300;box-shadow:0 8px 40px rgba(0,0,0,.3);transition:transform .3s;pointer-events:none}
+.toast.show{transform:translate(-50%,-50%) scale(1)}
+/* 要承認バッジ点滅 */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.badge-blink{animation:blink 2s ease-in-out infinite}
+/* 進捗バー */
+.approval-progress{background:#fff;padding:12px 16px;border-bottom:1px solid #e5e7eb}
+.approval-progress .ap-label{font-size:11px;color:var(--text-sub);font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between}
+.approval-progress .ap-bar{background:#e5e7eb;border-radius:10px;height:10px;overflow:hidden}
+.approval-progress .ap-fill{background:linear-gradient(90deg,#22b573,#16a34a);height:100%;border-radius:10px;transition:width .5s}
 </style>
 </head>
 <body>
@@ -389,8 +415,23 @@ function renderApp(role){
       </div>
     </div>`;
 
+  // 承認進捗の計算（スポット+基本業務内タスク）
+  const allInclItems=loadIncluded();
+  const totalActionable=activeTasks.length+allInclItems.filter(x=>x.status!=='approved').length;
+  const totalApprovedAction=activeTasks.filter(t=>t.status==='approved').length+allInclItems.filter(x=>x.status==='approved').length;
+  const totalAll=activeTasks.length+allInclItems.length;
+  const totalDone=activeTasks.filter(t=>t.status==='approved').length+allInclItems.filter(x=>x.status==='approved').length;
+  const apPct=totalAll>0?Math.round(totalDone/totalAll*100):0;
+
   if(!isAdmin){
-    html+=`<div class="note-text">スポット案件の承認・保留・却下を選択してください</div>`;
+    html+=`
+    <div class="guide-bar">
+      <p>各タスクの内容と金額をご確認いただき<br>「承認して進める」を押していただくと<br>楽しくなる合同会社が制作に着手します。<br>「保留」は検討中、「見送り」は不要な場合にお使いください。</p>
+    </div>
+    <div class="approval-progress">
+      <div class="ap-label"><span>承認済み ${totalDone}件 / 全${totalAll}件</span><span>${apPct}%</span></div>
+      <div class="ap-bar"><div class="ap-fill" style="width:${apPct}%"></div></div>
+    </div>`;
   }
 
   html+=`<div class="container">`;
@@ -542,23 +583,17 @@ function renderApp(role){
           <div class="deadline ${overdue?'overdue':''}">
             ${overdue?'⚠':'📅'} 締切 ${formatDate(item.deadline)}
           </div>
-          <span class="status-badge ${badgeClass}" ${isNone?'style="background:var(--orange-bg);color:var(--orange)"':''}>${badgeLabel}</span>
+          ${isNone?`<span class="status-badge badge-blink" style="background:var(--orange-bg);color:var(--orange)">ご確認ください</span>`
+          :`<span class="status-badge ${badgeClass}">${badgeLabel}</span>`}
         </div>`;
 
       if(!isAdmin && !isRejected){
         html+=`
-        <div class="task-actions"><div class="radio-group">
-          <div class="radio-btn">
-            <input type="radio" name="incl_${item.id}" id="incl_a_${item.id}" value="approved" onchange="updateIncludedStatus(${item.id},'approved')">
-            <label for="incl_a_${item.id}" class="approve-label">✓ 承認</label>
-          </div>
-          <div class="radio-btn">
-            <input type="radio" name="incl_${item.id}" id="incl_p_${item.id}" value="pending" ${isPending?'checked':''} onchange="updateIncludedStatus(${item.id},'pending')">
-            <label for="incl_p_${item.id}" class="pending-label">⏸ 保留</label>
-          </div>
-          <div class="radio-btn">
-            <input type="radio" name="incl_${item.id}" id="incl_r_${item.id}" value="rejected" onchange="updateIncludedStatus(${item.id},'rejected')">
-            <label for="incl_r_${item.id}" class="reject-label">✕ 却下</label>
+        <div class="task-actions"><div class="action-group">
+          <button class="btn-approve-big" onclick="showToastAndUpdateIncl(${item.id},'approved')">承認して進める</button>
+          <div class="action-row">
+            <button class="btn-hold${isPending?' selected':''}" onclick="updateIncludedStatus(${item.id},'pending')">保留・検討中</button>
+            <button class="btn-skip" onclick="updateIncludedStatus(${item.id},'rejected')">今回は見送り</button>
           </div>
         </div></div>`;
       }
@@ -570,8 +605,8 @@ function renderApp(role){
   // ── render task card helper ──
   function renderTaskCard(t,num){
     const statusClass=t.status==='approved'?'approved':t.status==='rejected'?'rejected':t.status==='pending'?'pending':'';
-    const statusLabel=t.status==='approved'?'承認済':t.status==='rejected'?'却下':t.status==='pending'?'保留':'未確認';
-    const statusBadgeClass=t.status||'none';
+    const isNone=!t.status||t.status==='none';
+    const statusLabel=t.status==='approved'?'承認済':t.status==='rejected'?'見送り':t.status==='pending'?'保留・検討中':'要承認';
     const overdue=isOverdue(t.deadline)&&t.status!=='approved';
     let c=`
       <div class="task-card ${statusClass}">
@@ -584,7 +619,8 @@ function renderApp(role){
           <div class="deadline ${overdue?'overdue':''}">
             ${overdue?'⚠':'📅'} ${t.deadline?('締切 '+formatDate(t.deadline)):'期限なし'}
           </div>
-          <span class="status-badge ${statusBadgeClass}">${statusLabel}</span>
+          ${isNone?`<span class="status-badge badge-blink" style="background:var(--orange-bg);color:var(--orange)">ご確認ください</span>`
+          :`<span class="status-badge ${t.status||'none'}">${statusLabel}</span>`}
         </div>`;
     if(t.desc){
       const descClass=t.approveOnly?'task-desc':'task-desc normal';
@@ -592,30 +628,22 @@ function renderApp(role){
     }
     if(!isAdmin){
       if(t.approveOnly){
-        c+=`<div class="task-actions"><div class="radio-group">
-          <div class="radio-btn">
-            <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
-            <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
-          </div></div></div>`;
+        c+=`<div class="task-actions"><div class="action-group">
+          <button class="btn-approve-big${t.status==='approved'?' selected':''}" onclick="showToastAndUpdate(${t.id},'approved')">承認して進める</button>
+        </div></div>`;
       } else {
-        c+=`<div class="task-actions"><div class="radio-group">
-          <div class="radio-btn">
-            <input type="radio" name="status_${t.id}" id="approve_${t.id}" value="approved" ${t.status==='approved'?'checked':''} onchange="updateStatus(${t.id},'approved')">
-            <label for="approve_${t.id}" class="approve-label">✓ 承認</label>
+        c+=`<div class="task-actions"><div class="action-group">
+          <button class="btn-approve-big${t.status==='approved'?' selected':''}" onclick="showToastAndUpdate(${t.id},'approved')">承認して進める</button>
+          <div class="action-row">
+            <button class="btn-hold${t.status==='pending'?' selected':''}" onclick="updateStatus(${t.id},'pending')">保留・検討中</button>
+            <button class="btn-skip${t.status==='rejected'?' selected':''}" onclick="updateStatus(${t.id},'rejected')">今回は見送り</button>
           </div>
-          <div class="radio-btn">
-            <input type="radio" name="status_${t.id}" id="pending_${t.id}" value="pending" ${t.status==='pending'?'checked':''} onchange="updateStatus(${t.id},'pending')">
-            <label for="pending_${t.id}" class="pending-label">⏸ 保留</label>
-          </div>
-          <div class="radio-btn">
-            <input type="radio" name="status_${t.id}" id="reject_${t.id}" value="rejected" ${t.status==='rejected'?'checked':''} onchange="updateStatus(${t.id},'rejected')">
-            <label for="reject_${t.id}" class="reject-label">✕ 却下</label>
-          </div></div></div>`;
+        </div></div>`;
       }
     } else {
       c+=`<div class="admin-controls">
-        <button class="btn btn-edit" onclick="openEditModal(${t.id})">✏️ 編集</button>
-        <button class="btn btn-delete" onclick="deleteTask(${t.id})">🗑 削除</button>
+        <button class="btn btn-edit" onclick="openEditModal(${t.id})">編集</button>
+        <button class="btn btn-delete" onclick="deleteTask(${t.id})">削除</button>
       </div>`;
     }
     c+=`</div>`;
@@ -796,6 +824,24 @@ function deleteTask(id){
   const tasks=loadTasks().filter(t=>t.id!==id);
   saveTasks(tasks);
   render();
+}
+
+function showToast(msg){
+  let el=document.getElementById('approveToast');
+  if(!el){el=document.createElement('div');el.id='approveToast';el.className='toast';document.body.appendChild(el);}
+  el.textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1800);
+}
+
+function showToastAndUpdate(id,status){
+  updateStatus(id,status);
+  if(status==='approved')showToast('承認しました！制作に進みます');
+}
+
+function showToastAndUpdateIncl(id,status){
+  updateIncludedStatus(id,status);
+  if(status==='approved')showToast('承認しました！制作に進みます');
 }
 
 function updateStatus(id,status){
