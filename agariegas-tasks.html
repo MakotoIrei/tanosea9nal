@@ -203,7 +203,7 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v13';
+const STORAGE_KEY = 'agariegas_tasks_v14';
 const SESSION_KEY = 'agariegas_session';
 const CLOSED_KEY = 'agariegas_closed_v1';
 const BASE_WORK_KEY = 'agariegas_basework_v1';
@@ -248,11 +248,20 @@ function getBaseStats(items){
   return {usedHours:usedH,usedPrice:usedP,remainHours:BASE_CONF.totalHours-usedH,remainPrice:BASE_CONF.price-usedP};
 }
 
-const INCL_KEY = 'agariegas_included_v2';
-const DEFAULT_INCLUDED = [
-  {id:101,title:'キャラクター決定バナー 正式版制作',deadline:'2026-04-14',status:'none',hours:2},
-  {id:102,title:'キャラクター紹介ページ 制作・Web公開',deadline:'2026-04-14',status:'none',hours:2},
-  {id:103,title:'当選者登録Googleフォーム 制作',deadline:'2026-04-14',status:'none',hours:2}
+const INCL_KEY = 'agariegas_included_v3';
+const DEFAULT_INCLUDED = [];
+
+// 完了済みタスク（静的表示用）
+const COMPLETED_APR = [
+  {title:'キャラクター決定バナー 正式版制作',price:0,date:'2026-04-15',label:'基本業務内・完了'},
+  {title:'キャラクター紹介ページ 制作・Web公開',price:0,date:'2026-04-15',label:'基本業務内・完了'},
+  {title:'当選者登録Googleフォーム 制作',price:0,date:'2026-04-15',label:'基本業務内・完了'},
+  {title:'当選者発表ページ関連（ページ作成、リスト導入）',price:20000,date:'2026-04-15',label:'完了'}
+];
+const COMPLETED_MAY = [
+  {title:'HP管理会社（セルラー）とのHP公開やりとり',price:5000,date:'2026-04-15',label:'1h × ¥5,000'},
+  {title:'当選者データ入力日付変更対応',price:5000,date:'2026-04-16',label:'1h × ¥5,000'},
+  {title:'当選者データ修正対応',price:5000,date:'2026-04-20',label:'1h × ¥5,000'}
 ];
 function loadIncluded(){
   const d=localStorage.getItem(INCL_KEY);
@@ -290,7 +299,6 @@ const DEFAULT_TASKS = [
   {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用',month:'apr'},
   {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画（ショート動画Bを投稿予定）',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用',month:'apr'},
   {id:12,title:'PRプレスリリース 原稿作成',price:5000,deadline:'2026-04-15',status:'none',note:'',month:'apr'},
-  {id:13,title:'当選者発表ページ関連（ページ作成、リスト導入）',price:20000,deadline:'2026-04-15',status:'none',note:'',desc:'4/15実施済み　キャラクター紹介ページ作成・当選者確認フォームへのリンク導入',approveOnly:true,month:'apr'},
   {id:10,title:'キャラクター活用マニュアル制作',price:80000,deadline:'2026-04-30',status:'none',note:'',desc:'ロゴ・表記ルール\nカラー・ボイス規定\nSNS運用ルール・使用禁止事項\nポージング・グッズ展開ルール\n市場相場：¥150,000〜¥300,000',month:'may'},
   {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,deadline:'2026-05-15',status:'none',note:'',desc:'LINE公式アカウント 開設・初期設定・リッチメニュー制作\nあがりえん＆ほかまる LINEスタンプ16種 制作・申請・販売設定\n初回メッセージ配信設定込み\n市場相場¥200,000〜¥350,000のところセット価格でご提供\n※単体でのご依頼の場合：LINE公式¥50,000＋スタンプ¥80,000＝¥130,000と同額',month:'may'},
   {id:11,title:'定期アンケート（夏）',price:30000,deadline:'2026-07-31',status:'none',note:'',desc:'夏季キャンペーン向け顧客アンケート実施',month:'may'}
@@ -374,8 +382,10 @@ function renderApp(role){
   const aprPending=aprTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
   const mayPending=mayTasks.filter(t=>t.status!=='approved').reduce((s,t)=>s+t.price,0);
   const hasCarryover=(m)=>m===CARRYOVER.applyMonth;
-  const aprBilling=BASE_CONF.price+(hasCarryover('apr')?CARRYOVER.price:0)+aprApproved;
-  const mayBilling=BASE_CONF.price+(hasCarryover('may')?CARRYOVER.price:0)+mayApproved;
+  const completedAprSpot=COMPLETED_APR.reduce((s,t)=>s+t.price,0);
+  const completedMaySpot=COMPLETED_MAY.reduce((s,t)=>s+t.price,0);
+  const aprBilling=BASE_CONF.price+(hasCarryover('apr')?CARRYOVER.price:0)+aprApproved+completedAprSpot;
+  const mayBilling=BASE_CONF.price+(hasCarryover('may')?CARRYOVER.price:0)+mayApproved+completedMaySpot;
   const aprApprovedCount=aprTasks.filter(t=>t.status==='approved').length;
 
   let html=`
@@ -651,18 +661,54 @@ function renderApp(role){
     return c;
   }
 
+  // ── 完了済みスポット案件（4月分） ──
+  html+=`
+    <div class="section-header" style="margin-top:8px">完了済みスポット案件（4月分）<span class="section-tag" style="background:var(--green-bg);color:var(--green)">確定 ${formatPrice(completedAprSpot)}</span></div>`;
+  COMPLETED_APR.forEach((ct,i)=>{
+    html+=`
+      <div class="task-card approved">
+        <div class="task-header">
+          <div class="task-num">${i+1}</div>
+          <div class="task-title">${escHtml(ct.title)}</div>
+          <div class="task-price">${ct.price>0?formatPrice(ct.price):'<span style="color:var(--blue);font-size:12px">基本業務内</span>'}</div>
+        </div>
+        <div class="task-meta">
+          <div class="deadline">完了 ${formatDate(ct.date)}</div>
+          <span class="status-badge approved">${ct.label}</span>
+        </div>
+      </div>`;
+  });
+
   // ── 4月中に実施予定 スポット案件 ──
   if(aprTasks.length>0){
     html+=`
       <div class="section-header" style="margin-top:8px">4月中に実施予定（スポット）<span class="section-tag section-tag-gold">承認済 ${formatPrice(aprApproved)}</span></div>`;
     aprTasks.forEach((t,i)=>{ html+=renderTaskCard(t,i+1); });
-    html+=`
-      <div class="month-subtotal">
-        <div class="subtotal-label">4月請求 小計</div>
-        <div class="subtotal-value">${formatPrice(aprBilling)}</div>
-      </div>
-      ${aprPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(aprPending)} は含まず）</div>`:''}`;
   }
+  html+=`
+    <div class="month-subtotal">
+      <div class="subtotal-label">4月請求 小計</div>
+      <div class="subtotal-value">${formatPrice(aprBilling)}</div>
+    </div>
+    ${aprPending>0?`<div style="text-align:center;font-size:11px;color:#999;margin:-8px 0 16px">（確認待ち ${formatPrice(aprPending)} は含まず）</div>`:''}`;
+
+  // ── 完了済み（5月請求予定） ──
+  html+=`
+    <div class="section-header">完了済み（5月請求予定）<span class="section-tag" style="background:var(--green-bg);color:var(--green)">確定 ${formatPrice(completedMaySpot)}</span></div>`;
+  COMPLETED_MAY.forEach((ct,i)=>{
+    html+=`
+      <div class="task-card approved">
+        <div class="task-header">
+          <div class="task-num">${i+1}</div>
+          <div class="task-title">${escHtml(ct.title)}</div>
+          <div class="task-price">${formatPrice(ct.price)}</div>
+        </div>
+        <div class="task-meta">
+          <div class="deadline">完了 ${formatDate(ct.date)}</div>
+          <span class="status-badge approved">${ct.label}</span>
+        </div>
+      </div>`;
+  });
 
   // ── 5月以降に実施予定 スポット案件 ──
   html+=`
