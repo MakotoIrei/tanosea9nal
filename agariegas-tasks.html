@@ -203,7 +203,7 @@ header .header-inner{position:relative}
 <div id="app"></div>
 
 <script>
-const STORAGE_KEY = 'agariegas_tasks_v14';
+const STORAGE_KEY = 'agariegas_tasks_v15';
 const SESSION_KEY = 'agariegas_session';
 const CLOSED_KEY = 'agariegas_closed_v1';
 const BASE_WORK_KEY = 'agariegas_basework_v2';
@@ -256,7 +256,8 @@ const DEFAULT_INCLUDED = [];
 
 // 完了済みタスク（静的表示用）
 const COMPLETED_APR = [
-  {title:'当選者発表ページ関連（ページ作成、リスト導入）',price:20000,date:'2026-04-15',label:'完了'}
+  {title:'ショート動画A 制作・配信',price:80000,date:'2026-04-01',label:'完了済み'},
+  {title:'当選者発表ページ関連（ページ作成、リスト導入）',price:20000,date:'2026-04-15',label:'完了済み'}
 ];
 const COMPLETED_MAY = [
   {title:'HP管理会社（セルラー）とのHP公開やりとり',price:5000,date:'2026-04-15',label:'1h × ¥5,000'},
@@ -294,7 +295,6 @@ function updateIncludedStatus(id,status){
 }
 
 const DEFAULT_TASKS = [
-  {id:1,title:'ショート動画A 制作・配信（実施済み）',price:80000,deadline:'2026-04-01',status:'none',note:'',desc:'4/1制作、YouTube、Instagram、TikTok、Xに配信済み',approveOnly:true,month:'apr'},
   {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,deadline:'2026-04-15',status:'none',note:'',month:'apr'},
   {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,deadline:'2026-04-15',status:'none',note:'',desc:'初回投稿はショート動画Bを使用',month:'apr'},
   {id:8,title:'YouTube公式チャンネル 立ち上げ・初回動画（ショート動画Bを投稿予定）',price:50000,deadline:'2026-04-15',status:'none',note:'',desc:'初回動画はショート動画Bを使用',month:'apr'},
