@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>当選者発表 | 53周年キャラクターネーミングキャンペーン | 東江ガス</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#E8500A;--orange-light:#FF7A35;--orange-pale:#FFF3EC;--gold:#F0A500;--silver:#9AA5B4;--silver-light:#EFF2F5;--bronze:#C47B2B;--bronze-light:#FDF3E7;--text:#1A1A1A;--text-mid:#555;--bg:#FFFAF6;--border:#F0D4C0;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);}
+  header{background:var(--orange);padding:28px 24px 24px;text-align:center;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.04) 10px,rgba(255,255,255,.04) 20px);}
+  .h-inner{position:relative;}.h-tag{display:inline-block;background:var(--gold);color:var(--text);font-size:11px;font-weight:700;letter-spacing:.15em;padding:4px 16px;border-radius:20px;margin-bottom:12px;}
+  header h1{font-family:'Shippori Mincho',serif;color:#fff;font-size:clamp(20px,5vw,30px);line-height:1.45;}
+  header .sub{color:rgba(255,255,255,.85);font-size:13px;margin-top:6px;}.h-logo{margin-top:10px;font-size:11px;color:rgba(255,255,255,.65);}
+  .lead{max-width:680px;margin:36px auto 0;padding:0 20px;text-align:center;}
+  .lead h2{font-family:'Shippori Mincho',serif;font-size:clamp(18px,4vw,23px);color:var(--orange);line-height:1.6;margin-bottom:12px;}
+  .lead p{font-size:14px;color:var(--text-mid);line-height:1.95;}
+  .divider{width:48px;height:3px;background:var(--gold);border-radius:2px;margin:32px auto;}
+  .tier-section{max-width:860px;margin:0 auto;padding:0 16px 52px;}
+  .tier-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid;}
+  .tier-header.gold{border-color:var(--gold);}.tier-header.silver{border-color:var(--silver);}.tier-header.bronze{border-color:var(--bronze);}
+  .tier-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .tier-badge.gold{background:var(--gold);color:#fff;}.tier-badge.silver{background:var(--silver);color:#fff;}.tier-badge.bronze{background:var(--bronze);color:#fff;}
+  .tier-info h3{font-size:18px;font-weight:900;}.tier-info .prize-name{font-size:13px;color:var(--text-mid);margin-top:2px;line-height:1.5;}
+  .first-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+  .first-card{background:#fff;border:2px solid var(--gold);border-radius:20px;padding:0 20px 28px;text-align:center;box-shadow:0 6px 28px rgba(240,165,0,.2);overflow:hidden;}
+  .char-img-wrap{background:linear-gradient(160deg,#EEF6FF 0%,#FFF8E6 100%);margin:0 -20px 20px;padding:24px 20px 8px;display:flex;align-items:flex-end;justify-content:center;min-height:200px;}
+  .char-img{width:180px;height:180px;object-fit:contain;display:block;filter:drop-shadow(0 6px 16px rgba(0,0,0,.18));}
+  .char-adopted{display:inline-block;background:var(--gold);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:10px;}
+  .char-name{font-family:'Shippori Mincho',serif;font-size:clamp(22px,5vw,30px);color:var(--orange);font-weight:700;}
+  .char-ruby{font-size:12px;color:var(--text-mid);margin-top:2px;letter-spacing:.1em;}
+  .nickname-row{margin-top:14px;padding-top:14px;border-top:1px dashed #e0c870;font-size:12px;color:var(--text-mid);}
+  .nickname-row strong{font-size:15px;color:var(--text);font-weight:700;display:block;margin-top:3px;}
+  .winners-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+  .winner-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:box-shadow .2s,transform .2s;}
+  .winner-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);transform:translateY(-2px);}
+  .w-num{width:28px;height:28px;min-width:28px;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .silver-grid .w-num{background:var(--silver-light);color:var(--silver);}.bronze-grid .w-num{background:var(--bronze-light);color:var(--bronze);}
+  .w-info{flex:1;min-width:0;}.w-nickname{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .w-naming{font-size:11px;color:var(--text-mid);margin-top:4px;line-height:1.6;}
+  .w-naming .tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;vertical-align:middle;}
+  .w-naming .tag-boy{background:#E8F4FF;color:#1B6BB0;}
+  .w-naming .tag-dog{background:#FFF0E8;color:#C47B2B;}
+  .how-to{background:var(--orange-pale);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--text-mid);line-height:1.8;}
+  .how-to strong{color:var(--orange);}
+  .note-box{max-width:700px;margin:0 auto 48px;padding:0 16px;text-align:center;}
+  .note-box p{font-size:12px;color:var(--text-mid);line-height:1.9;}
+  .form-section{background:linear-gradient(135deg,var(--orange),var(--orange-light));padding:52px 20px;text-align:center;position:relative;overflow:hidden;}
+  .form-section::before{content:'🎉';position:absolute;font-size:130px;opacity:.06;top:-10px;left:-20px;transform:rotate(-15deg);pointer-events:none;}
+  .form-section::after{content:'🎊';position:absolute;font-size:130px;opacity:.06;bottom:-10px;right:-20px;transform:rotate(15deg);pointer-events:none;}
+  .form-inner{position:relative;}
+  .form-section h3{font-family:'Shippori Mincho',serif;color:#fff;font-size:clamp(18px,4vw,24px);line-height:1.5;margin-bottom:12px;}
+  .form-desc{color:rgba(255,255,255,.9);font-size:13px;line-height:1.85;margin-bottom:24px;}
+  .form-steps{display:flex;flex-direction:column;gap:10px;max-width:460px;margin:0 auto 28px;text-align:left;}
+  .step{background:rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px;color:#fff;font-size:13px;line-height:1.6;}
+  .step-num{width:22px;height:22px;min-width:22px;background:#fff;color:var(--orange);border-radius:50%;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .form-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--orange);font-weight:700;font-size:15px;padding:16px 36px;border-radius:50px;text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:transform .2s,box-shadow .2s;}
+  .form-btn:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.25);}
+  .form-btn-icon{width:22px;height:22px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;}
+  .deadline{margin-top:18px;color:rgba(255,255,255,.75);font-size:12px;line-height:1.7;}
+  footer{background:#1A1A1A;color:rgba(255,255,255,.55);text-align:center;padding:24px 20px;font-size:12px;line-height:1.9;}
+  footer a{color:#FFD166;text-decoration:none;}
+  @media(max-width:480px){.winners-grid{grid-template-columns:1fr 1fr;}.first-grid{grid-template-columns:1fr;}.char-img{width:130px;height:130px;}}
+</style>
+</head>
+<body>
+<header><div class="h-inner">
+  <div class="h-tag">🎉 当選者発表</div>
+  <h1>53周年記念<br>キャラクターネーミング<br>キャンペーン</h1>
+  <p class="sub">応募総数 595件 ／ 当選者 総計 53名</p>
+  <div class="h-logo">AGARIEGAS / 東江ガス株式会社</div>
+</div></header>
+
+<div class="lead">
+  <h2>たくさんのご応募<br>ありがとうございました！</h2>
+  <p>2026年2月20日〜3月25日の期間中、<br>沖縄県内より <strong>595件</strong> のご応募をいただきました。<br>厳正なる審査・抽選の結果、以下の<strong>53名様</strong>が当選されました。</p>
+</div>
+<div class="divider"></div>
+
+<div class="tier-section">
+  <div class="tier-header gold">
+    <div class="tier-badge gold">🏆</div>
+    <div class="tier-info"><h3 style="color:#C68A00;">東江ガス賞 ／ 2名様</h3><div class="prize-name">ホテルコルディオ ご宿泊券（5万円分相当）<br>キャラクター名を採用された方</div></div>
+  </div>
+  <div class="first-grid">
+    <div class="first-card">
+      <div class="char-img-wrap">
+        <img class="char-img" src="https://makotoirei.github.io/tanosea9nal/agari-en.png" alt="あがりえん">
+      </div>
+      <div class="char-adopted">採用ネーミング（少年キャラ）</div>
+      <div class="char-name">あがりえん</div>
+      <div class="char-ruby">AGARI-EN</div>
+      <div class="nickname-row">応募ニックネーム<strong>ゆーん様</strong></div>
+    </div>
+    <div class="first-card">
+      <div class="char-img-wrap">
+        <img class="char-img" src="https://makotoirei.github.io/tanosea9nal/hokamaru.png" alt="ほかまる">
+      </div>
+      <div class="char-adopted">採用ネーミング（犬キャラ）</div>
+      <div class="char-name">ほかまる</div>
+      <div class="char-ruby">HOKAMARU</div>
+      <div class="nickname-row">応募ニックネーム<strong>とぅむ様</strong></div>
+    </div></div>
+  <div style="height:48px;"></div>
+
+  <div class="tier-header silver">
+    <div class="tier-badge silver">🥈</div>
+    <div class="tier-info"><h3 style="color:var(--silver);">地域応援賞 ／ 11名様</h3><div class="prize-name">元祖ゆし豆腐そば「高江洲そば」お食事券（3,000円分）</div></div>
+  </div>
+  <div class="how-to"><strong>📌 ご確認ください：</strong>ニックネームと提案されたキャラクター名の案をご確認ください。当選された方は、ページ下部の「当選者登録フォーム」よりお手続きをお願いいたします。</div>
+  <div class="winners-grid silver-grid">
+    <div class="winner-card">
+      <div class="w-num">1</div>
+      <div class="w-info">
+        <div class="w-nickname">ちろりん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ヒカル（火輝）<br><span class="tag tag-dog">🐕 犬</span>シーちゃん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">2</div>
+      <div class="w-info">
+        <div class="w-nickname">miyako5555様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ぽかりえ<br><span class="tag tag-dog">🐕 犬</span>ぽかまる</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">3</div>
+      <div class="w-info">
+        <div class="w-nickname">奇跡の子供達様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ちむあちー<br><span class="tag tag-dog">🐕 犬</span>ほかまる</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">4</div>
+      <div class="w-info">
+        <div class="w-nickname">星乃様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりえん<br><span class="tag tag-dog">🐕 犬</span>あがりワン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">5</div>
+      <div class="w-info">
+        <div class="w-nickname">あおけん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ちゅらさ<br><span class="tag tag-dog">🐕 犬</span>てぃーだ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">6</div>
+      <div class="w-info">
+        <div class="w-nickname">かねたん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりえん<br><span class="tag tag-dog">🐕 犬</span>ぽちび</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">7</div>
+      <div class="w-info">
+        <div class="w-nickname">浦添の桃さん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがり炎<br><span class="tag tag-dog">🐕 犬</span>てぃーだ丸</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">8</div>
+      <div class="w-info">
+        <div class="w-nickname">MIURA様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりえん<br><span class="tag tag-dog">🐕 犬</span>がっすん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">9</div>
+      <div class="w-info">
+        <div class="w-nickname">ニック様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリ<br><span class="tag tag-dog">🐕 犬</span>ティーダ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">10</div>
+      <div class="w-info">
+        <div class="w-nickname">なびぃー様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ぬくるん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">11</div>
+      <div class="w-info">
+        <div class="w-nickname">よーりー様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>もえる<br><span class="tag tag-dog">🐕 犬</span>ほか丸</div>
+      </div>
+    </div></div>
+  <div style="height:48px;"></div>
+
+  <div class="tier-header bronze">
+    <div class="tier-badge bronze">🥉</div>
+    <div class="tier-info"><h3 style="color:var(--bronze);">ありがとう賞 ／ 40名様</h3><div class="prize-name">イオン 商品券（500円分）</div></div>
+  </div>
+  <div class="how-to"><strong>📌 ご確認ください：</strong>ニックネームと提案されたキャラクター名の案をご確認ください。当選された方は、ページ下部の「当選者登録フォーム」よりお手続きをお願いいたします。</div>
+  <div class="winners-grid bronze-grid">
+    <div class="winner-card">
+      <div class="w-num">1</div>
+      <div class="w-info">
+        <div class="w-nickname">こここあ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>セーフ君</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">2</div>
+      <div class="w-info">
+        <div class="w-nickname">いもち様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>エルみん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">3</div>
+      <div class="w-info">
+        <div class="w-nickname">板チョコ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦</span>あがりー</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">4</div>
+      <div class="w-info">
+        <div class="w-nickname">プリン3150様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>アガ丸</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">5</div>
+      <div class="w-info">
+        <div class="w-nickname">ガネコ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>東炎太<br><span class="tag tag-dog">🐕 犬</span>ガス犬</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">6</div>
+      <div class="w-info">
+        <div class="w-nickname">SunnyT様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>翔炎<br><span class="tag tag-dog">🐕 犬</span>翔犬</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">7</div>
+      <div class="w-info">
+        <div class="w-nickname">よし様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリン<br><span class="tag tag-dog">🐕 犬</span>リーエー</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">8</div>
+      <div class="w-info">
+        <div class="w-nickname">りー様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>あおまる</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">9</div>
+      <div class="w-info">
+        <div class="w-nickname">大成ホーム きゃん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ふぃーまる<br><span class="tag tag-dog">🐕 犬</span>みーる</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">10</div>
+      <div class="w-info">
+        <div class="w-nickname">ジャスミン様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ほのるん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">11</div>
+      <div class="w-info">
+        <div class="w-nickname">はは様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>あがわん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">12</div>
+      <div class="w-info">
+        <div class="w-nickname">宮りょう様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリン<br><span class="tag tag-dog">🐕 犬</span>ポッポ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">13</div>
+      <div class="w-info">
+        <div class="w-nickname">ガース様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>パトワン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">14</div>
+      <div class="w-info">
+        <div class="w-nickname">りぃちゃん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ガス点犬</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">15</div>
+      <div class="w-info">
+        <div class="w-nickname">58パパ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>えがすけ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">16</div>
+      <div class="w-info">
+        <div class="w-nickname">ともちゃん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>シワン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">17</div>
+      <div class="w-info">
+        <div class="w-nickname">オカコ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリン<br><span class="tag tag-dog">🐕 犬</span>アオ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">18</div>
+      <div class="w-info">
+        <div class="w-nickname">有村ゆうき様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>東江 燈琉(あがりえ ともる)<br><span class="tag tag-dog">🐕 犬</span>メンテ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">19</div>
+      <div class="w-info">
+        <div class="w-nickname">りりり様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ふわりん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">20</div>
+      <div class="w-info">
+        <div class="w-nickname">まんじゅう様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>東りん<br><span class="tag tag-dog">🐕 犬</span>コロン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">21</div>
+      <div class="w-info">
+        <div class="w-nickname">Akiko様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ガス吉</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">22</div>
+      <div class="w-info">
+        <div class="w-nickname">カミヤン様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>フレアン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">23</div>
+      <div class="w-info">
+        <div class="w-nickname">ごまだいふく様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>あがわん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">24</div>
+      <div class="w-info">
+        <div class="w-nickname">まえひら様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ぽか</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">25</div>
+      <div class="w-info">
+        <div class="w-nickname">よっちゃん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>バウバウ</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">26</div>
+      <div class="w-info">
+        <div class="w-nickname">なべなべ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリン<br><span class="tag tag-dog">🐕 犬</span>エエワン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">27</div>
+      <div class="w-info">
+        <div class="w-nickname">きくしょう様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>あんあん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">28</div>
+      <div class="w-info">
+        <div class="w-nickname">脇内孝司様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ぽか丸</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">29</div>
+      <div class="w-info">
+        <div class="w-nickname">サニー様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ガスポン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">30</div>
+      <div class="w-info">
+        <div class="w-nickname">苦苦味様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>シバさん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">31</div>
+      <div class="w-info">
+        <div class="w-nickname">Rui様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>乾太郎</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">32</div>
+      <div class="w-info">
+        <div class="w-nickname">たくみん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>あがゆい</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">33</div>
+      <div class="w-info">
+        <div class="w-nickname">MIURA様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリン<br><span class="tag tag-dog">🐕 犬</span>リエワン</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">34</div>
+      <div class="w-info">
+        <div class="w-nickname">しー様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ルーカー</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">35</div>
+      <div class="w-info">
+        <div class="w-nickname">ゆにん様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>まもるん</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">36</div>
+      <div class="w-info">
+        <div class="w-nickname">トシ様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ゆいまる</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">37</div>
+      <div class="w-info">
+        <div class="w-nickname">覚えやすいしカッコいい様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>アガリンくん<br><span class="tag tag-dog">🐕 犬</span>ガス</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">38</div>
+      <div class="w-info">
+        <div class="w-nickname">もちはる様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>ガッシー</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">39</div>
+      <div class="w-info">
+        <div class="w-nickname">なお様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>あがりん<br><span class="tag tag-dog">🐕 犬</span>がー助</div>
+      </div>
+    </div>
+
+    <div class="winner-card">
+      <div class="w-num">40</div>
+      <div class="w-info">
+        <div class="w-nickname">ナッキーン様</div>
+        <div class="w-naming"><span class="tag tag-boy">👦 少年</span>ハピネスファイヤー・アガリン<br><span class="tag tag-dog">🐕 犬</span>あがりくんちゅ</div>
+      </div>
+    </div></div>
+</div>
+
+<div class="note-box">
+  <p>※ プライバシー保護のため、お名前は応募時のニックネームを掲載しています。<br>※ 掲載内容に誤りがある場合は、下記フォームよりお知らせください。<br>※ 重複当選はございません。</p>
+</div>
+
+<div class="form-section"><div class="form-inner">
+  <h3>当選された方へ<br>お受け取り登録フォーム</h3>
+  <p class="form-desc">当選者様専用フォームより、発送先情報のご登録をお願いいたします。<br>ご本人確認のため、応募時にご自身で設定された「4桁の暗証番号」が必要です。</p>
+  <div class="form-steps">
+    <div class="step"><div class="step-num">1</div><div>下記ボタンより「当選者登録フォーム」へアクセス</div></div>
+    <div class="step"><div class="step-num">2</div><div>お名前・ご住所など発送先情報を入力</div></div>
+    <div class="step"><div class="step-num">3</div><div>応募時にご自身で設定した「4桁の暗証番号」を入力して送信</div></div>
+    <div class="step"><div class="step-num">4</div><div>事務局にて照合後、順次景品を発送いたします</div></div>
+  </div>
+  <a href="https://docs.google.com/forms/d/18AeqBZhdGdwTtsz9X0Jv494Dc0z-daxCBHMgq9Wk-Ts/viewform" class="form-btn" target="_blank" rel="noopener">
+    <span class="form-btn-icon">▶</span>当選者登録フォームへ進む
+  </a>
+  <p class="deadline">※ 登録期限：2026年5月31日（日）まで<br>※ 期限を過ぎた場合は権利が無効となりますのでご注意ください</p>
+</div></div>
+
+<footer>
+  <p><a href="https://www.agariegas.co.jp" target="_blank">東江ガス株式会社</a> ／ 〒901-2132 沖縄県浦添市伊祖3丁目32番5号 ／ TEL：098-877-2515<br>
+  <a href="https://tanosea9nal.com/agariegas-characters.html">← キャラクター紹介ページへ戻る</a></p>
+</footer>
+</body></html>

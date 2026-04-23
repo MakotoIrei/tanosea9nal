@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東江ガス キャラクター関連 タスクリスト</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #f0f4f8; color: #333;
+  min-height: 100vh; padding: 40px 20px;
+}
+.container { max-width: 920px; margin: 0 auto; }
+
+/* ヘッダー */
+.header {
+  background: linear-gradient(135deg, #002a78, #004db8);
+  border-radius: 16px; padding: 32px 40px; color: #fff;
+  margin-bottom: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.header-left h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; font-weight: 900; margin-bottom: 6px;
+}
+.header-left p { font-size: 13px; color: rgba(255,255,255,0.75); }
+.header-right { text-align: right; }
+.header-right .date { font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+.deadline {
+  background: #ffd740; color: #002a78;
+  font-size: 14px; font-weight: 900;
+  padding: 6px 18px; border-radius: 30px; display: inline-block;
+}
+
+/* 進捗サマリー */
+.summary {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-bottom: 28px;
+}
+.summary-card {
+  background: #fff; border-radius: 12px; padding: 20px;
+  text-align: center; box-shadow: 0 2px 12px rgba(0,42,120,0.08);
+}
+.summary-card .num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 36px; font-weight: 900; margin-bottom: 4px;
+}
+.summary-card .lbl { font-size: 12px; color: #888; font-weight: 700; }
+.num.done { color: #22b573; }
+.num.wip { color: #f4a522; }
+.num.todo { color: #0055b3; }
+
+/* セクション */
+.section {
+  background: #fff; border-radius: 14px;
+  margin-bottom: 20px; overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,42,120,0.08);
+}
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 24px; font-weight: 900; font-size: 14px; color: #fff;
+}
+.section-header.green  { background: linear-gradient(90deg, #1a7a4a, #22b573); }
+.section-header.orange { background: linear-gradient(90deg, #c47a00, #f4a522); }
+.section-header.blue   { background: linear-gradient(90deg, #002a78, #0055b3); }
+.section-header.purple { background: linear-gradient(90deg, #5b21b6, #7c3aed); }
+.section-header .icon { font-size: 18px; }
+.date-badge {
+  margin-left: auto;
+  background: rgba(255,255,255,0.25);
+  font-size: 11px; padding: 3px 12px; border-radius: 20px; font-weight: 700;
+}
+
+/* タスク行 */
+.task-list { padding: 6px 0; }
+.task-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 24px; border-bottom: 1px solid #f0f4f8;
+  transition: background 0.2s;
+}
+.task-item:last-child { border-bottom: none; }
+.task-item:hover { background: #f8faff; }
+
+.status {
+  flex-shrink: 0; font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+  width: 68px; text-align: center; margin-top: 2px;
+}
+.status.done { background: #dcfce7; color: #166534; }
+.status.wip  { background: #fef9c3; color: #854d0e; }
+.status.todo { background: #dbeafe; color: #1e40af; }
+.status.wait { background: #f3e8ff; color: #6b21a8; }
+.status.prep { background: #ffedd5; color: #9a3412; }
+
+.task-body { flex: 1; }
+.task-name { font-size: 14px; font-weight: 700; color: #002a78; margin-bottom: 2px; }
+.task-note { font-size: 11px; color: #777; line-height: 1.6; }
+
+.right-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.owner {
+  font-size: 10px; padding: 2px 10px; border-radius: 20px; font-weight: 700;
+}
+.owner.tanosea  { background: #dbeafe; color: #1e40af; }
+.owner.agariegas{ background: #fce7f3; color: #9d174d; }
+.owner.both     { background: #e0f2fe; color: #0c4a6e; }
+.task-date { font-size: 11px; font-weight: 700; color: #aaa; }
+.task-date.urgent { color: #dc2626; }
+.task-date.soon   { color: #f59e0b; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="header-left">
+      <h1>🏆 東江ガス キャラクター関連 タスクリスト</h1>
+      <p>あがりえん＆ほかまる 発表準備スケジュール</p>
+    </div>
+    <div class="header-right">
+      <div class="date">2026年4月7日 現在</div>
+      <div class="deadline">🎉 発表日：4月15日（水）</div>
+    </div>
+  </div>
+
+  <!-- 進捗サマリー -->
+  <div class="summary">
+    <div class="summary-card">
+      <div class="num done">5</div>
+      <div class="lbl">✅ 完了</div>
+    </div>
+    <div class="summary-card">
+      <div class="num wip">5</div>
+      <div class="lbl">🔄 進行中</div>
+    </div>
+    <div class="summary-card">
+      <div class="num todo">8</div>
+      <div class="lbl">📋 未着手</div>
+    </div>
+  </div>
+
+  <!-- ①完了済み -->
+  <div class="section">
+    <div class="section-header green">
+      <span class="icon">✅</span> 完了済みタスク
+    </div>
+    <div class="task-list">
+
+      <div class="task-item">
+        <span class="status done">完了</span>
+        <div class="task-body">
+          <div class="task-name">感謝バナー制作・HP公開</div>
+          <div class="task-note">595件お礼・ネーミング確定の感謝メッセージ（4/1公開済み）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">4/1 完了</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status done">完了</span>
+        <div class="task-body">
+          <div class="task-name">役員会向け社内アンケート分析レポート（PDF）</div>
+          <div class="task-note">投票結果・推薦理由・社員の声を活かす論点整理</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">4/1 完了</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status done">完了</span>
+        <div class="task-body">
+          <div class="task-name">HP管理会社（マルシェ）向け作業指示書</div>
+          <div class="task-note">お知らせページテキスト・バナー設置依頼</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">4/1 完了</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status done">完了</span>
+        <div class="task-body">
+          <div class="task-name">ショート動画A 制作・YouTube配信</div>
+          <div class="task-note">応募者向け感謝動画（YouTube/Instagram/TikTok/X）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">4/1 完了</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status done">完了</span>
+        <div class="task-body">
+          <div class="task-name">役員会でのネーミング確定</div>
+          <div class="task-note">あがりえん（少年）＆ほかまる（犬）に決定。第2候補：あがりん＆ほかまる</div>
+        </div>
+        <div class="right-col">
+          <span class="owner agariegas">東江ガス</span>
+          <div class="task-date">4/7 完了</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ②進行中（〜4/12） -->
+  <div class="section">
+    <div class="section-header orange">
+      <span class="icon">🔄</span> 進行中タスク
+      <span class="date-badge">4/7〜4/12</span>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item">
+        <span class="status wip">進行中</span>
+        <div class="task-body">
+          <div class="task-name">商標確認（あがりえん・ほかまる）</div>
+          <div class="task-note">確認完了後に正式発表。第2候補：あがりん＆ほかまる</div>
+        </div>
+        <div class="right-col">
+          <span class="owner agariegas">東江ガス</span>
+          <div class="task-date soon">4/14まで</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status wip">進行中</span>
+        <div class="task-body">
+          <div class="task-name">キャラクター決定バナー制作（仮）</div>
+          <div class="task-note">PC版・SP版・アニメーション付きHTML。商標確認後に正式公開</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">4/12まで</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status wip">進行中</span>
+        <div class="task-body">
+          <div class="task-name">キャラクター紹介ページ制作（仮）</div>
+          <div class="task-note">あがりえん＆ほかまるのプロフィール・由来・選定理由を掲載</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">4/12まで</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status wip">進行中</span>
+        <div class="task-body">
+          <div class="task-name">当選者登録用Googleフォーム作成</div>
+          <div class="task-note">ニックネーム・応募名・確認コード・氏名・住所・電話番号</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">4/12まで</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status prep">準備中</span>
+        <div class="task-body">
+          <div class="task-name">新聞社・メディア向けPRプレスリリース 原稿作成</div>
+          <div class="task-note">沖縄タイムス・FM沖縄等への配信準備。原稿は4/12完成→公表は4/15以降</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">原稿4/12</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ③4/15発表向け -->
+  <div class="section">
+    <div class="section-header blue">
+      <span class="icon">📋</span> 4/15発表に向けた未着手タスク
+      <span class="date-badge">4/12〜4/15</span>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item">
+        <span class="status wait">商標待ち</span>
+        <div class="task-body">
+          <div class="task-name">キャラクター決定バナー・紹介ページ 正式公開</div>
+          <div class="task-note">商標確認完了後にHP・SNSへ公開。東江ガスHPからリンク設置依頼</div>
+        </div>
+        <div class="right-col">
+          <span class="owner both">両社</span>
+          <div class="task-date urgent">4/15</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">ショート動画B 制作・配信（一般向け告知編）</div>
+          <div class="task-note">あがりえん＆ほかまる名前発表動画。YouTube/Instagram/TikTok/X</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date urgent">4/15</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">当選者確認フォーム公開・SNSアナウンス</div>
+          <div class="task-note">当選者へ4桁コードで本人確認→登録フォームへ誘導</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date urgent">4/15</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">当選者リスト最終確認・発表</div>
+          <div class="task-note">53名の当選者発表（HP・SNS）。応募データとの照合</div>
+        </div>
+        <div class="right-col">
+          <span class="owner both">両社</span>
+          <div class="task-date urgent">4/15</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">新聞社・メディアへのPR配信</div>
+          <div class="task-note">沖縄タイムス・FM沖縄等へプレスリリース配信（4/15以降）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date urgent">4/15〜</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">賞品発送手続き開始</div>
+          <div class="task-note">ホテルコルディオ宿泊券・高江洲そば食事券・イオン商品券（53名）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner agariegas">東江ガス</span>
+          <div class="task-date">4/15〜</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ④中長期タスク -->
+  <div class="section">
+    <div class="section-header purple">
+      <span class="icon">🚀</span> 中長期タスク（4月下旬〜）
+      <span class="date-badge">4月中旬〜</span>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">Instagram公式アカウント立ち上げ・運用開始</div>
+          <div class="task-note">あがりえん＆ほかまるのアカウント開設・月8投稿。4/15間に合えば理想</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">4/15〜</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">YouTube公式チャンネル立ち上げ</div>
+          <div class="task-note">月2本制作・キャラクターを活かしたコンテンツ。4/15間に合えば理想</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date soon">4/15〜</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">キャラクター活用マニュアル制作</div>
+          <div class="task-note">ロゴ・表記・ポージング・カラー・ボイス・SNS運用ルール・使用禁止事項</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">4月下旬</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">LINEスタンプ制作</div>
+          <div class="task-note">あがりえん＆ほかまるのオリジナルスタンプ（8〜16種）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner tanosea">楽しくなる</span>
+          <div class="task-date">6月〜</div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <span class="status todo">未着手</span>
+        <div class="task-body">
+          <div class="task-name">お客様アンケート（夏）実施</div>
+          <div class="task-note">キャラクター認知度・好感度・会社イメージを定点観測（年2回）</div>
+        </div>
+        <div class="right-col">
+          <span class="owner both">両社</span>
+          <div class="task-date">7〜8月</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align:center; font-size:12px; color:#aaa; margin-top:28px;">
+    楽しくなる合同会社　｜　作成日：2026年4月7日
+  </div>
+
+</div>
+</body>
+</html>
