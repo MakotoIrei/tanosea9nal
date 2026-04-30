@@ -231,7 +231,7 @@ var DT=[
   {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,status:'none',month:'all',desc:''},
   {id:11,title:'定期アンケート（夏）',price:30000,status:'none',month:'all',desc:''}
 ];
-var user=null,tasks=[],opS={apr:true,may:false,jun:false};
+var user=null,tasks=[],opS={apr:false,may:true,jun:false},opCA=false,opCM=false;
 function fp(n){var v=(n==null||isNaN(n))?0:Number(n);return'\u00a5'+v.toLocaleString();}
 function fd(d){if(!d)return'';var p=d.split('-');return p.length>=3?(p[1].replace(/^0/,'')+'/'+p[2].replace(/^0/,'')):d;}
 function $(id){return document.getElementById(id);}
@@ -245,6 +245,8 @@ window.doLogout=function(){try{sessionStorage.removeItem(SS);}catch(e){}user=nul
 (function(){try{var pw=sessionStorage.getItem(SS);if(pw&&PW[pw]){user=PW[pw];$('login-screen').style.display='none';$('app').style.display='block';$('foot').style.display='flex';load();render();}}catch(e){}})();
 window.setStatus=function(id,st){for(var i=0;i<tasks.length;i++){if(tasks[i].id===id){tasks[i].status=st;break;}}save();render();};
 window.toggleS=function(m){opS[m]=!opS[m];render();};
+window.toggleCA=function(){opCA=!opCA;render();};
+window.toggleCM=function(){opCM=!opCM;render();};
 function calc(){var r={};AM.forEach(function(m){var mt=tasks.filter(function(t){return t.month===m;});var ap=mt.filter(function(t){return t.status==='approved';});var pe=mt.filter(function(t){return t.status==='none'||t.status==='held';});var apT=ap.reduce(function(s,t){return s+(t.price||0);},0);var peT=pe.reduce(function(s,t){return s+(t.price||0);},0);var comp=m==='apr'?CA:m==='may'?CM:[];var compT=comp.reduce(function(s,c){return s+(c.p||0);},0);var bI=m==='apr'?AB:m==='may'?MB:[];var bH=bI.reduce(function(s,i){return s+(i.h||0);},0);var base=BC.p;var carry=(CO.m===m)?CO.p:0;var bill=base+carry+compT+apT;r[m]={tasks:mt,approved:ap,pending:pe,apT:apT,peT:peT,comp:comp,compT:compT,bI:bI,bH:bH,base:base,carry:carry,bill:bill};});return r;}
 function render(){
 if(!user)return;var isA=user.role==='admin';var d=calc();var cl=gCl();
@@ -277,8 +279,9 @@ AM.forEach(function(m){
   h+='</div></div></div>';
 });
 h+='<div class="sec"><div class="coc"><div class="ct">【繰越】3カ月分 超過業務時間（4月のみ）</div><div class="ca">'+fp(CO.p)+'（'+CO.h+'h × '+fp(CO.r)+'）</div><div class="cd">'+esc(CO.tx)+'</div><span class="ctg">繰越済み・4月請求のみ</span></div></div>';
-if(CA.length>0){var caT=CA.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">完了済みスポット案件（4月分）</span><span class="sbdg gn">確定 '+fp(caT)+'</span></div>';CA.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});h+='</div>';}
+if(CA.length>0){var caT=CA.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr" style="cursor:pointer" onclick="toggleCA()"><span class="stitle">完了済みスポット案件（4月分） '+(opCA?'▼':'▶')+'</span><span class="sbdg gn">確定 '+fp(caT)+'</span></div>';if(opCA){CA.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});}h+='</div>';}
 if(tasks.length>0){var allApT=tasks.filter(function(t){return t.status==='approved';}).reduce(function(s,t){return s+(t.price||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">実施予定タスク（スポット）</span><span class="sbdg gd">承認済 '+fp(allApT)+'</span></div>';h+=rC(tasks,false);h+='</div>';}
+if(MB.length>0){var mbT=MB.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr" style="cursor:pointer" onclick="toggleCM()"><span class="stitle">完了済み（5月請求予定） '+(opCM?'▼':'▶')+'</span><span class="sbdg gn">確定 '+fp(mbT)+'</span></div>';if(opCM){MB.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+c.h+'h × '+fp(BC.r)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});}h+='</div>';}
 h+='<div style="height:60px"></div>';$('main').innerHTML=h;
 var allPe=tasks.filter(function(t){return t.status==='none'||t.status==='held';});var peA=allPe.reduce(function(s,t){return s+(t.price||0);},0);
 var f='';f+='<div class="fi"><div class="fl">4月請求</div><div class="fa">'+fp(d.apr.bill)+'</div></div>';f+='<div class="fi"><div class="fl">5月〜請求</div><div class="fa">'+fp(mB)+'</div></div>';f+='<div class="fi"><div class="fl">今月請求予定合計</div><div class="fa wh">'+fp(d.apr.bill)+'</div></div>';f+='<div class="fsub">確認待ち合計：'+fp(peA)+'</div>';$('foot').innerHTML=f;
