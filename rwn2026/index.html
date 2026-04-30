@@ -1130,53 +1130,55 @@
     <h2 class="section-title reveal">LINE UP</h2>
 
     <div class="band-grid">
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="johnny-ginowan">
         <div class="band-number">01</div>
         <div class="band-name">ジョニー宜野湾BAND</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="johnny-ginowan"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="jupiter">
         <div class="band-number">02</div>
         <div class="band-name">ジュピター</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="jupiter"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="yellowstone-bridge">
         <div class="band-number">03</div>
         <div class="band-name">イエローストーンブリッジ</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="yellowstone-bridge"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="ran">
         <div class="band-number">04</div>
         <div class="band-name">蘭</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="ran"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="bigmountain">
         <div class="band-number">05</div>
         <div class="band-name">ビッグマウンテンバンド</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="bigmountain"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="witchcraft">
         <div class="band-number">06</div>
         <div class="band-name">ウイッチクラフト</div>
         <span class="band-tag">Rock</span>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="witchcraft"></div></div>
       </div>
-      <div class="band-card reveal">
+      <div class="band-card reveal" data-band="miiz">
         <div class="band-number">07</div>
         <div class="band-name">ミーズ</div>
         <span class="band-tag">Rock</span>
         <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">「永遠のガールズ・マインド」をもった80年代ロックと歌謡曲。<br>沖国ロッククラブ キューティハートのギター・たーきーをゲストボーカルに迎え、ベース泉とともに懐かしい曲をお届けします。</p>
         <button class="gallery-toggle" onclick="toggleGallery(this)">📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
-        <div class="gallery-body">
-          <div class="gallery-grid">
-            <img src="images/miiz/S__2449440.jpg" alt="MiiiZ" onclick="openLB(0)">
-            <img src="images/miiz/S__2449441.jpg" alt="MiiiZ" onclick="openLB(1)">
-            <img src="images/miiz/S__2449443.jpg" alt="MiiiZ" onclick="openLB(2)">
-            <img src="images/miiz/S__2449445.jpg" alt="MiiiZ" onclick="openLB(3)">
-            <img src="images/miiz/S__2449448.jpg" alt="MiiiZ" onclick="openLB(4)">
-            <img src="images/miiz/S__2474158.jpg" alt="MiiiZ" onclick="openLB(5)">
-            <img src="images/miiz/S__2474159.jpg" alt="MiiiZ" onclick="openLB(6)">
-          </div>
-        </div>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="miiz"></div></div>
       </div>
     </div>
 
@@ -1391,12 +1393,35 @@
   });
 
   // ===== PHOTO GALLERY & LIGHTBOX =====
-  const lbPhotos=[
-    'images/miiz/S__2449440.jpg','images/miiz/S__2449441.jpg','images/miiz/S__2449443.jpg',
-    'images/miiz/S__2449445.jpg','images/miiz/S__2449448.jpg','images/miiz/S__2474158.jpg',
-    'images/miiz/S__2474159.jpg'
-  ];
-  let lbIdx=0;
+  const bandPhotos={
+    'johnny-ginowan':[],
+    'jupiter':[],
+    'yellowstone-bridge':[],
+    'ran':[],
+    'bigmountain':[],
+    'witchcraft':[],
+    'miiz':[
+      'images/miiz/S__2449440.jpg','images/miiz/S__2449441.jpg','images/miiz/S__2449443.jpg',
+      'images/miiz/S__2449445.jpg','images/miiz/S__2449448.jpg','images/miiz/S__2474158.jpg',
+      'images/miiz/S__2474159.jpg'
+    ]
+  };
+  let curPhotos=[], lbIdx=0;
+
+  // Populate galleries from config
+  Object.keys(bandPhotos).forEach(function(band){
+    const photos=bandPhotos[band];
+    const grid=document.querySelector('[data-gallery="'+band+'"]');
+    if(!grid||photos.length===0)return;
+    const btn=grid.closest('.band-card').querySelector('[data-gallery-btn]');
+    if(btn)btn.style.display='';
+    photos.forEach(function(src,i){
+      const img=document.createElement('img');
+      img.src=src;img.alt=band;
+      img.onclick=function(){openLB(band,i);};
+      grid.appendChild(img);
+    });
+  });
 
   // Create lightbox element
   const lbEl=document.createElement('div');
@@ -1414,10 +1439,11 @@
     btn.classList.toggle('open');
     btn.nextElementSibling.classList.toggle('open');
   }
-  function openLB(i){
+  function openLB(band,i){
+    curPhotos=bandPhotos[band]||[];
     lbIdx=i;
-    document.getElementById('lbImg').src=lbPhotos[lbIdx];
-    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbPhotos.length;
+    document.getElementById('lbImg').src=curPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+curPhotos.length;
     lbEl.classList.add('active');
     document.body.style.overflow='hidden';
   }
@@ -1426,9 +1452,9 @@
     document.body.style.overflow='';
   }
   function navLB(d){
-    lbIdx=(lbIdx+d+lbPhotos.length)%lbPhotos.length;
-    document.getElementById('lbImg').src=lbPhotos[lbIdx];
-    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbPhotos.length;
+    lbIdx=(lbIdx+d+curPhotos.length)%curPhotos.length;
+    document.getElementById('lbImg').src=curPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+curPhotos.length;
   }
   document.addEventListener('keydown',function(e){
     if(!lbEl.classList.contains('active'))return;
