@@ -945,6 +945,118 @@
     .band-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 20vw; }
   }
+
+  /* ===== PHOTO GALLERY ===== */
+  .gallery-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 8px 16px;
+    background: rgba(200,168,75,0.12);
+    border: 1px solid rgba(200,168,75,0.3);
+    border-radius: 6px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .gallery-toggle:hover { background: rgba(200,168,75,0.2); }
+  .gallery-toggle .arrow { transition: transform 0.3s; display: inline-block; }
+  .gallery-toggle.open .arrow { transform: rotate(180deg); }
+
+  .gallery-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  .gallery-body.open { max-height: 2000px; }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0.85;
+  }
+  .gallery-grid img:hover { opacity: 1; transform: scale(1.03); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .lightbox.active { opacity: 1; pointer-events: all; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(200,168,75,0.15);
+  }
+  .lb-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .lb-close:hover { opacity: 1; }
+  .lb-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(200,168,75,0.15);
+    border: 1px solid rgba(200,168,75,0.3);
+    color: var(--gold);
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .lb-arrow:hover { background: rgba(200,168,75,0.3); }
+  .lb-prev { left: 16px; }
+  .lb-next { right: 16px; }
+  .lb-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+  }
 </style>
 </head>
 <body>
@@ -1053,6 +1165,18 @@
         <div class="band-name">ミーズ</div>
         <span class="band-tag">Rock</span>
         <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">「永遠のガールズ・マインド」をもった80年代ロックと歌謡曲。<br>沖国ロッククラブ キューティハートのギター・たーきーをゲストボーカルに迎え、ベース泉とともに懐かしい曲をお届けします。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)">📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body">
+          <div class="gallery-grid">
+            <img src="images/miiz/S__2449440.jpg" alt="MiiiZ" onclick="openLB(0)">
+            <img src="images/miiz/S__2449441.jpg" alt="MiiiZ" onclick="openLB(1)">
+            <img src="images/miiz/S__2449443.jpg" alt="MiiiZ" onclick="openLB(2)">
+            <img src="images/miiz/S__2449445.jpg" alt="MiiiZ" onclick="openLB(3)">
+            <img src="images/miiz/S__2449448.jpg" alt="MiiiZ" onclick="openLB(4)">
+            <img src="images/miiz/S__2474158.jpg" alt="MiiiZ" onclick="openLB(5)">
+            <img src="images/miiz/S__2474159.jpg" alt="MiiiZ" onclick="openLB(6)">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1264,6 +1388,53 @@
       const nav = document.querySelector('.nav-links');
       nav.style.display = 'none';
     });
+  });
+
+  // ===== PHOTO GALLERY & LIGHTBOX =====
+  const lbPhotos=[
+    'images/miiz/S__2449440.jpg','images/miiz/S__2449441.jpg','images/miiz/S__2449443.jpg',
+    'images/miiz/S__2449445.jpg','images/miiz/S__2449448.jpg','images/miiz/S__2474158.jpg',
+    'images/miiz/S__2474159.jpg'
+  ];
+  let lbIdx=0;
+
+  // Create lightbox element
+  const lbEl=document.createElement('div');
+  lbEl.className='lightbox';
+  lbEl.innerHTML=`
+    <button class="lb-close" onclick="closeLB()">&times;</button>
+    <button class="lb-arrow lb-prev" onclick="navLB(-1)">&#8249;</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-arrow lb-next" onclick="navLB(1)">&#8250;</button>
+    <div class="lb-counter" id="lbCounter"></div>`;
+  document.body.appendChild(lbEl);
+  lbEl.addEventListener('click',function(e){if(e.target===lbEl)closeLB();});
+
+  function toggleGallery(btn){
+    btn.classList.toggle('open');
+    btn.nextElementSibling.classList.toggle('open');
+  }
+  function openLB(i){
+    lbIdx=i;
+    document.getElementById('lbImg').src=lbPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbPhotos.length;
+    lbEl.classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+  function closeLB(){
+    lbEl.classList.remove('active');
+    document.body.style.overflow='';
+  }
+  function navLB(d){
+    lbIdx=(lbIdx+d+lbPhotos.length)%lbPhotos.length;
+    document.getElementById('lbImg').src=lbPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbPhotos.length;
+  }
+  document.addEventListener('keydown',function(e){
+    if(!lbEl.classList.contains('active'))return;
+    if(e.key==='Escape')closeLB();
+    if(e.key==='ArrowLeft')navLB(-1);
+    if(e.key==='ArrowRight')navLB(1);
   });
 </script>
 </body>
