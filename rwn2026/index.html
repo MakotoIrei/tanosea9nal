@@ -1160,7 +1160,6 @@
     <li><a href="#ticket">TICKET</a></li>
     <li><a href="#timetable">SCHEDULE</a></li>
     <li><a href="#access">ACCESS</a></li>
-    <li><a href="#youtube">LIVE配信</a></li>
   </ul>
   <button class="hamburger" aria-label="メニュー" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -1205,6 +1204,16 @@
     </div>
 
     <a href="#ticket" class="hero-cta">🎟 チケット情報</a>
+
+    <!-- ライブ配信中止告知 -->
+    <div style="margin-top:36px; max-width:520px; background:rgba(10,10,10,0.85); border:1.5px solid rgba(180,50,40,0.5); padding:24px 28px; text-align:left; opacity:0; animation:fadeUp 0.8s 1.6s forwards;">
+      <p style="font-size:0.95rem; font-weight:900; color:var(--neon-red); margin-bottom:10px; letter-spacing:0.08em;">📢 ライブ配信について</p>
+      <p style="font-size:0.82rem; color:var(--text); line-height:1.9; letter-spacing:0.04em;">
+        諸事情・著作権保護のため、当日のライブ配信は中止とさせていただきます。<br>
+        ライブは会場で収録し、権利確認を経て後日アーカイブとして公開予定です。<br>
+        詳細は決定次第、こちらのサイトでお知らせします🎸
+      </p>
+    </div>
   </div>
 
   <div class="scroll-hint">
@@ -1420,10 +1429,6 @@
       <span class="icon">🍖</span>
       <span>フードコーナー有</span>
     </div>
-    <div class="extra-badge">
-      <span class="icon">📺</span>
-      <span>YouTube LIVE配信</span>
-    </div>
   </div>
 </section>
 
@@ -1502,21 +1507,6 @@
   </div>
 </section>
 
-<!-- YOUTUBE LIVE -->
-<section id="youtube">
-  <p class="section-label reveal">STREAMING</p>
-  <h2 class="section-title reveal">YOUTUBE LIVE</h2>
-
-  <div class="yt-banner reveal">
-    <div class="yt-icon">📡</div>
-    <div class="yt-text">
-      <h3>LIVE配信 実施予定</h3>
-      <p>当日はYouTube LIVEにてライブ配信を予定しています。<br>
-      会場に来られない方もリアルタイムで熱狂をお届けします。<br>
-      チャンネルは近日公開予定。チャンネル登録・通知設定をお忘れなく！</p>
-    </div>
-  </div>
-</section>
 
 <!-- ACCESS -->
 <section id="access">
@@ -1635,7 +1625,8 @@
     'miiz':[
       'images/miiz/S__2449440.jpg','images/miiz/S__2449441.jpg','images/miiz/S__2449443.jpg',
       'images/miiz/S__2449445.jpg','images/miiz/S__2449448.jpg','images/miiz/S__2474158.jpg',
-      'images/miiz/S__2474159.jpg'
+      'images/miiz/S__2474159.jpg',
+      'images/miiz/photo8.jpg','images/miiz/photo9.jpg','images/miiz/photo10.jpg'
     ],
     'yellowstone-bridge':['images/yellowstone-bridge/photo1.jpg','images/yellowstone-bridge/photo2.jpg','images/yellowstone-bridge/photo3.jpg','images/yellowstone-bridge/photo4.jpg','images/yellowstone-bridge/photo5.jpg']
   };
