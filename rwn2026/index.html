@@ -406,6 +406,76 @@
     box-shadow: 0 0 10px var(--neon-red);
   }
 
+  /* ===== TIMETABLE TABLE ===== */
+  .tt-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .tt-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,26,26,0.15);
+    border: 1px solid rgba(255,26,26,0.3);
+    padding: 8px 18px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    color: var(--neon-red);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  .tt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  .tt-table th {
+    background: rgba(255,26,26,0.12);
+    color: var(--neon-red);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid rgba(255,26,26,0.3);
+  }
+  .tt-table td {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: middle;
+  }
+  .tt-table tr:hover td {
+    background: rgba(200,168,75,0.05);
+  }
+  .tt-table .tt-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: rgba(200,168,75,0.4);
+    width: 50px;
+    text-align: center;
+  }
+  .tt-table .tt-time {
+    font-family: 'Oswald', sans-serif;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .tt-table .tt-band {
+    font-weight: 700;
+  }
+  .tt-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 16px;
+    letter-spacing: 0.1em;
+  }
+
   /* ===== LINEUP ===== */
   #lineup {
     background: var(--dark2);
@@ -477,6 +547,22 @@
     color: var(--text);
     letter-spacing: 0.05em;
     line-height: 1.3;
+  }
+
+  .band-time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 4px 12px;
+    background: rgba(255,26,26,0.12);
+    border: 1px solid rgba(255,26,26,0.25);
+    border-radius: 4px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    color: var(--neon-red);
+    letter-spacing: 0.05em;
+    font-weight: 700;
   }
 
   .band-tag {
@@ -939,11 +1025,127 @@
     .yt-banner { flex-direction: column; text-align: center; padding: 32px 24px; }
 
     footer { padding: 40px 20px 30px; }
+
+    .tt-table th, .tt-table td { padding: 10px 8px; font-size: 0.8rem; }
+    .tt-table .tt-num { font-size: 1.1rem; width: 36px; }
   }
 
   @media (max-width: 480px) {
     .band-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 20vw; }
+    .tt-table { font-size: 0.75rem; }
+  }
+
+  /* ===== PHOTO GALLERY ===== */
+  .gallery-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 8px 16px;
+    background: rgba(200,168,75,0.12);
+    border: 1px solid rgba(200,168,75,0.3);
+    border-radius: 6px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .gallery-toggle:hover { background: rgba(200,168,75,0.2); }
+  .gallery-toggle .arrow { transition: transform 0.3s; display: inline-block; }
+  .gallery-toggle.open .arrow { transform: rotate(180deg); }
+
+  .gallery-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  .gallery-body.open { max-height: 2000px; }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0.85;
+  }
+  .gallery-grid img:hover { opacity: 1; transform: scale(1.03); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .lightbox.active { opacity: 1; pointer-events: all; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(200,168,75,0.15);
+  }
+  .lb-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .lb-close:hover { opacity: 1; }
+  .lb-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(200,168,75,0.15);
+    border: 1px solid rgba(200,168,75,0.3);
+    color: var(--gold);
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .lb-arrow:hover { background: rgba(200,168,75,0.3); }
+  .lb-prev { left: 16px; }
+  .lb-next { right: 16px; }
+  .lb-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    opacity: 0.6;
   }
 </style>
 </head>
@@ -953,11 +1155,11 @@
 <nav>
   <a href="#" class="nav-logo">沖国 RWN 2026</a>
   <ul class="nav-links">
+    <li><a href="#timetable-table">TIME TABLE</a></li>
     <li><a href="#lineup">LINEUP</a></li>
     <li><a href="#ticket">TICKET</a></li>
     <li><a href="#timetable">SCHEDULE</a></li>
     <li><a href="#access">ACCESS</a></li>
-    <li><a href="#youtube">LIVE配信</a></li>
   </ul>
   <button class="hamburger" aria-label="メニュー" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -968,7 +1170,6 @@
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <p class="hero-presenter">第一興商 プレゼンツ</p>
     <p class="hero-edition">第4回</p>
     <p class="hero-okinawa">沖国</p>
     <h1 class="hero-title">ROCK WHY NOW</h1>
@@ -1003,6 +1204,16 @@
     </div>
 
     <a href="#ticket" class="hero-cta">🎟 チケット情報</a>
+
+    <!-- ライブ配信中止告知 -->
+    <div style="margin-top:36px; max-width:520px; margin-left:auto; margin-right:auto; background:rgba(10,10,10,0.85); border:1.5px solid rgba(180,50,40,0.5); padding:24px 28px; text-align:left; opacity:0; animation:fadeUp 0.8s 1.6s forwards;">
+      <p style="font-size:0.95rem; font-weight:900; color:var(--neon-red); margin-bottom:10px; letter-spacing:0.08em;">📢 ライブ配信について</p>
+      <p style="font-size:0.82rem; color:var(--text); line-height:1.9; letter-spacing:0.04em;">
+        著作権保護のため、当日のライブ配信は中止とさせていただきます。<br>
+        ライブは会場で収録し、権利確認を経て後日アーカイブとして公開予定です。<br>
+        詳細は決定次第、こちらのサイトでお知らせします🎸
+      </p>
+    </div>
   </div>
 
   <div class="scroll-hint">
@@ -1011,51 +1222,175 @@
   </div>
 </section>
 
-<!-- LINEUP -->
+<!-- TIMETABLE TABLE (作業4) -->
+<section id="timetable-table" style="max-width:100%; padding: 100px 40px; background: var(--dark);">
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="section-label reveal">SCHEDULE</p>
+    <h2 class="section-title reveal">TIME TABLE</h2>
+
+    <div class="tt-header reveal">
+      <div class="tt-badge">🚪 OPEN 17:00</div>
+      <div class="tt-badge" style="background:rgba(255,26,26,0.25);">🎸 START 18:00</div>
+    </div>
+
+    <table class="tt-table reveal">
+      <thead>
+        <tr>
+          <th style="text-align:center;">No.</th>
+          <th>バンド名</th>
+          <th>開始</th>
+          <th>終了</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tt-num">01</td>
+          <td class="tt-band">ウイッチクラフト</td>
+          <td class="tt-time">18:00</td>
+          <td class="tt-time">18:30</td>
+        </tr>
+        <tr>
+          <td class="tt-num">02</td>
+          <td class="tt-band">ビッグマウンテンバンド</td>
+          <td class="tt-time">18:40</td>
+          <td class="tt-time">19:10</td>
+        </tr>
+        <tr>
+          <td class="tt-num">03</td>
+          <td class="tt-band">ジョニー宜野湾BAND</td>
+          <td class="tt-time">19:20</td>
+          <td class="tt-time">19:50</td>
+        </tr>
+        <tr>
+          <td class="tt-num">04</td>
+          <td class="tt-band">蘭</td>
+          <td class="tt-time">20:00</td>
+          <td class="tt-time">20:30</td>
+        </tr>
+        <tr>
+          <td class="tt-num">05</td>
+          <td class="tt-band">ジュピター</td>
+          <td class="tt-time">20:40</td>
+          <td class="tt-time">21:10</td>
+        </tr>
+        <tr>
+          <td class="tt-num">06</td>
+          <td class="tt-band">MiiiZ(ミーズ)</td>
+          <td class="tt-time">21:20</td>
+          <td class="tt-time">21:50</td>
+        </tr>
+        <tr>
+          <td class="tt-num">07</td>
+          <td class="tt-band">イエローストーンブリッジ</td>
+          <td class="tt-time">22:00</td>
+          <td class="tt-time">22:30</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="tt-note reveal">※ 各バンド間の転換 10分</p>
+  </div>
+</section>
+
+<!-- LINEUP (作業2: 出演順に並べ替え / 作業3: 時刻バッジ追加) -->
 <section id="lineup" style="max-width:100%; padding: 100px 40px;">
   <div>
     <p class="section-label reveal">PERFORMERS</p>
     <h2 class="section-title reveal">LINE UP</h2>
 
     <div class="band-grid">
-      <div class="band-card reveal">
+      <!-- 01: ウイッチクラフト 18:00〜18:30 -->
+      <div class="band-card reveal" data-band="witchcraft">
         <div class="band-number">01</div>
-        <div class="band-name">ジョニー宜野湾BAND</div>
+        <div class="band-name">ウイッチクラフト</div>
+        <div class="band-time-badge">🕐 18:00〜18:30</div>
         <span class="band-tag">Rock</span>
+        <div style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.8;">
+          <p style="color:var(--gold);font-weight:700;font-size:0.75rem;letter-spacing:0.1em;">GENRE: 70年代〜80年代ハードロック</p>
+          <p style="margin-top:8px;">沖国入学時に結成したバンドもあれから40年。<br>時代を超えて愛される本格的なハードロックサウンドで、<br>会場を熱狂の渦に巻き込みます。</p>
+        </div>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="witchcraft"></div></div>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="margin-top:8px">🎵 オリジナル曲「Rock star」 <span class="arrow">▼</span></button>
+        <div class="gallery-body">
+          <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:4px;overflow:hidden;margin-top:10px;">
+            <iframe src="https://www.youtube.com/embed/Idt00Mu2gJc" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
       </div>
-      <div class="band-card reveal">
+      <!-- 02: ビッグマウンテンバンド 18:40〜19:10 -->
+      <div class="band-card reveal" data-band="bigmountain">
         <div class="band-number">02</div>
-        <div class="band-name">ジュピター</div>
+        <div class="band-name">ビッグマウンテンバンド</div>
+        <div class="band-time-badge">🕐 18:40〜19:10</div>
         <span class="band-tag">Rock</span>
+        <div style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.8;">
+          <p>1979年夏 マッシー マーク マック 兼城君でトラブルメーカー結成。<br>ACDC モントローズ テッドニュージェントを中心に演奏を行う。</p>
+          <p style="margin-top:6px;">米兵に人気出るが女子に全く受けなく マック・兼城君が去っていく。<br>その後数回のメンバーチェンジを繰り返すが自然消滅。</p>
+          <p style="margin-top:6px;">結成当初のメンバーの長期体調不良・行方不明者により再結成できず。<br>現在マーク大山率いるビッグマウンテンバンドによる当時のうるさいロックをお届けいたします。</p>
+          <p style="margin-top:10px;color:var(--gold);font-weight:700;font-size:0.75rem;letter-spacing:0.1em;">MEMBERS</p>
+          <p style="margin-top:4px;">マーク 大山（VO.GR）<br>ナーリー（DR）<br>オヤカタ（GR、VO）<br>ショゥジィー（BS.VO）</p>
+        </div>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="bigmountain"></div></div>
       </div>
-      <div class="band-card reveal">
+      <!-- 03: ジョニー宜野湾BAND 19:20〜19:50 -->
+      <div class="band-card reveal" data-band="johnny-ginowan">
         <div class="band-number">03</div>
-        <div class="band-name">イエローストーンブリッジ</div>
+        <div class="band-name">ジョニー宜野湾BAND</div>
+        <div class="band-time-badge">🕐 19:20〜19:50</div>
         <span class="band-tag">Rock</span>
+        <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">沖国ロッククラブ出身。宜野湾を拠点に活動するロックバンド。熱いステージパフォーマンスで会場を盛り上げます。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="johnny-ginowan"></div></div>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="margin-top:8px">📺 スポンサーCM出演 <span class="arrow">▼</span></button>
+        <div class="gallery-body">
+          <p style="margin:12px 0 8px;font-size:0.8rem;color:var(--muted);">イベントスポンサー企業テレビCM - ジョニーさん出演</p>
+          <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:4px;overflow:hidden;">
+            <iframe src="https://www.youtube.com/embed/tqDWmdMhbVA?start=62" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
       </div>
-      <div class="band-card reveal">
+      <!-- 04: 蘭 20:00〜20:30 -->
+      <div class="band-card reveal" data-band="ran">
         <div class="band-number">04</div>
         <div class="band-name">蘭</div>
+        <div class="band-time-badge">🕐 20:00〜20:30</div>
         <span class="band-tag">Rock</span>
+        <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">ひがたかし率いるバンド「蘭」。沖国ロッククラブの伝統を受け継ぐ熱いロックサウンド。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="ran"></div></div>
       </div>
-      <div class="band-card reveal">
+      <!-- 05: ジュピター 20:40〜21:10 -->
+      <div class="band-card reveal" data-band="jupiter">
         <div class="band-number">05</div>
-        <div class="band-name">ビッグマウンテンバンド</div>
+        <div class="band-name">ジュピター</div>
+        <div class="band-time-badge">🕐 20:40〜21:10</div>
         <span class="band-tag">Rock</span>
+        <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">沖国ロッククラブ出身。木星の名を冠するバンドが放つ、スケール感あふれるロックサウンド。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="jupiter"></div></div>
       </div>
-      <div class="band-card reveal">
+      <!-- 06: MiiiZ(ミーズ) 21:20〜21:50 -->
+      <div class="band-card reveal" data-band="miiz">
         <div class="band-number">06</div>
-        <div class="band-name">ウイッチクラフト</div>
+        <div class="band-name">MiiiZ(ミーズ)</div>
+        <div class="band-time-badge">🕐 21:20〜21:50</div>
         <span class="band-tag">Rock</span>
+        <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">「永遠のガールズ・マインド」をもった80年代ロックと歌謡曲。<br>沖国ロッククラブ キューティハートのギター・たーきーをゲストボーカルに迎え、ベース泉とともに懐かしい曲をお届けします。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)">📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="miiz"></div></div>
       </div>
-      <div class="band-card reveal">
+      <!-- 07: イエローストーンブリッジ 22:00〜22:30 -->
+      <div class="band-card reveal" data-band="yellowstone-bridge">
         <div class="band-number">07</div>
-        <div class="band-name">ミーズ</div>
+        <div class="band-name">イエローストーンブリッジ</div>
+        <div class="band-time-badge">🕐 22:00〜22:30</div>
         <span class="band-tag">Rock</span>
+        <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);line-height:1.7;">沖国大ロッククラブOB。トリを飾るロックバンド。骨太なロックサウンドで会場を盛り上げる。</p>
+        <button class="gallery-toggle" onclick="toggleGallery(this)" style="display:none" data-gallery-btn>📷 フォトギャラリーを見る <span class="arrow">▼</span></button>
+        <div class="gallery-body"><div class="gallery-grid" data-gallery="yellowstone-bridge"></div></div>
       </div>
     </div>
-
-    <p class="band-note reveal">※ 出演順は順不同</p>
   </div>
 </section>
 
@@ -1077,6 +1412,14 @@
     </div>
   </div>
 
+  <div class="ticket-stores reveal" style="margin-top:40px;text-align:center;">
+    <h3 style="font-size:1.1rem;color:var(--gold);margin-bottom:16px;">🎟 前売りチケット取扱店</h3>
+    <ul style="list-style:none;font-size:0.9rem;line-height:2;">
+      <li><strong>高良レコード店 楽器部</strong>　📞 098-861-6394</li>
+      <li><strong>高良楽器店</strong>　📞 098-863-8942</li>
+    </ul>
+  </div>
+
   <div class="extras reveal">
     <div class="extra-badge">
       <span class="icon">🍺</span>
@@ -1085,10 +1428,6 @@
     <div class="extra-badge">
       <span class="icon">🍖</span>
       <span>フードコーナー有</span>
-    </div>
-    <div class="extra-badge">
-      <span class="icon">📺</span>
-      <span>YouTube LIVE配信</span>
     </div>
   </div>
 </section>
@@ -1112,38 +1451,62 @@
         <div class="timeline-dot"></div>
         <div class="timeline-time">18:00</div>
         <div class="timeline-content">
-          <div class="timeline-title">START</div>
-          <div class="timeline-sub">開演</div>
+          <div class="timeline-title">ウイッチクラフト</div>
+          <div class="timeline-sub">18:00〜18:30</div>
         </div>
       </div>
       <div class="timeline-item reveal">
         <div class="timeline-dot"></div>
-        <div class="timeline-time">---</div>
+        <div class="timeline-time">18:40</div>
         <div class="timeline-content">
-          <div class="timeline-title">7バンド 出演</div>
-          <div class="timeline-sub">出演順は順不同</div>
-          <span class="tbd-note">詳細タイムテーブルは近日公開</span>
+          <div class="timeline-title">ビッグマウンテンバンド</div>
+          <div class="timeline-sub">18:40〜19:10</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">19:20</div>
+        <div class="timeline-content">
+          <div class="timeline-title">ジョニー宜野湾BAND</div>
+          <div class="timeline-sub">19:20〜19:50</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">20:00</div>
+        <div class="timeline-content">
+          <div class="timeline-title">蘭</div>
+          <div class="timeline-sub">20:00〜20:30</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">20:40</div>
+        <div class="timeline-content">
+          <div class="timeline-title">ジュピター</div>
+          <div class="timeline-sub">20:40〜21:10</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">21:20</div>
+        <div class="timeline-content">
+          <div class="timeline-title">MiiiZ(ミーズ)</div>
+          <div class="timeline-sub">21:20〜21:50</div>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-time">22:00</div>
+        <div class="timeline-content">
+          <div class="timeline-title">イエローストーンブリッジ</div>
+          <div class="timeline-sub">22:00〜22:30</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- YOUTUBE LIVE -->
-<section id="youtube">
-  <p class="section-label reveal">STREAMING</p>
-  <h2 class="section-title reveal">YOUTUBE LIVE</h2>
-
-  <div class="yt-banner reveal">
-    <div class="yt-icon">📡</div>
-    <div class="yt-text">
-      <h3>LIVE配信 実施予定</h3>
-      <p>当日はYouTube LIVEにてライブ配信を予定しています。<br>
-      会場に来られない方もリアルタイムで熱狂をお届けします。<br>
-      チャンネルは近日公開予定。チャンネル登録・通知設定をお忘れなく！</p>
-    </div>
-  </div>
-</section>
 
 <!-- ACCESS -->
 <section id="access">
@@ -1157,9 +1520,6 @@
 
       <dt>住所</dt>
       <dd>〒900-0032<br>沖縄県那覇市松山2-13-1</dd>
-
-      <dt>TEL</dt>
-      <dd><a href="tel:050-5486-6088">050-5486-6088</a></dd>
 
       <dt>WEB</dt>
       <dd><a href="https://fb1z201.gorp.jp" target="_blank" rel="noopener">https://fb1z201.gorp.jp</a></dd>
@@ -1191,15 +1551,15 @@
   <div>
     <p class="sns-title">FOLLOW US</p>
     <div class="sns-links">
-      <a href="#" class="sns-btn" target="_blank" rel="noopener">
+      <span class="sns-btn" style="opacity:0.35;cursor:default;pointer-events:none;">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
         Instagram
-      </a>
-      <a href="#" class="sns-btn" target="_blank" rel="noopener">
+      </span>
+      <span class="sns-btn" style="opacity:0.35;cursor:default;pointer-events:none;">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         X (Twitter)
-      </a>
-      <a href="#" class="sns-btn" target="_blank" rel="noopener">
+      </span>
+      <a href="https://www.youtube.com/@ryukyutanosea9nal" class="sns-btn" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         YouTube
       </a>
@@ -1216,9 +1576,7 @@
   <p class="footer-sub">第4回 沖国 ROCK WHY NOW 2026</p>
   <p class="footer-info">
     2026年5月30日（土）OPEN 17:00 / START 18:00<br>
-    会場：SCRATCH — 〒900-0032 沖縄県那覇市松山2-13-1<br>
-    TEL: <a href="tel:050-5486-6088">050-5486-6088</a><br>
-    主催：第一興商
+    会場：SCRATCH — 〒900-0032 沖縄県那覇市松山2-13-1
   </p>
   <p class="footer-copy">© 2026 第4回 沖国 ROCK WHY NOW All Rights Reserved.</p>
 </footer>
@@ -1255,6 +1613,78 @@
       const nav = document.querySelector('.nav-links');
       nav.style.display = 'none';
     });
+  });
+
+  // ===== PHOTO GALLERY & LIGHTBOX =====
+  const bandPhotos={
+    'witchcraft':['images/witchcraft/photo1.jpg','images/witchcraft/photo2.jpg','images/witchcraft/photo3.jpg','images/witchcraft/photo4.jpg','images/witchcraft/photo5.jpg','images/witchcraft/photo6.jpg'],
+    'bigmountain':['images/bigmountain/photo1.jpg','images/bigmountain/photo2.jpg','images/bigmountain/photo3.jpg','images/bigmountain/photo4.jpg','images/bigmountain/photo5.jpg'],
+    'johnny-ginowan':['images/johnny-ginowan/photo1.jpg','images/johnny-ginowan/photo2.jpg','images/johnny-ginowan/photo3.jpg','images/johnny-ginowan/photo4.jpg','images/johnny-ginowan/photo5.jpg','images/johnny-ginowan/photo6.jpg','images/johnny-ginowan/photo7.jpg','images/johnny-ginowan/photo8.jpg','images/johnny-ginowan/photo9.jpg'],
+    'ran':['images/ran/photo1.jpg','images/ran/photo2.jpg','images/ran/photo3.jpg','images/ran/photo4.jpg','images/ran/photo5.jpg'],
+    'jupiter':['images/jupiter/photo1.jpg','images/jupiter/photo2.jpg','images/jupiter/photo3.jpg','images/jupiter/photo4.jpg','images/jupiter/photo5.jpg','images/jupiter/photo6.jpg','images/jupiter/photo7.jpg','images/jupiter/photo8.jpg'],
+    'miiz':[
+      'images/miiz/S__2449440.jpg','images/miiz/S__2449441.jpg','images/miiz/S__2449443.jpg',
+      'images/miiz/S__2449445.jpg','images/miiz/S__2449448.jpg','images/miiz/S__2474158.jpg',
+      'images/miiz/S__2474159.jpg',
+      'images/miiz/photo8.jpg','images/miiz/photo9.jpg'
+    ],
+    'yellowstone-bridge':['images/yellowstone-bridge/photo1.jpg','images/yellowstone-bridge/photo2.jpg','images/yellowstone-bridge/photo3.jpg','images/yellowstone-bridge/photo4.jpg','images/yellowstone-bridge/photo5.jpg']
+  };
+  let curPhotos=[], lbIdx=0;
+
+  // Populate galleries from config
+  Object.keys(bandPhotos).forEach(function(band){
+    const photos=bandPhotos[band];
+    const grid=document.querySelector('[data-gallery="'+band+'"]');
+    if(!grid||photos.length===0)return;
+    const btn=grid.closest('.band-card').querySelector('[data-gallery-btn]');
+    if(btn)btn.style.display='';
+    photos.forEach(function(src,i){
+      const img=document.createElement('img');
+      img.src=src;img.alt=band;
+      img.onclick=function(){openLB(band,i);};
+      grid.appendChild(img);
+    });
+  });
+
+  // Create lightbox element
+  const lbEl=document.createElement('div');
+  lbEl.className='lightbox';
+  lbEl.innerHTML=`
+    <button class="lb-close" onclick="closeLB()">&times;</button>
+    <button class="lb-arrow lb-prev" onclick="navLB(-1)">&#8249;</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-arrow lb-next" onclick="navLB(1)">&#8250;</button>
+    <div class="lb-counter" id="lbCounter"></div>`;
+  document.body.appendChild(lbEl);
+  lbEl.addEventListener('click',function(e){if(e.target===lbEl)closeLB();});
+
+  function toggleGallery(btn){
+    btn.classList.toggle('open');
+    btn.nextElementSibling.classList.toggle('open');
+  }
+  function openLB(band,i){
+    curPhotos=bandPhotos[band]||[];
+    lbIdx=i;
+    document.getElementById('lbImg').src=curPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+curPhotos.length;
+    lbEl.classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+  function closeLB(){
+    lbEl.classList.remove('active');
+    document.body.style.overflow='';
+  }
+  function navLB(d){
+    lbIdx=(lbIdx+d+curPhotos.length)%curPhotos.length;
+    document.getElementById('lbImg').src=curPhotos[lbIdx];
+    document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+curPhotos.length;
+  }
+  document.addEventListener('keydown',function(e){
+    if(!lbEl.classList.contains('active'))return;
+    if(e.key==='Escape')closeLB();
+    if(e.key==='ArrowLeft')navLB(-1);
+    if(e.key==='ArrowRight')navLB(1);
   });
 </script>
 </body>
