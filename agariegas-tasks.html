@@ -191,7 +191,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v22',SS='agariegas_session',CK='agariegas_closed_v1';
+var SK='agariegas_tasks_v23',SS='agariegas_session',CK='agariegas_closed_v1';
 var BC={p:100000,h:20,r:5000};
 var CO={p:100000,h:20,r:5000,m:'apr',tx:'1月〜3月の累計超過時間 20h分を4月基本業務に繰り越し済み'};
 var AM=['apr','may','jun'];
@@ -284,7 +284,7 @@ AM.forEach(function(m){
   h+='</table>';
   h+='<div class="bsm"><div class="bsr"><span>稼働時間 '+uH+'h / '+tH+'h</span><span class="bsv">残り '+rH+'h</span></div>';
   h+='<div class="bsb"><div class="bsf" style="width:'+Math.min(100,uH/tH*100)+'%"></div></div>';
-  h+='<div class="bst"><span>消化済み：'+uH+'h '+fp(uH*BC.r)+'</span><span style="color:var(--blue);font-weight:700">残り：'+rH+'h '+fp(rH*BC.r)+'</span></div>';
+  h+='<div class="bst"><span>消化済み：'+uH+'h</span><span style="color:var(--blue);font-weight:700">残り：'+rH+'h</span></div>';
   h+='</div></div></div>';
 });
 h+='<div class="sec"><div class="coc"><div class="ct">【繰越】3カ月分 超過業務時間（4月のみ）</div><div class="ca">'+fp(CO.p)+'（'+CO.h+'h × '+fp(CO.r)+'）</div><div class="cd">'+esc(CO.tx)+'</div><span class="ctg">繰越済み・4月請求のみ</span></div></div>';
