@@ -9,625 +9,300 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --navy:#002a78;--navy-light:#003a9e;--navy-dark:#001a4e;
-  --gold:#ffd740;--gold-dark:#c8a800;--gold-light:#ffe680;
-  --bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--text-sub:#666;
-  --green:#2e7d32;--green-bg:#e8f5e9;
-  --orange:#e65100;--orange-bg:#fff3e0;
-  --red:#c62828;--red-bg:#ffebee;
-  --blue:#1565c0;--blue-bg:#e3f2fd;
-  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --navy:#0a1e6e;--navy-dark:#071550;--navy-hdr:#0d2377;
+  --gold:#ffd740;--gold-dark:#c8a800;
+  --green:#1b8c3a;--green-lt:#e8f5e9;
+  --orange:#e67e00;--orange-lt:#fff3e0;
+  --red:#d32f2f;
+  --blue:#2962ff;
+  --gbg:#eef1f6;--text:#1a1a2e;--tsub:#666;--tmut:#999;
+  --radius:8px;
 }
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-
-/* LOGIN */
+body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--text);min-height:100vh;padding-bottom:80px}
 #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--navy-dark),var(--navy))}
-.login-box{background:#fff;border-radius:var(--radius);padding:48px 40px;width:90%;max-width:400px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.login-box h1{color:var(--navy);font-size:1.5rem;margin-bottom:8px}
-.login-box p{color:var(--text-sub);font-size:.9rem;margin-bottom:24px}
-.login-box input{width:100%;padding:14px 16px;border:2px solid #ddd;border-radius:8px;font-size:1rem;font-family:inherit;outline:none;transition:border .2s}
-.login-box input:focus{border-color:var(--navy)}
-.login-box button{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:16px;font-family:inherit;transition:background .2s}
-.login-box button:hover{background:var(--navy-light)}
-.login-err{color:var(--red);font-size:.85rem;margin-top:12px;display:none}
-
-/* HEADER */
+.lb{background:#fff;border-radius:var(--radius);padding:48px 40px;width:90%;max-width:400px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.lb h1{color:var(--navy);font-size:1.4rem;margin-bottom:4px}
+.lb .sub{color:var(--tsub);font-size:.85rem;margin-bottom:24px}
+.lb input{width:100%;padding:14px 16px;border:2px solid #ddd;border-radius:6px;font-size:1rem;font-family:inherit;outline:none}
+.lb input:focus{border-color:var(--navy)}
+.lb button{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:16px;font-family:inherit}
+.lb button:hover{opacity:.9}
+.lerr{color:var(--red);font-size:.85rem;margin-top:12px;display:none}
 #app{display:none}
-.header{background:var(--navy);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.header h1{font-size:1.2rem;display:flex;align-items:center;gap:8px}
-.header h1 .badge{background:var(--gold);color:var(--navy);font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700}
-.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.header-right .role{font-size:.8rem;opacity:.8}
-.btn{padding:8px 16px;border:none;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:var(--gold-light)}
-.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
-.btn-outline:hover{background:rgba(255,255,255,.1)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{background:#b71c1c}
-.btn-sm{padding:6px 12px;font-size:.8rem}
-
-/* SUMMARY */
-.summary-bar{background:#fff;padding:20px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;border-bottom:1px solid #e0e0e0}
-.summary-card{padding:16px;border-radius:var(--radius);background:var(--bg)}
-.summary-card .label{font-size:.75rem;color:var(--text-sub);margin-bottom:4px}
-.summary-card .value{font-size:1.5rem;font-weight:900;color:var(--navy)}
-.summary-card .value.gold{color:var(--gold-dark)}
-
-/* TABS */
-.tabs{display:flex;padding:0 24px;background:#fff;border-bottom:1px solid #e0e0e0;overflow-x:auto}
-.tab{padding:14px 20px;font-size:.9rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--text-sub);white-space:nowrap;transition:all .2s}
-.tab.active{color:var(--navy);border-bottom-color:var(--gold)}
-.tab:hover{color:var(--navy)}
-
-/* CONTENT */
-.content{padding:24px;max-width:1200px;margin:0 auto}
-.section-title{font-size:1rem;font-weight:700;color:var(--navy);margin:24px 0 12px;display:flex;align-items:center;gap:8px}
-.section-title:first-child{margin-top:0}
-
-/* TASK CARD */
-.task-card{background:var(--card);border-radius:var(--radius);padding:20px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--navy);transition:transform .15s}
-.task-card:hover{transform:translateY(-1px)}
-.task-card.approved{border-left-color:var(--green);background:var(--green-bg)}
-.task-card.held{border-left-color:var(--orange);background:var(--orange-bg)}
-.task-card.rejected{border-left-color:var(--red);background:var(--red-bg)}
-.task-card.completed{border-left-color:#9e9e9e;background:#fafafa}
-.task-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-.task-title{font-weight:700;font-size:.95rem;flex:1}
-.task-price{font-weight:900;font-size:1.1rem;color:var(--navy);white-space:nowrap}
-.task-meta{display:flex;gap:12px;margin-top:8px;font-size:.8rem;color:var(--text-sub);flex-wrap:wrap}
-.task-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.task-actions .btn{font-size:.8rem;padding:6px 14px}
-.btn-approve{background:var(--green);color:#fff}
-.btn-approve:hover{background:#1b5e20}
-.btn-hold{background:var(--orange);color:#fff}
-.btn-hold:hover{background:#bf360c}
-.btn-reject{background:var(--red);color:#fff}
-.btn-reject:hover{background:#b71c1c}
-.btn-reset{background:#9e9e9e;color:#fff}
-.btn-reset:hover{background:#757575}
-.status-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
-.status-badge.approved{background:var(--green);color:#fff}
-.status-badge.held{background:var(--orange);color:#fff}
-.status-badge.rejected{background:var(--red);color:#fff}
-.status-badge.completed{background:#9e9e9e;color:#fff}
-
-/* COMPLETED LIST */
-.completed-item{background:var(--card);border-radius:8px;padding:14px 20px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #9e9e9e;flex-wrap:wrap;gap:8px}
-.completed-item .ci-title{font-weight:500;font-size:.9rem}
-.completed-item .ci-right{display:flex;gap:16px;align-items:center;font-size:.85rem;color:var(--text-sub)}
-.completed-item .ci-price{font-weight:700;color:var(--navy)}
-
-/* CLOSE MONTH MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal{background:#fff;border-radius:var(--radius);padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
-.modal h2{font-size:1.2rem;color:var(--navy);margin-bottom:16px}
-.modal p{font-size:.9rem;margin-bottom:12px;line-height:1.6}
-.modal-actions{display:flex;gap:12px;margin-top:24px;justify-content:flex-end}
-
-/* RESPONSIVE */
+.hdr{background:var(--navy-hdr);color:#fff;padding:12px 24px}
+.hdr-top{display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:1.1rem;font-weight:900;letter-spacing:.5px}
+.hdr h1 span{color:var(--gold)}
+.hdr .stxt{font-size:.75rem;opacity:.7;margin-top:2px}
+.rbdg{display:inline-block;background:var(--gold);color:var(--navy);font-size:.75rem;font-weight:700;padding:4px 14px;border-radius:20px;margin-top:8px}
+.blo{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:4px;font-size:.8rem;cursor:pointer;font-family:inherit}
+.blo:hover{background:rgba(255,255,255,.1)}
+.dbar{text-align:center;padding:12px;color:var(--tsub);font-size:.8rem;background:#fff;border-bottom:1px solid #e0e0e0}
+.srow{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0 24px;background:#fff;padding-bottom:24px;padding-top:12px}
+.scb{border:2px solid #ddd;padding:20px;text-align:center}
+.scb:first-child{border-radius:var(--radius) 0 0 var(--radius);border-right:1px solid #ddd}
+.scb:last-child{border-radius:0 var(--radius) var(--radius) 0;border-left:1px solid #ddd}
+.scb .sl{font-size:.85rem;font-weight:700}
+.scb .sa{font-size:2rem;font-weight:900;color:var(--navy);margin:8px 0 4px}
+.scb .sd{font-size:.75rem;color:var(--tsub)}
+.expl{padding:20px 24px;color:var(--green);font-size:.85rem;line-height:1.8;background:#fff;border-bottom:1px solid #e0e0e0;display:none}
+.psec{padding:16px 24px;background:#fff;border-bottom:1px solid #e0e0e0}
+.ph{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:6px}
+.pbo{width:100%;height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden}
+.pbi{height:100%;background:var(--blue);border-radius:4px;transition:width .3s}
+.sec{max-width:1100px;margin:24px auto;padding:0 24px}
+.shdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.stitle{font-size:1rem;font-weight:900;color:var(--navy);border-bottom:3px solid var(--navy);padding-bottom:4px;display:inline-block}
+.sbdg{font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:4px;border:1px solid}
+.sbdg.bl{color:var(--blue);border-color:var(--blue)}
+.sbdg.gd{color:var(--gold-dark);border-color:var(--gold-dark)}
+.sbdg.gn{color:var(--green);border-color:var(--green)}
+.bwc{background:linear-gradient(135deg,#2962ff,#1a47cc);color:#fff;border-radius:var(--radius);padding:20px;cursor:pointer;position:relative}
+.bwc.exp{border-radius:var(--radius) var(--radius) 0 0}
+.bwt{font-size:.95rem;font-weight:700}
+.bws{display:flex;justify-content:space-between;font-size:.8rem;margin-top:4px;opacity:.85}
+.bwa{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.2rem}
+.bwd{background:#fff;border:1px solid #d0d7e8;border-top:none;border-radius:0 0 var(--radius) var(--radius);display:none;overflow:hidden}
+.bwd.open{display:block}
+.bwd table{width:100%;border-collapse:collapse;font-size:.85rem}
+.bwd td{padding:10px 16px;border-bottom:1px solid #eee}
+.tdd{width:50px;text-align:center;color:var(--tsub)}
+.tdh{width:40px;text-align:center;color:var(--blue);font-weight:700}
+.tdp{width:80px;text-align:right;font-weight:700}
+.tpl td{color:var(--tmut);font-size:.8rem}
+.tpl .tdh{color:var(--tmut)}
+.bsm{padding:12px 16px;border-top:2px solid var(--navy);background:var(--gbg)}
+.bsr{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px}
+.bsv{font-weight:700;color:var(--blue)}
+.bsb{width:100%;height:10px;background:#d0d7e8;border-radius:5px;overflow:hidden;margin:8px 0}
+.bsf{height:100%;background:var(--blue);border-radius:5px}
+.bst{display:flex;justify-content:space-between;font-size:.85rem;margin-top:8px;padding-top:8px;border-top:1px solid #d0d7e8}
+.coc{background:linear-gradient(135deg,#546e7a,#37474f);color:#fff;border-radius:var(--radius);padding:20px}
+.coc .ct{font-size:.85rem;font-weight:700;opacity:.9}
+.coc .ca{font-size:1.2rem;font-weight:900;margin-top:4px}
+.coc .cd{background:rgba(255,255,255,.1);border-radius:6px;padding:12px;margin-top:12px;font-size:.8rem;line-height:1.6}
+.coc .ctg{display:inline-block;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:4px;font-size:.75rem;margin-top:8px}
+.cpc{background:#fff;border-left:4px solid var(--green);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.cpn{width:28px;height:28px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.cpi{flex:1}
+.cpi .cit{font-weight:700;font-size:.9rem}
+.cpi .cim{font-size:.8rem;color:var(--tsub);margin-top:4px;display:flex;gap:8px;align-items:center}
+.cpb{background:var(--green);color:#fff;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700}
+.cpp{font-size:1.1rem;font-weight:900;white-space:nowrap}
+.cmc{background:#fff;border-left:4px solid var(--blue);border-radius:var(--radius);padding:14px 20px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.cmc .cmt{font-weight:500;font-size:.85rem;flex:1}
+.cmc .cmr{display:flex;gap:12px;align-items:center;font-size:.8rem;color:var(--tsub)}
+.cmc .cmp{font-weight:700;color:var(--navy)}
+.cmc .cml{font-size:.75rem;color:var(--tmut)}
+.tk{background:#fff;border-left:4px solid var(--navy);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.tk.ap{border-left-color:var(--green);background:var(--green-lt)}
+.tk.ho{border-left-color:var(--orange);background:var(--orange-lt)}
+.tk.rj{border-left-color:#999;background:#f5f5f5;opacity:.7}
+.tkh{display:flex;align-items:flex-start;gap:14px}
+.tkn{width:28px;height:28px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.tk.ap .tkn{background:var(--green)}
+.tk.ho .tkn{background:var(--orange)}
+.tkb{flex:1}
+.tkb .tp{font-size:1.1rem;font-weight:900;float:right;margin-left:12px}
+.tkb .tt{font-weight:700;font-size:.95rem}
+.tkb .tm{margin-top:6px;font-size:.8rem;color:var(--tsub)}
+.tkb .dw{color:var(--red);font-weight:700}
+.tkb .cft{color:var(--orange);font-weight:500;margin-left:8px}
+.tkb .td{margin-top:8px;font-size:.85rem;color:var(--tsub)}
+.sttag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:.75rem;font-weight:700;color:#fff;margin-top:6px}
+.sttag.ap{background:var(--green)}
+.sttag.ho{background:var(--orange)}
+.sttag.rj{background:#999}
+.tka{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.ba{width:100%;padding:14px;border:none;border-radius:6px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.ba:hover{opacity:.85}
+.ba.bap{background:var(--green);color:#fff}
+.ba.bho{background:var(--orange);color:#fff}
+.ba.brj{background:#bbb;color:#fff}
+.ba.bun{background:#eee;color:var(--text);padding:10px;font-size:.85rem;margin-top:4px}
+.brow{display:flex;gap:8px}
+.brow .ba{flex:1}
+.foot{position:fixed;bottom:0;left:0;right:0;background:var(--navy-dark);color:#fff;display:none;justify-content:space-between;align-items:center;padding:10px 24px;font-size:.85rem;z-index:100;flex-wrap:wrap;gap:4px}
+.fi{text-align:center}
+.fl{font-size:.65rem;opacity:.7}
+.fa{font-size:1.1rem;font-weight:900;color:var(--gold)}
+.fa.wh{color:#fff}
+.fsub{font-size:.7rem;opacity:.6;text-align:center;width:100%}
+.abar{background:#fff;padding:12px 24px;border-bottom:1px solid #e0e0e0;display:none;gap:8px;flex-wrap:wrap}
+.bad{padding:8px 16px;background:var(--navy);color:#fff;border:none;border-radius:6px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+.bad:hover{opacity:.85}
+.bad.gd{background:var(--gold);color:var(--navy)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.mo.show{display:flex}
+.mbox{background:#fff;border-radius:var(--radius);padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
+.mbox h2{font-size:1.1rem;color:var(--navy);margin-bottom:16px}
+.mbox p{font-size:.9rem;margin-bottom:8px;line-height:1.6}
+.macts{display:flex;gap:12px;margin-top:20px;justify-content:flex-end}
+.mb{padding:10px 20px;border:none;border-radius:6px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit}
+.mb.cn{background:#eee;color:var(--text)}
+.mb.cf{background:var(--red);color:#fff}
 @media(max-width:768px){
-  .header{padding:12px 16px}
-  .header h1{font-size:1rem}
-  .summary-bar{padding:16px;grid-template-columns:1fr 1fr;gap:12px}
-  .summary-card .value{font-size:1.2rem}
-  .content{padding:16px}
-  .task-top{flex-direction:column}
-  .tabs{padding:0 12px}
-  .tab{padding:12px 14px;font-size:.85rem}
-  .login-box{padding:32px 24px}
-}
-@media(max-width:480px){
-  .summary-bar{grid-template-columns:1fr}
+  .hdr{padding:10px 16px}
+  .srow{grid-template-columns:1fr;padding:0 16px;gap:12px}
+  .scb:first-child,.scb:last-child{border-radius:var(--radius);border:2px solid #ddd}
+  .sec{padding:0 16px}
+  .foot{padding:8px 12px;font-size:.75rem}
+  .fa{font-size:.95rem}
+  .tkb .tp{float:none;display:block;margin:6px 0}
+  .brow{flex-direction:column}
 }
 </style>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div class="login-box">
-    <h1>東江ガス株式会社</h1>
-    <p>タスク発注管理システム</p>
-    <input type="password" id="pw-input" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
+  <div class="lb">
+    <h1>AGARIEGAS タスク管理</h1>
+    <p class="sub">東江ガス × 楽しくなる合同会社</p>
+    <input type="password" id="pw" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">ログイン</button>
-    <div class="login-err" id="login-err">パスワードが正しくありません</div>
+    <div class="lerr" id="lerr">パスワードが正しくありません</div>
   </div>
 </div>
-
-<!-- APP -->
 <div id="app">
-  <!-- HEADER -->
-  <div class="header">
-    <h1>東江ガス タスク管理 <span class="badge">53周年</span></h1>
-    <div class="header-right">
-      <span class="role" id="role-label"></span>
-      <button class="btn btn-gold" onclick="showExportModal()" id="btn-csv">📥 CSV出力</button>
-      <button class="btn btn-outline" onclick="doLogout()">ログアウト</button>
+  <div class="hdr">
+    <div class="hdr-top">
+      <div>
+        <h1><span>AGARIEGAS</span> タスク管理</h1>
+        <div class="stxt">東江ガス × 楽しくなる合同会社</div>
+        <div class="rbdg" id="rbdg"></div>
+      </div>
+      <button class="blo" onclick="doLogout()">ログアウト</button>
     </div>
   </div>
-
-  <!-- SUMMARY -->
-  <div class="summary-bar" id="summary-bar"></div>
-
-  <!-- TABS -->
-  <div class="tabs" id="tabs"></div>
-
-  <!-- CONTENT -->
-  <div class="content" id="content"></div>
+  <div class="abar" id="abar">
+    <button class="bad gd" onclick="showExport()">📥 CSV出力</button>
+    <button class="bad" onclick="showClose()">🔒 月末締め</button>
+  </div>
+  <div class="dbar" id="dbar"></div>
+  <div class="srow" id="srow"></div>
+  <div class="expl" id="expl"></div>
+  <div class="psec" id="prog"></div>
+  <div id="main"></div>
 </div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modal-body"></div>
+<div class="foot" id="foot"></div>
+<div class="mo" id="mo" onclick="if(event.target===this)closeMo()">
+  <div class="mbox" id="mbox"></div>
 </div>
-
 <script>
 (function(){
 'use strict';
-
-/* ========== CONFIG ========== */
-var STORAGE_KEY = 'agariegas_tasks_v15';
-var SESSION_KEY = 'agariegas_session';
-var CLOSED_KEY = 'agariegas_closed_v1';
-var BASE_WORK_KEY = 'agariegas_basework_v2';
-
-var BASE_CONF = {price:100000, totalHours:20, hourlyRate:5000};
-var CARRYOVER = {price:100000, hours:20, hourlyRate:5000, applyMonth:'apr'};
-var ACTIVE_MONTHS = ['apr','may','jun'];
-var MONTH_LABELS = {apr:'2026年4月', may:'2026年5月', jun:'2026年6月'};
-
-var PASSWORDS = {
-  'makoto2026': {role:'admin', label:'管理者（まこと）'},
-  'agarie2026': {role:'viewer', label:'閲覧者（東江常務）'}
+var SK='agariegas_tasks_v22',SS='agariegas_session',CK='agariegas_closed_v1';
+var BC={p:100000,h:20,r:5000};
+var CO={p:100000,h:20,r:5000,m:'apr',tx:'1月〜3月の累計超過時間 20h分を4月基本業務に繰り越し済み'};
+var AM=['apr','may','jun'];
+var ML={apr:'2026年4月',may:'2026年5月',jun:'2026年6月'};
+var PW={
+  'makoto2026':{role:'admin',disp:'管理者（楽しくなる合同会社）'},
+  'agarie2026':{role:'viewer',disp:'東江常務（東江ガス）'}
 };
-
-/* ========== COMPLETED DATA ========== */
-var COMPLETED_APR = [
-  {title:'ショート動画A 制作・配信', price:80000, date:'2026-04-01', label:'完了済み'},
-  {title:'当選者発表ページ関連（ページ作成、リスト導入）', price:20000, date:'2026-04-15', label:'完了済み'}
+var AB=[
+  {t:'ネーミング確定調整（アンケート集計・役員会向け分析レポート）',d:'2026-04-01',h:4,p:20000},
+  {t:'「決定しました」バナー・HPお知らせページ・作業指示書',d:'2026-04-01',h:5,p:25000},
+  {t:'キャラクター決定バナー（仮）制作',d:'2026-04-02',h:2,p:10000},
+  {t:'キャラクター紹介ページ（仮）制作',d:'2026-04-02',h:2,p:10000},
+  {t:'打ち合わせ（タスクリスト・スケジュール確認）',d:'2026-04-07',h:1,p:5000},
+  {t:'キャラクター決定バナー 正式版制作',d:'2026-04-15',h:2,p:10000},
+  {t:'キャラクター紹介ページ 正式版・Web公開',d:'2026-04-15',h:2,p:10000},
+  {t:'当選者登録Googleフォーム 制作',d:'2026-04-15',h:2,p:10000}
 ];
-
-var COMPLETED_MAY = [
-  {title:'HP管理会社（セルラー）とのHP公開やりとり', price:5000, date:'2026-04-15', label:'1h × ¥5,000'},
-  {title:'当選者データ入力日付変更対応', price:5000, date:'2026-04-16', label:'1h × ¥5,000'},
-  {title:'当選者データ修正対応', price:5000, date:'2026-04-20', label:'1h × ¥5,000'},
-  {title:'ミーティング（予算&キャラクター活用マニュアル）', price:5000, date:'2026-04-23', label:'1h × ¥5,000'}
+var TPL=[{t:'ミーティング（月2回）'},{t:'LINE対応・調整'},{t:'企画立案・レポート'},{t:'SNS投稿文・概要欄作成'}];
+var CA=[
+  {t:'ショート動画A 制作・配信',p:80000,d:'2026-04-01',l:'完了済み'},
+  {t:'当選者発表ページ関連（ページ作成、リスト導入）',p:20000,d:'2026-04-15',l:'完了済み'}
 ];
-
-/* ========== DEFAULT TASKS ========== */
-var DEFAULT_TASKS = [
-  {id:2, title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）', price:80000, deadline:'2026-04-15', status:'none', month:'apr'},
-  {id:7, title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）', price:30000, deadline:'2026-04-15', status:'none', month:'apr'},
-  {id:8, title:'キャラクター紹介ページ（当選者発表ページに追加）', price:20000, deadline:'2026-04-30', status:'none', month:'apr'},
-  {id:9, title:'キャラクター活用マニュアル（企画書）', price:15000, deadline:'2026-04-30', status:'none', month:'apr'},
-  {id:10, title:'キャラクターバナー制作（PC・SP各2パターン）', price:40000, deadline:'2026-05-15', status:'none', month:'may'},
-  {id:11, title:'地域情報誌掲載用バナー（キャラクター発表・マンスリーうらそえ5月号）', price:20000, deadline:'2026-05-01', status:'none', month:'may'},
-  {id:12, title:'動画制作技術指導（東江ガス社員向け）', price:30000, deadline:'2026-05-31', status:'none', month:'may'},
-  {id:13, title:'次期キャンペーン企画立案（キャラクター活用）', price:25000, deadline:'2026-05-31', status:'none', month:'may'}
+var MB=[
+  {t:'HP管理会社（セルラー）とのHP公開やりとり',d:'2026-04-15',h:2,p:10000},
+  {t:'当選者データ入力日付変更対応',d:'2026-04-16',h:2,p:10000},
+  {t:'当選者データ修正対応',d:'2026-04-20',h:2,p:10000},
+  {t:'ミーティング（予算&キャラクター活用マニュアル）',d:'2026-04-23',h:1,p:5000},
+  {t:'高江洲そば商品券デザイン制作',d:'2026-04-23',h:2,p:5000},
+  {t:'ミーティング（当選者発送・マニュアル進捗）',d:'2026-05-19',h:1,p:5000}
 ];
-
-/* ========== STATE ========== */
-var currentUser = null;
-var currentMonth = 'apr';
-var tasks = [];
-
-/* ========== UTILITIES ========== */
-function formatPrice(n) {
-  var val = (n == null || isNaN(n)) ? 0 : Number(n);
-  return '\u00a5' + val.toLocaleString();
+var CM=[];
+var CJ=[
+  {t:'キャラクター活用マニュアル制作',p:80000,d:'',l:'完成納品後'}
+];
+var MJ=[
+  {t:'そば交換チケット デザイン修正・印刷製本・現物納品',d:'2026-06-04',h:8,p:40000},
+  {t:'ミーティング（納品、今後の業務について）',d:'2026-06-04',h:1,p:5000},
+  {t:'面談',d:'2026-06-09',h:1,p:5000},
+  {t:'面談',d:'2026-06-12',h:1,p:5000}
+];
+var DT=[
+  {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,status:'none',month:'all',desc:''},
+  {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,status:'none',month:'all',desc:'初回投稿はショート動画Bを使用'},
+  {id:12,title:'YouTube公式アカウント立ち上げ',price:50000,status:'none',month:'all',desc:''},
+  {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,status:'none',month:'all',desc:''},
+  {id:11,title:'定期アンケート（夏）',price:30000,status:'none',month:'all',desc:''}
+];
+var user=null,tasks=[],opS={apr:false,may:false,jun:true},opCA=false,opCM=false;
+function fp(n){var v=(n==null||isNaN(n))?0:Number(n);return'\u00a5'+v.toLocaleString();}
+function fd(d){if(!d)return'';var p=d.split('-');return p.length>=3?(p[1].replace(/^0/,'')+'/'+p[2].replace(/^0/,'')):d;}
+function $(id){return document.getElementById(id);}
+function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function save(){try{localStorage.setItem(SK,JSON.stringify(tasks));}catch(e){}}
+function load(){try{var r=localStorage.getItem(SK);if(r){var p=JSON.parse(r);if(Array.isArray(p)&&p.length>0){tasks=p;return;}}}catch(e){}tasks=JSON.parse(JSON.stringify(DT));save();}
+function gCl(){try{var r=localStorage.getItem(CK);return r?JSON.parse(r):{};}catch(e){return{};}}
+function sCl(m,d){var c=gCl();c[m]=d;try{localStorage.setItem(CK,JSON.stringify(c));}catch(e){}}
+window.doLogin=function(){var pw=$('pw').value.trim();var u=PW[pw];if(!u){$('lerr').style.display='block';$('pw').value='';return;}user=u;try{sessionStorage.setItem(SS,pw);}catch(e){}$('login-screen').style.display='none';$('app').style.display='block';$('foot').style.display='flex';load();render();};
+window.doLogout=function(){try{sessionStorage.removeItem(SS);}catch(e){}user=null;$('app').style.display='none';$('foot').style.display='none';$('login-screen').style.display='flex';$('pw').value='';$('lerr').style.display='none';};
+(function(){try{var pw=sessionStorage.getItem(SS);if(pw&&PW[pw]){user=PW[pw];$('login-screen').style.display='none';$('app').style.display='block';$('foot').style.display='flex';load();render();}}catch(e){}})();
+window.setStatus=function(id,st){for(var i=0;i<tasks.length;i++){if(tasks[i].id===id){tasks[i].status=st;break;}}save();render();};
+window.toggleS=function(m){opS[m]=!opS[m];render();};
+window.toggleCA=function(){opCA=!opCA;render();};
+window.toggleCM=function(){opCM=!opCM;render();};
+function calc(){var r={};AM.forEach(function(m){var mt=tasks.filter(function(t){return t.month===m;});var ap=mt.filter(function(t){return t.status==='approved';});var pe=mt.filter(function(t){return t.status==='none'||t.status==='held';});var apT=ap.reduce(function(s,t){return s+(t.price||0);},0);var peT=pe.reduce(function(s,t){return s+(t.price||0);},0);var comp=m==='apr'?CA:m==='may'?CM:m==='jun'?CJ:[];var compT=comp.reduce(function(s,c){return s+(c.p||0);},0);var bI=m==='apr'?AB:m==='may'?MB:m==='jun'?MJ:[];var bH=bI.reduce(function(s,i){return s+(i.h||0);},0);var base=BC.p;var carry=(CO.m===m)?CO.p:0;var bill=base+carry+compT+apT;r[m]={tasks:mt,approved:ap,pending:pe,apT:apT,peT:peT,comp:comp,compT:compT,bI:bI,bH:bH,base:base,carry:carry,bill:bill};});return r;}
+function render(){
+if(!user)return;var isA=user.role==='admin';var d=calc();var cl=gCl();
+$('rbdg').textContent=user.disp;
+$('abar').style.display=isA?'flex':'none';
+var now=new Date();$('dbar').textContent=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日 '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+'現在';
+var jB=d.jun.bill;
+var s='';
+s+='<div class="scb"><div class="sl">'+ML.may+' 請求額</div><div class="sa">'+fp(d.may.bill)+'</div><div class="sd">基本'+fp(d.may.base)+'（請求済み）</div></div>';
+s+='<div class="scb"><div class="sl">'+ML.jun+' 請求予定額</div><div class="sa">'+fp(jB)+'</div><div class="sd">基本'+fp(d.jun.base)+'+スポット'+fp(d.jun.compT)+'</div></div>';
+$('srow').innerHTML=s;
+if(!isA){$('expl').style.display='block';$('expl').innerHTML='各タスクの内容と金額をご確認いただき<br>「承認して進める」を押していただくと<br>楽しくなる合同会社が制作に着手します。<br>「保留」は検討中、「見送り」は不要な場合にお使いください。';}else{$('expl').style.display='none';}
+var aCnt=tasks.filter(function(t){return t.status==='approved';}).length;var tCnt=tasks.length;var pct=tCnt>0?Math.round(aCnt/tCnt*100):0;
+$('prog').innerHTML='<div class="ph"><span>承認済み '+aCnt+'件 / 全'+tCnt+'件</span><span>'+pct+'%</span></div><div class="pbo"><div class="pbi" style="width:'+pct+'%"></div></div>';
+var h='';
+AM.forEach(function(m){
+  var dd=d[m];var bI=dd.bI;var tH=BC.h;var uH=dd.bH;var rH=tH-uH;var op=opS[m];
+  h+='<div class="sec"><div class="shdr"><span class="stitle">基本業務（'+ML[m]+'）</span><span class="sbdg bl">固定 '+fp(BC.p)+'</span></div>';
+  h+='<div class="bwc'+(op?' exp':'')+'" onclick="toggleS(\''+m+'\')">';
+  h+='<div class="bwt">'+ML[m]+' 基本業務 '+fp(BC.p)+'（'+tH+'h・'+fp(BC.r)+'/h）</div>';
+  h+='<div class="bws"><span>消化 '+uH+'h / '+tH+'h</span><span>残り '+rH+'h</span></div>';
+  h+='<span class="bwa">'+(op?'▼':'▶')+'</span></div>';
+  h+='<div class="bwd'+(op?' open':'')+'">';
+  h+='<table>';
+  bI.forEach(function(i){h+='<tr><td>'+esc(i.t)+'</td><td class="tdd">'+fd(i.d)+'</td><td class="tdh">'+i.h+'h</td><td class="tdp">'+fp(i.p)+'</td></tr>';});
+  h+='</table>';
+  h+='<div class="bsm"><div class="bsr"><span>稼働時間 '+uH+'h / '+tH+'h</span><span class="bsv">残り '+rH+'h</span></div>';
+  h+='<div class="bsb"><div class="bsf" style="width:'+Math.min(100,uH/tH*100)+'%"></div></div>';
+  h+='<div class="bst"><span>消化済み：'+uH+'h '+fp(uH*BC.r)+'</span><span style="color:var(--blue);font-weight:700">残り：'+rH+'h '+fp(rH*BC.r)+'</span></div>';
+  h+='</div></div></div>';
+});
+h+='<div class="sec"><div class="coc"><div class="ct">【繰越】3カ月分 超過業務時間（4月のみ）</div><div class="ca">'+fp(CO.p)+'（'+CO.h+'h × '+fp(CO.r)+'）</div><div class="cd">'+esc(CO.tx)+'</div><span class="ctg">繰越済み・4月請求のみ</span></div></div>';
+if(CA.length>0){var caT=CA.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr" style="cursor:pointer" onclick="toggleCA()"><span class="stitle">完了済みスポット案件（4月分） '+(opCA?'▼':'▶')+'</span><span class="sbdg gn">確定 '+fp(caT)+'</span></div>';if(opCA){CA.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});}h+='</div>';}
+if(CM.length>0){var cmT=CM.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">完了済みスポット案件（5月分）</span><span class="sbdg gn">確定 '+fp(cmT)+'</span></div>';CM.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});h+='</div>';}
+if(CJ.length>0){var cjT=CJ.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">スポット案件（6月請求予定）</span><span class="sbdg gn">確定 '+fp(cjT)+'</span></div>';CJ.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});h+='</div>';}
+if(tasks.length>0){var allApT=tasks.filter(function(t){return t.status==='approved';}).reduce(function(s,t){return s+(t.price||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">実施予定タスク（スポット）</span><span class="sbdg gd">承認済 '+fp(allApT)+'</span></div>';h+=rC(tasks,false);h+='</div>';}
+h+='<div style="height:60px"></div>';$('main').innerHTML=h;
+var allPe=tasks.filter(function(t){return t.status==='none'||t.status==='held';});var peA=allPe.reduce(function(s,t){return s+(t.price||0);},0);
+var f='';f+='<div class="fi"><div class="fl">5月請求済</div><div class="fa">'+fp(d.may.bill)+'</div></div>';f+='<div class="fi"><div class="fl">6月請求予定</div><div class="fa">'+fp(jB)+'</div></div>';f+='<div class="fi"><div class="fl">今月請求予定合計</div><div class="fa wh">'+fp(jB)+'</div></div>';f+='<div class="fsub">確認待ち合計：'+fp(peA)+'</div>';$('foot').innerHTML=f;
 }
-
-function formatDate(d) {
-  if (!d) return '-';
-  var parts = d.split('-');
-  if (parts.length < 3) return d;
-  return parts[1].replace(/^0/,'') + '/' + parts[2].replace(/^0/,'');
-}
-
-function $(id) { return document.getElementById(id); }
-
-/* ========== STORAGE ========== */
-function saveTasks() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-  } catch(e) {
-    console.warn('saveTasks error:', e);
-  }
-}
-
-function loadTasks() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        tasks = parsed;
-        return;
-      }
-    }
-  } catch(e) {
-    console.warn('loadTasks error:', e);
-  }
-  // Fallback: use defaults
-  tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-  saveTasks();
-}
-
-function getClosedMonths() {
-  try {
-    var raw = localStorage.getItem(CLOSED_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) { return {}; }
-}
-
-function setClosedMonth(m, data) {
-  var closed = getClosedMonths();
-  closed[m] = data;
-  try {
-    localStorage.setItem(CLOSED_KEY, JSON.stringify(closed));
-  } catch(e) {}
-}
-
-function getBaseWork() {
-  try {
-    var raw = localStorage.getItem(BASE_WORK_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) { return {}; }
-}
-
-function setBaseWork(m, items) {
-  var bw = getBaseWork();
-  bw[m] = items;
-  try {
-    localStorage.setItem(BASE_WORK_KEY, JSON.stringify(bw));
-  } catch(e) {}
-}
-
-/* ========== AUTH ========== */
-function doLogin() {
-  var pw = $('pw-input').value.trim();
-  var user = PASSWORDS[pw];
-  if (!user) {
-    $('login-err').style.display = 'block';
-    $('pw-input').value = '';
-    return;
-  }
-  currentUser = user;
-  try { sessionStorage.setItem(SESSION_KEY, pw); } catch(e) {}
-  $('login-screen').style.display = 'none';
-  $('app').style.display = 'block';
-  loadTasks();
-  render();
-}
-
-function doLogout() {
-  try { sessionStorage.removeItem(SESSION_KEY); } catch(e) {}
-  currentUser = null;
-  $('app').style.display = 'none';
-  $('login-screen').style.display = 'flex';
-  $('pw-input').value = '';
-  $('login-err').style.display = 'none';
-}
-
-function tryAutoLogin() {
-  try {
-    var pw = sessionStorage.getItem(SESSION_KEY);
-    if (pw && PASSWORDS[pw]) {
-      currentUser = PASSWORDS[pw];
-      $('login-screen').style.display = 'none';
-      $('app').style.display = 'block';
-      loadTasks();
-      render();
-    }
-  } catch(e) {}
-}
-
-/* ========== TASK ACTIONS ========== */
-function setStatus(id, status) {
-  if (!currentUser || currentUser.role !== 'admin') return;
-  for (var i = 0; i < tasks.length; i++) {
-    if (tasks[i].id === id) {
-      tasks[i].status = status;
-      break;
-    }
-  }
-  saveTasks();
-  render();
-}
-
-/* ========== CALCULATIONS ========== */
-function calcMonth(m) {
-  var monthTasks = tasks.filter(function(t){ return t.month === m; });
-  var approved = monthTasks.filter(function(t){ return t.status === 'approved'; });
-  var held = monthTasks.filter(function(t){ return t.status === 'held'; });
-  var pending = monthTasks.filter(function(t){ return t.status === 'none'; });
-  var rejected = monthTasks.filter(function(t){ return t.status === 'rejected'; });
-
-  var approvedTotal = approved.reduce(function(s,t){ return s + (t.price || 0); }, 0);
-
-  // Get completed items for this month
-  var completedItems = [];
-  var completedTotal = 0;
-  if (m === 'apr') {
-    completedItems = COMPLETED_APR;
-  } else if (m === 'may') {
-    completedItems = COMPLETED_MAY;
-  }
-  completedTotal = completedItems.reduce(function(s,c){ return s + (c.price || 0); }, 0);
-
-  // Base contract
-  var base = BASE_CONF.price;
-  var carry = (CARRYOVER.applyMonth === m) ? CARRYOVER.price : 0;
-
-  // Total billing = base + carry + approved tasks + completed
-  var billing = base + carry + approvedTotal + completedTotal;
-
-  return {
-    monthTasks: monthTasks,
-    approved: approved,
-    held: held,
-    pending: pending,
-    rejected: rejected,
-    approvedTotal: approvedTotal,
-    completedItems: completedItems,
-    completedTotal: completedTotal,
-    base: base,
-    carry: carry,
-    billing: billing
-  };
-}
-
-/* ========== RENDER ========== */
-function render() {
-  if (!currentUser) return;
-
-  // Role label
-  $('role-label').textContent = currentUser.label;
-
-  // Hide admin-only elements for viewers
-  if (currentUser.role !== 'admin') {
-    $('btn-csv').style.display = 'none';
-  } else {
-    $('btn-csv').style.display = '';
-  }
-
-  // Tabs
-  var tabsHtml = '';
-  ACTIVE_MONTHS.forEach(function(m) {
-    var cls = m === currentMonth ? 'tab active' : 'tab';
-    tabsHtml += '<div class="' + cls + '" onclick="switchMonth(\'' + m + '\')">' + MONTH_LABELS[m] + '</div>';
-  });
-  $('tabs').innerHTML = tabsHtml;
-
-  // Calc current month
-  var c = calcMonth(currentMonth);
-  var closed = getClosedMonths();
-  var isClosed = !!closed[currentMonth];
-
-  // Summary bar
-  var summaryHtml = '';
-  summaryHtml += '<div class="summary-card"><div class="label">基本契約</div><div class="value">' + formatPrice(c.base) + '</div></div>';
-  if (c.carry > 0) {
-    summaryHtml += '<div class="summary-card"><div class="label">繰越金額</div><div class="value">' + formatPrice(c.carry) + '</div></div>';
-  }
-  summaryHtml += '<div class="summary-card"><div class="label">承認済みタスク</div><div class="value">' + formatPrice(c.approvedTotal) + '</div></div>';
-  summaryHtml += '<div class="summary-card"><div class="label">完了済み業務</div><div class="value">' + formatPrice(c.completedTotal) + '</div></div>';
-  summaryHtml += '<div class="summary-card"><div class="label">請求合計</div><div class="value gold">' + formatPrice(c.billing) + '</div></div>';
-  $('summary-bar').innerHTML = summaryHtml;
-
-  // Content
-  var html = '';
-
-  // Closed notice
-  if (isClosed) {
-    html += '<div style="background:var(--gold-light);padding:16px;border-radius:var(--radius);margin-bottom:20px;font-weight:700;color:var(--navy)">✅ ' + MONTH_LABELS[currentMonth] + 'は締め済みです（' + closed[currentMonth].closedAt + '）</div>';
-  }
-
-  // Active tasks
-  if (c.monthTasks.length > 0) {
-    html += '<div class="section-title">📋 発注タスク（' + c.monthTasks.length + '件）</div>';
-
-    // Group by status
-    var groups = [
-      {key:'none', label:'未対応', items: c.pending},
-      {key:'approved', label:'承認済み', items: c.approved},
-      {key:'held', label:'保留中', items: c.held},
-      {key:'rejected', label:'見送り', items: c.rejected}
-    ];
-
-    groups.forEach(function(g) {
-      if (g.items.length === 0) return;
-      html += '<div style="font-size:.85rem;color:var(--text-sub);margin:16px 0 8px;font-weight:700">' + g.label + '（' + g.items.length + '件）</div>';
-
-      g.items.forEach(function(t) {
-        var cardClass = 'task-card';
-        if (t.status === 'approved') cardClass += ' approved';
-        else if (t.status === 'held') cardClass += ' held';
-        else if (t.status === 'rejected') cardClass += ' rejected';
-
-        html += '<div class="' + cardClass + '">';
-        html += '<div class="task-top">';
-        html += '<div class="task-title">' + escHtml(t.title) + '</div>';
-        html += '<div class="task-price">' + formatPrice(t.price) + '</div>';
-        html += '</div>';
-        html += '<div class="task-meta">';
-        html += '<span>📅 期限: ' + formatDate(t.deadline) + '</span>';
-        if (t.status !== 'none') {
-          var badgeCls = 'status-badge ' + t.status;
-          var badgeText = t.status === 'approved' ? '承認' : t.status === 'held' ? '保留' : '見送り';
-          html += '<span class="' + badgeCls + '">' + badgeText + '</span>';
-        }
-        html += '</div>';
-
-        // Actions (admin only, not closed)
-        if (currentUser.role === 'admin' && !isClosed) {
-          html += '<div class="task-actions">';
-          if (t.status !== 'approved') {
-            html += '<button class="btn btn-approve" onclick="setStatus(' + t.id + ',\'approved\')">✅ 承認</button>';
-          }
-          if (t.status !== 'held') {
-            html += '<button class="btn btn-hold" onclick="setStatus(' + t.id + ',\'held\')">⏸ 保留</button>';
-          }
-          if (t.status !== 'rejected') {
-            html += '<button class="btn btn-reject" onclick="setStatus(' + t.id + ',\'rejected\')">❌ 見送り</button>';
-          }
-          if (t.status !== 'none') {
-            html += '<button class="btn btn-reset" onclick="setStatus(' + t.id + ',\'none\')">↩ 戻す</button>';
-          }
-          html += '</div>';
-        }
-        html += '</div>';
-      });
-    });
-  }
-
-  // Completed items
-  if (c.completedItems.length > 0) {
-    html += '<div class="section-title">✅ 完了済み業務（' + c.completedItems.length + '件）</div>';
-    c.completedItems.forEach(function(ci) {
-      html += '<div class="completed-item">';
-      html += '<div class="ci-title">' + escHtml(ci.title) + '</div>';
-      html += '<div class="ci-right">';
-      html += '<span>' + formatDate(ci.date) + '</span>';
-      html += '<span class="ci-price">' + formatPrice(ci.price) + '</span>';
-      if (ci.label) html += '<span style="font-size:.75rem;color:var(--text-sub)">' + escHtml(ci.label) + '</span>';
-      html += '</div></div>';
-    });
-  }
-
-  // Billing summary
-  html += '<div class="section-title">💰 請求サマリー</div>';
-  html += '<div style="background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)">';
-  html += '<table style="width:100%;border-collapse:collapse;font-size:.9rem">';
-  html += row('基本契約（月額）', formatPrice(c.base));
-  if (c.carry > 0) html += row('繰越金額', formatPrice(c.carry));
-  html += row('完了済み業務', formatPrice(c.completedTotal));
-  html += row('承認済みタスク', formatPrice(c.approvedTotal));
-  html += '<tr style="border-top:2px solid var(--navy)"><td style="padding:12px 0;font-weight:900;font-size:1.1rem">請求合計</td><td style="padding:12px 0;text-align:right;font-weight:900;font-size:1.1rem;color:var(--gold-dark)">' + formatPrice(c.billing) + '</td></tr>';
-  html += '</table></div>';
-
-  // Admin actions
-  if (currentUser.role === 'admin' && !isClosed) {
-    html += '<div style="margin-top:24px;text-align:right">';
-    html += '<button class="btn btn-danger" onclick="showCloseMonthModal()">🔒 ' + MONTH_LABELS[currentMonth] + 'を締める</button>';
-    html += '</div>';
-  }
-
-  $('content').innerHTML = html;
-}
-
-function row(label, value) {
-  return '<tr><td style="padding:8px 0;border-bottom:1px solid #eee">' + label + '</td><td style="padding:8px 0;text-align:right;font-weight:700;border-bottom:1px solid #eee">' + value + '</td></tr>';
-}
-
-function escHtml(s) {
-  if (!s) return '';
-  var d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-/* ========== TABS ========== */
-window.switchMonth = function(m) {
-  currentMonth = m;
-  render();
-};
-
-/* ========== CLOSE MONTH ========== */
-function showCloseMonthModal() {
-  var c = calcMonth(currentMonth);
-  var pending = c.pending;
-  var html = '<h2>🔒 月末締め確認</h2>';
-  html += '<p><strong>' + MONTH_LABELS[currentMonth] + '</strong>を締めます。</p>';
-  html += '<p>請求合計: <strong style="color:var(--gold-dark)">' + formatPrice(c.billing) + '</strong></p>';
-  if (pending.length > 0) {
-    html += '<p style="color:var(--orange)">⚠ 未対応タスクが' + pending.length + '件あります。締め後は変更できません。</p>';
-  }
-  html += '<div class="modal-actions">';
-  html += '<button class="btn btn-outline" style="color:var(--text);border-color:#ccc" onclick="closeModal()">キャンセル</button>';
-  html += '<button class="btn btn-danger" onclick="executeCloseMonth()">締め確定</button>';
-  html += '</div>';
-  $('modal-body').innerHTML = html;
-  $('modal-overlay').classList.add('show');
-}
-
-window.executeCloseMonth = function() {
-  var now = new Date();
-  var dateStr = now.getFullYear() + '/' + (now.getMonth()+1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  var c = calcMonth(currentMonth);
-  setClosedMonth(currentMonth, {
-    closedAt: dateStr,
-    billing: c.billing,
-    approvedTotal: c.approvedTotal,
-    completedTotal: c.completedTotal
-  });
-  closeModal();
-  render();
-};
-
-/* ========== CSV EXPORT ========== */
-function showExportModal() {
-  var html = '<h2>📥 CSVエクスポート</h2>';
-  html += '<p>エクスポートする月を選択してください。</p>';
-  html += '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">';
-  ACTIVE_MONTHS.forEach(function(m) {
-    html += '<button class="btn btn-gold" style="width:100%" onclick="exportCSV(\'' + m + '\')">' + MONTH_LABELS[m] + '</button>';
-  });
-  html += '<button class="btn" style="width:100%;background:var(--navy);color:#fff" onclick="exportCSV(\'all\')">全期間</button>';
-  html += '</div>';
-  html += '<div class="modal-actions"><button class="btn btn-outline" style="color:var(--text);border-color:#ccc" onclick="closeModal()">閉じる</button></div>';
-  $('modal-body').innerHTML = html;
-  $('modal-overlay').classList.add('show');
-}
-
-window.exportCSV = function(target) {
-  var months = target === 'all' ? ACTIVE_MONTHS : [target];
-  var lines = ['種別,タスク名,金額,期限/日付,ステータス,月'];
-
-  months.forEach(function(m) {
-    var c = calcMonth(m);
-    // Active tasks
-    c.monthTasks.forEach(function(t) {
-      var statusText = t.status === 'approved' ? '承認' : t.status === 'held' ? '保留' : t.status === 'rejected' ? '見送り' : '未対応';
-      lines.push('発注タスク,"' + (t.title||'').replace(/"/g,'""') + '",' + (t.price||0) + ',' + (t.deadline||'') + ',' + statusText + ',' + MONTH_LABELS[m]);
-    });
-    // Completed
-    c.completedItems.forEach(function(ci) {
-      lines.push('完了済み,"' + (ci.title||'').replace(/"/g,'""') + '",' + (ci.price||0) + ',' + (ci.date||'') + ',完了,' + MONTH_LABELS[m]);
-    });
-    // Summary row
-    lines.push('請求合計,,,,' + formatPrice(c.billing) + ',' + MONTH_LABELS[m]);
-  });
-
-  var bom = '\uFEFF';
-  var blob = new Blob([bom + lines.join('\n')], {type:'text/csv;charset=utf-8'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = '東江ガス_タスク管理_' + target + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  closeModal();
-};
-
-/* ========== MODAL ========== */
-function closeModal() {
-  $('modal-overlay').classList.remove('show');
-}
-
-/* ========== GLOBAL ========== */
-window.doLogin = doLogin;
-window.doLogout = doLogout;
-window.setStatus = setStatus;
-window.showCloseMonthModal = showCloseMonthModal;
-window.showExportModal = showExportModal;
-window.closeModal = closeModal;
-
-/* ========== INIT ========== */
-tryAutoLogin();
-
+function rC(list,locked){var h='';var idx=0;list.forEach(function(t){idx++;var cls='tk';if(t.status==='approved')cls+=' ap';else if(t.status==='held')cls+=' ho';else if(t.status==='rejected')cls+=' rj';h+='<div class="'+cls+'"><div class="tkh"><div class="tkn">'+idx+'</div><div class="tkb">';h+='<div class="tp">'+fp(t.price)+'</div>';h+='<div class="tt">'+esc(t.title)+'</div>';if(t.desc)h+='<div class="td">'+esc(t.desc)+'</div>';if(t.status!=='none'){var lb=t.status==='approved'?'承認済み':t.status==='held'?'保留中':'見送り';h+='<div class="sttag '+t.status.substring(0,2)+'">'+lb+'</div>';}h+='</div></div>';if(!locked){if(t.status==='none'){h+='<div class="tka"><button class="ba bap" onclick="setStatus('+t.id+',\'approved\')">承認して進める</button><div class="brow"><button class="ba bho" onclick="setStatus('+t.id+',\'held\')">保留・検討中</button><button class="ba brj" onclick="setStatus('+t.id+',\'rejected\')">今回は見送り</button></div></div>';}else{h+='<div class="tka"><button class="ba bun" onclick="setStatus('+t.id+',\'none\')">↩ 選択を取り消す</button></div>';}}h+='</div>';});return h;}
+window.showClose=function(){var h='<h2>🔒 月末締め</h2><p>締める月を選択</p>';var cl=gCl();AM.forEach(function(m){if(!cl[m])h+='<button class="bad" style="width:100%;margin-bottom:8px" onclick="cfClose(\''+m+'\')">'+ML[m]+'</button>';});h+='<div class="macts"><button class="mb cn" onclick="closeMo()">閉じる</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
+window.cfClose=function(m){var dd=calc()[m];var h='<h2>🔒 '+ML[m]+' 締め確認</h2><p>請求合計: <strong>'+fp(dd.bill)+'</strong></p>';if(dd.pending.length>0)h+='<p style="color:var(--orange)">⚠ 未確認'+dd.pending.length+'件</p>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">キャンセル</button><button class="mb cf" onclick="exClose(\''+m+'\')">締め確定</button></div>';$('mbox').innerHTML=h;};
+window.exClose=function(m){var now=new Date();sCl(m,{at:now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate(),bill:calc()[m].bill});closeMo();render();};
+window.showExport=function(){var h='<h2>📥 CSVエクスポート</h2>';AM.forEach(function(m){h+='<button class="bad gd" style="width:100%;margin-bottom:8px" onclick="doExp(\''+m+'\')">'+ML[m]+'</button>';});h+='<button class="bad" style="width:100%;margin-bottom:8px" onclick="doExp(\'all\')">全期間</button>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">閉じる</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
+window.doExp=function(tgt){var ms=tgt==='all'?AM:[tgt];var lines=['種別,タスク名,金額,日付,ステータス,月'];var dd=calc();ms.forEach(function(m){var x=dd[m];x.bI.forEach(function(b){lines.push('基本業務,"'+(b.t||'').replace(/"/g,'""')+'",'+(b.p||0)+','+(b.d||'')+','+(b.h||0)+'h,'+ML[m]);});x.comp.forEach(function(c){lines.push('完了済み,"'+(c.t||'').replace(/"/g,'""')+'",'+(c.p||0)+','+(c.d||'')+',完了,'+ML[m]);});x.tasks.forEach(function(t){var st=t.status==='approved'?'承認':t.status==='held'?'保留':t.status==='rejected'?'見送り':'未対応';lines.push('発注タスク,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+','+''+','+st+','+ML[m]);});lines.push('請求合計,,'+x.bill+',,'+fp(x.bill)+','+ML[m]);});var blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='東江ガス_タスク管理_'+tgt+'.csv';a.click();URL.revokeObjectURL(u);closeMo();};
+window.closeMo=function(){$('mo').classList.remove('show');};
 })();
 </script>
 </body>
