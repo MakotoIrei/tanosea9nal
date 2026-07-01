@@ -191,11 +191,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v23',SS='agariegas_session',CK='agariegas_closed_v1';
+var SK='agariegas_tasks_v24',SS='agariegas_session',CK='agariegas_closed_v1';
 var BC={p:100000,h:20,r:5000};
 var CO={p:100000,h:20,r:5000,m:'apr',tx:'1月〜3月の累計超過時間 20h分を4月基本業務に繰り越し済み'};
-var AM=['apr','may','jun'];
-var ML={apr:'2026年4月',may:'2026年5月',jun:'2026年6月'};
+var AM=['apr','may','jun','jul'];
+var ML={apr:'2026年4月',may:'2026年5月',jun:'2026年6月',jul:'2026年7月'};
 var PW={
   'makoto2026':{role:'admin',disp:'管理者（楽しくなる合同会社）'},
   'agarie2026':{role:'viewer',disp:'東江常務（東江ガス）'}
@@ -233,6 +233,10 @@ var MJ=[
   {t:'面談',d:'2026-06-09',h:1,p:5000},
   {t:'面談',d:'2026-06-12',h:1,p:5000}
 ];
+var JB=[
+  {t:'保守費用（7月分・公開ページ／フォーム維持＋窓口対応）',d:'',h:0,p:10000},
+  {t:'打ち合わせ（今後の体制・保守・秋の展開／HP移管の相談）',d:'2026-07-01',h:1,p:5000}
+];
 var DT=[
   {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,status:'none',month:'all',desc:''},
   {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,status:'none',month:'all',desc:'初回投稿はショート動画Bを使用'},
@@ -240,7 +244,7 @@ var DT=[
   {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,status:'none',month:'all',desc:''},
   {id:11,title:'定期アンケート（夏）',price:30000,status:'none',month:'all',desc:''}
 ];
-var user=null,tasks=[],opS={apr:false,may:false,jun:true},opCA=false,opCM=false;
+var user=null,tasks=[],opS={apr:false,may:false,jun:false,jul:true},opCA=false,opCM=false;
 function fp(n){var v=(n==null||isNaN(n))?0:Number(n);return'\u00a5'+v.toLocaleString();}
 function fd(d){if(!d)return'';var p=d.split('-');return p.length>=3?(p[1].replace(/^0/,'')+'/'+p[2].replace(/^0/,'')):d;}
 function $(id){return document.getElementById(id);}
@@ -256,16 +260,16 @@ window.setStatus=function(id,st){for(var i=0;i<tasks.length;i++){if(tasks[i].id=
 window.toggleS=function(m){opS[m]=!opS[m];render();};
 window.toggleCA=function(){opCA=!opCA;render();};
 window.toggleCM=function(){opCM=!opCM;render();};
-function calc(){var r={};AM.forEach(function(m){var mt=tasks.filter(function(t){return t.month===m;});var ap=mt.filter(function(t){return t.status==='approved';});var pe=mt.filter(function(t){return t.status==='none'||t.status==='held';});var apT=ap.reduce(function(s,t){return s+(t.price||0);},0);var peT=pe.reduce(function(s,t){return s+(t.price||0);},0);var comp=m==='apr'?CA:m==='may'?CM:m==='jun'?CJ:[];var compT=comp.reduce(function(s,c){return s+(c.p||0);},0);var bI=m==='apr'?AB:m==='may'?MB:m==='jun'?MJ:[];var bH=bI.reduce(function(s,i){return s+(i.h||0);},0);var base=BC.p;var carry=(CO.m===m)?CO.p:0;var bill=base+carry+compT+apT;r[m]={tasks:mt,approved:ap,pending:pe,apT:apT,peT:peT,comp:comp,compT:compT,bI:bI,bH:bH,base:base,carry:carry,bill:bill};});return r;}
+function calc(){var r={};AM.forEach(function(m){var mt=tasks.filter(function(t){return t.month===m;});var ap=mt.filter(function(t){return t.status==='approved';});var pe=mt.filter(function(t){return t.status==='none'||t.status==='held';});var apT=ap.reduce(function(s,t){return s+(t.price||0);},0);var peT=pe.reduce(function(s,t){return s+(t.price||0);},0);var comp=m==='apr'?CA:m==='may'?CM:m==='jun'?CJ:[];var compT=comp.reduce(function(s,c){return s+(c.p||0);},0);var bI=m==='apr'?AB:m==='may'?MB:m==='jun'?MJ:m==='jul'?JB:[];var bH=bI.reduce(function(s,i){return s+(i.h||0);},0);var bP=bI.reduce(function(s,i){return s+(i.p||0);},0);var base=(m==='jul')?0:BC.p;var carry=(CO.m===m)?CO.p:0;var bill=(m==='jul')?(bP+compT+apT):(base+carry+compT+apT);r[m]={tasks:mt,approved:ap,pending:pe,apT:apT,peT:peT,comp:comp,compT:compT,bI:bI,bH:bH,bP:bP,base:base,carry:carry,bill:bill};});return r;}
 function render(){
 if(!user)return;var isA=user.role==='admin';var d=calc();var cl=gCl();
 $('rbdg').textContent=user.disp;
 $('abar').style.display=isA?'flex':'none';
 var now=new Date();$('dbar').textContent=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日 '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+'現在';
-var jB=d.jun.bill;
+var jB=d.jun.bill;var julB=d.jul.bill;
 var s='';
-s+='<div class="scb"><div class="sl">'+ML.may+' 請求額</div><div class="sa">'+fp(d.may.bill)+'</div><div class="sd">基本'+fp(d.may.base)+'（請求済み）</div></div>';
-s+='<div class="scb"><div class="sl">'+ML.jun+' 請求予定額</div><div class="sa">'+fp(jB)+'</div><div class="sd">基本'+fp(d.jun.base)+'+スポット'+fp(d.jun.compT)+'</div></div>';
+s+='<div class="scb"><div class="sl">'+ML.jun+' 請求額</div><div class="sa">'+fp(jB)+'</div><div class="sd">基本'+fp(d.jun.base)+'+スポット'+fp(d.jun.compT)+'（請求済み）</div></div>';
+s+='<div class="scb"><div class="sl">'+ML.jul+' 請求予定額</div><div class="sa">'+fp(julB)+'</div><div class="sd">都度課金（固定報酬なし）</div></div>';
 $('srow').innerHTML=s;
 if(!isA){$('expl').style.display='block';$('expl').innerHTML='各タスクの内容と金額をご確認いただき<br>「承認して進める」を押していただくと<br>楽しくなる合同会社が制作に着手します。<br>「保留」は検討中、「見送り」は不要な場合にお使いください。';}else{$('expl').style.display='none';}
 var aCnt=tasks.filter(function(t){return t.status==='approved';}).length;var tCnt=tasks.length;var pct=tCnt>0?Math.round(aCnt/tCnt*100):0;
@@ -273,6 +277,18 @@ $('prog').innerHTML='<div class="ph"><span>承認済み '+aCnt+'件 / 全'+tCnt+
 var h='';
 AM.forEach(function(m){
   var dd=d[m];var bI=dd.bI;var tH=BC.h;var uH=dd.bH;var rH=tH-uH;var op=opS[m];
+  if(m==='jul'){
+    var jT=dd.bP;var opj=opS[m];
+    h+='<div class="sec"><div class="shdr"><span class="stitle">都度業務（'+ML[m]+'）</span><span class="sbdg gn">請求予定 '+fp(jT)+'</span></div>';
+    h+='<div class="bwc'+(opj?' exp':'')+'" onclick="toggleS(\''+m+'\')">';
+    h+='<div class="bwt">'+ML[m]+' 都度課金（固定報酬なし・'+fp(BC.r)+'/h）</div>';
+    h+='<div class="bws"><span>'+bI.length+'件</span><span>合計 '+fp(jT)+'</span></div>';
+    h+='<span class="bwa">'+(opj?'▼':'▶')+'</span></div>';
+    h+='<div class="bwd'+(opj?' open':'')+'"><table>';
+    bI.forEach(function(i){h+='<tr><td>'+esc(i.t)+'</td><td class="tdd">'+fd(i.d)+'</td><td class="tdh">'+(i.h?i.h+'h':'-')+'</td><td class="tdp">'+fp(i.p)+'</td></tr>';});
+    h+='</table><div class="bsm"><div class="bsr"><span>都度課金・固定報酬なし</span><span class="bsv">合計 '+fp(jT)+'</span></div></div></div></div>';
+    return;
+  }
   h+='<div class="sec"><div class="shdr"><span class="stitle">基本業務（'+ML[m]+'）</span><span class="sbdg bl">固定 '+fp(BC.p)+'</span></div>';
   h+='<div class="bwc'+(op?' exp':'')+'" onclick="toggleS(\''+m+'\')">';
   h+='<div class="bwt">'+ML[m]+' 基本業務 '+fp(BC.p)+'（'+tH+'h・'+fp(BC.r)+'/h）</div>';
@@ -294,7 +310,7 @@ if(CJ.length>0){var cjT=CJ.reduce(function(s,c){return s+(c.p||0);},0);h+='<div 
 if(tasks.length>0){var allApT=tasks.filter(function(t){return t.status==='approved';}).reduce(function(s,t){return s+(t.price||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">実施予定タスク（スポット）</span><span class="sbdg gd">承認済 '+fp(allApT)+'</span></div>';h+=rC(tasks,false);h+='</div>';}
 h+='<div style="height:60px"></div>';$('main').innerHTML=h;
 var allPe=tasks.filter(function(t){return t.status==='none'||t.status==='held';});var peA=allPe.reduce(function(s,t){return s+(t.price||0);},0);
-var f='';f+='<div class="fi"><div class="fl">5月請求済</div><div class="fa">'+fp(d.may.bill)+'</div></div>';f+='<div class="fi"><div class="fl">6月請求予定</div><div class="fa">'+fp(jB)+'</div></div>';f+='<div class="fi"><div class="fl">今月請求予定合計</div><div class="fa wh">'+fp(jB)+'</div></div>';f+='<div class="fsub">確認待ち合計：'+fp(peA)+'</div>';$('foot').innerHTML=f;
+var f='';f+='<div class="fi"><div class="fl">6月請求済</div><div class="fa">'+fp(jB)+'</div></div>';f+='<div class="fi"><div class="fl">7月請求予定</div><div class="fa">'+fp(julB)+'</div></div>';f+='<div class="fi"><div class="fl">今月請求予定合計</div><div class="fa wh">'+fp(julB)+'</div></div>';f+='<div class="fsub">確認待ち合計：'+fp(peA)+'</div>';$('foot').innerHTML=f;
 }
 function rC(list,locked){var h='';var idx=0;list.forEach(function(t){idx++;var cls='tk';if(t.status==='approved')cls+=' ap';else if(t.status==='held')cls+=' ho';else if(t.status==='rejected')cls+=' rj';h+='<div class="'+cls+'"><div class="tkh"><div class="tkn">'+idx+'</div><div class="tkb">';h+='<div class="tp">'+fp(t.price)+'</div>';h+='<div class="tt">'+esc(t.title)+'</div>';if(t.desc)h+='<div class="td">'+esc(t.desc)+'</div>';if(t.status!=='none'){var lb=t.status==='approved'?'承認済み':t.status==='held'?'保留中':'見送り';h+='<div class="sttag '+t.status.substring(0,2)+'">'+lb+'</div>';}h+='</div></div>';if(!locked){if(t.status==='none'){h+='<div class="tka"><button class="ba bap" onclick="setStatus('+t.id+',\'approved\')">承認して進める</button><div class="brow"><button class="ba bho" onclick="setStatus('+t.id+',\'held\')">保留・検討中</button><button class="ba brj" onclick="setStatus('+t.id+',\'rejected\')">今回は見送り</button></div></div>';}else{h+='<div class="tka"><button class="ba bun" onclick="setStatus('+t.id+',\'none\')">↩ 選択を取り消す</button></div>';}}h+='</div>';});return h;}
 window.showClose=function(){var h='<h2>🔒 月末締め</h2><p>締める月を選択</p>';var cl=gCl();AM.forEach(function(m){if(!cl[m])h+='<button class="bad" style="width:100%;margin-bottom:8px" onclick="cfClose(\''+m+'\')">'+ML[m]+'</button>';});h+='<div class="macts"><button class="mb cn" onclick="closeMo()">閉じる</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
