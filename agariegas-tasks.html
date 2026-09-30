@@ -191,133 +191,185 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v24',SS='agariegas_session',CK='agariegas_closed_v1';
-var BC={p:100000,h:20,r:5000};
-var CO={p:100000,h:20,r:5000,m:'apr',tx:'1月〜3月の累計超過時間 20h分を4月基本業務に繰り越し済み'};
-var AM=['apr','may','jun','jul'];
-var ML={apr:'2026年4月',may:'2026年5月',jun:'2026年6月',jul:'2026年7月'};
+var SK='agariegas_tasks_v38',SS='agariegas_session',CK='agariegas_closed_v1';
 var PW={
-  'makoto2026':{role:'admin',disp:'管理者（楽しくなる合同会社）'},
-  'agarie2026':{role:'viewer',disp:'東江常務（東江ガス）'}
+  'makoto2026':{role:'admin',disp:'\u7ba1\u7406\u8005\uff08\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\uff09'},
+  'agarie2026':{role:'viewer',disp:'\u6771\u6c5f\u5e38\u52d9\uff08\u6771\u6c5f\u30ac\u30b9\uff09'}
 };
-var AB=[
-  {t:'ネーミング確定調整（アンケート集計・役員会向け分析レポート）',d:'2026-04-01',h:4,p:20000},
-  {t:'「決定しました」バナー・HPお知らせページ・作業指示書',d:'2026-04-01',h:5,p:25000},
-  {t:'キャラクター決定バナー（仮）制作',d:'2026-04-02',h:2,p:10000},
-  {t:'キャラクター紹介ページ（仮）制作',d:'2026-04-02',h:2,p:10000},
-  {t:'打ち合わせ（タスクリスト・スケジュール確認）',d:'2026-04-07',h:1,p:5000},
-  {t:'キャラクター決定バナー 正式版制作',d:'2026-04-15',h:2,p:10000},
-  {t:'キャラクター紹介ページ 正式版・Web公開',d:'2026-04-15',h:2,p:10000},
-  {t:'当選者登録Googleフォーム 制作',d:'2026-04-15',h:2,p:10000}
+
+/* ===== \u4eca\u6708\uff082026\u5e747\u6708\uff09\u306e\u78ba\u5b9a\u696d\u52d9\uff08\u8acb\u6c42\u4e88\u5b9a\uff09 ===== */
+/* ===== 7\u6708\u5206\u306f\u8acb\u6c42\u30fb\u5165\u91d1\u6e08\u307f\u2192ARCHIVE\u3078\u79fb\u52d5 ===== */
+var JUL=[];
+
+/* ===== \u6765\u6708\uff082026\u5e749\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
+var AUG=[
+  {t:'保守・運用費（9月分）公開ページ／Googleフォーム維持',d:'',p:10000,tag:'月額'},
+  {t:'LINE公式アカウント 運用サポート（9月分）FAQ自動応答内容更新等',d:'',p:15000,tag:'月額'},
+  {t:'打ち合わせ（イベント用動画・ラジオCM）',d:'2026-09-16',p:5000,tag:'確定'},
+  {t:'広告用汎用周年PR動画（イベント用15秒）企画・制作・AIキャラクター生成・BGM制作',d:'',p:100000,tag:'納品済'},
+  {t:'クレジットカード払い 申込フォーム構築',d:'2026-09-30',p:100000,tag:'完了',note:'フォーム構築まで。項目の最適化・カード会社へ渡しやすくするカスタマイズは別途お見積もり'}
 ];
-var TPL=[{t:'ミーティング（月2回）'},{t:'LINE対応・調整'},{t:'企画立案・レポート'},{t:'SNS投稿文・概要欄作成'}];
-var CA=[
-  {t:'ショート動画A 制作・配信',p:80000,d:'2026-04-01',l:'完了済み'},
-  {t:'当選者発表ページ関連（ページ作成、リスト導入）',p:20000,d:'2026-04-15',l:'完了済み'}
-];
-var MB=[
-  {t:'HP管理会社（セルラー）とのHP公開やりとり',d:'2026-04-15',h:2,p:10000},
-  {t:'当選者データ入力日付変更対応',d:'2026-04-16',h:2,p:10000},
-  {t:'当選者データ修正対応',d:'2026-04-20',h:2,p:10000},
-  {t:'ミーティング（予算&キャラクター活用マニュアル）',d:'2026-04-23',h:1,p:5000},
-  {t:'高江洲そば商品券デザイン制作',d:'2026-04-23',h:2,p:5000},
-  {t:'ミーティング（当選者発送・マニュアル進捗）',d:'2026-05-19',h:1,p:5000}
-];
-var CM=[];
-var CJ=[
-  {t:'キャラクター活用マニュアル制作',p:80000,d:'',l:'完成納品後'}
-];
-var MJ=[
-  {t:'そば交換チケット デザイン修正・印刷製本・現物納品',d:'2026-06-04',h:8,p:40000},
-  {t:'ミーティング（納品、今後の業務について）',d:'2026-06-04',h:1,p:5000},
-  {t:'面談',d:'2026-06-09',h:1,p:5000},
-  {t:'面談',d:'2026-06-12',h:1,p:5000}
-];
-var JB=[
-  {t:'保守費用（7月分・公開ページ／フォーム維持＋窓口対応）',d:'',h:0,p:10000},
-  {t:'打ち合わせ（今後の体制・保守・秋の展開／HP移管の相談）',d:'2026-07-01',h:1,p:5000}
-];
+
+/* ===== \u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\u5f85\u3061\uff09 ===== */
 var DT=[
-  {id:2,title:'ショート動画B（キャラクターネーミング表記＆PRお披露目動画）',price:80000,status:'none',month:'all',desc:''},
-  {id:7,title:'Instagram公式アカウント 立ち上げ・初回投稿（ショート動画Bを投稿予定）',price:30000,status:'none',month:'all',desc:'初回投稿はショート動画Bを使用'},
-  {id:12,title:'YouTube公式アカウント立ち上げ',price:50000,status:'none',month:'all',desc:''},
-  {id:9,title:'【セット割】LINE公式アカウント＋LINEスタンプ 一式',price:130000,status:'none',month:'all',desc:''},
-  {id:11,title:'定期アンケート（夏）',price:30000,status:'none',month:'all',desc:''}
+  {id:12,title:'YouTube\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\u7acb\u3061\u4e0a\u3052',price:50000,status:'none',desc:'\u98f2\u98df\u5e97\u7d39\u4ecb\u306b\u3088\u308b\u9867\u5ba2\u652f\u63f4\uff1d\u8ca9\u4fc3\u306e\u67f1\u3002\u7acb\u4e0a\u3052\u8cbb\u3068\u52d5\u753b1\u672c\u5236\u4f5c\u8cbb\u306f\u5225'},
+  {id:11,title:'\u5b9a\u671f\u30a2\u30f3\u30b1\u30fc\u30c8\uff08\u590f\uff09',price:30000,status:'none',desc:'\u79cb\u65bd\u7b56\u306e\u88cf\u4ed8\u3051\u30c7\u30fc\u30bf'},
+  {id:13,title:'\u30e9\u30b8\u30aaCM\u5236\u4f5c\uff0820\u79d2\u30fb\u30b5\u30a6\u30f3\u30c9\u30ed\u30b4\u542b\u3080\uff09',price:null,status:'adjust',desc:'9/16 常務より「毎週差し替え」の月額見積もり依頼あり。放送側の条件確認後に提示（金額調整中）'},
+  {id:14,title:'LINEキャンペーン（友だち増加）',price:null,status:'adjust',desc:'8/28 ご依頼。企画内容とあわせて金額調整中'},
+  {id:15,title:'LINE内ゲーム（LIFF）',price:null,status:'adjust',desc:'8/28 ご依頼（ガスボンベを並べるゲーム等）。内容・範囲の確定後にお見積もり'},
+  {id:16,title:'キャラクターグッズ（立体ステッカー・キーホルダー）',price:null,status:'adjust',desc:'ドリームワークそてつの森にサンプル制作を依頼中。サンプル確認後にお見積もり'}
 ];
-var user=null,tasks=[],opS={apr:false,may:false,jun:false,jul:true},opCA=false,opCM=false;
+
+/* ===== 対応中（月額の運用サポート内・追加費用なし） ===== */
+var ONGO=[
+  {t:'LINE微調整（リッチメニューの文字拡大・Default応答の文言修正・「料金」キーワード追加）',tag:'運用サポート内'},
+  {t:'LINE認証済みアカウントの申請',tag:'ご承諾待ち',note:'申請のご承諾と、社名・住所・電話番号の表記確認をお願いします'}
+];
+
+/* ===== \u59d4\u8a17\u5951\u7d04\u671f\u9593\u306e\u5b9f\u7e3e\uff082026\u5e744\uff5e6\u6708\u30fb\u8acb\u6c42\u6e08\u307f\uff09 =====
+   \u6642\u9593\u306f\u8868\u793a\u3057\u306a\u3044\u3002\u5c4a\u3051\u305f\u4ed5\u4e8b\u306e\u4fa1\u5024\u306e\u8a18\u9332\u3068\u3057\u3066\u6b8b\u3059\u3002 */
+var ARCHIVE=[
+  {m:'2026年8月',billed:320000,note:'保守 ¥10,000 ＋ LINE構築 ¥200,000 ＋ LINE運用サポート ¥15,000 ＋ 打合せ ¥15,000 ＋ ショート動画 ¥80,000（INV-0000000092・送付済）',items:[
+  {t:'\u4fdd\u5b88\u30fb\u904b\u7528\u8cbb\uff088\u6708\u5206\uff09\u516c\u958b\u30da\u30fc\u30b8\uff0fGoogle\u30d5\u30a9\u30fc\u30e0\u7dad\u6301',d:'',p:10000,tag:'\u6708\u984d'},
+  {t:'LINE\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8 \u69cb\u7bc9\uff08\u7533\u8fbc\u30d5\u30a9\u30fc\u30e0\uff0bFAQ\u81ea\u52d5\u5fdc\u7b54 \u7b49\uff09',d:'',p:200000,tag:'\u627f\u8a8d\u6e08'},
+  {t:'LINE\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8 \u904b\u7528\u30b5\u30dd\u30fc\u30c8\uff08FAQ\u81ea\u52d5\u5fdc\u7b54\u5185\u5bb9\u66f4\u65b0\u7b49\uff09',d:'',p:15000,tag:'\u627f\u8a8d\u6e08'},
+  {t:'\u6253\u3061\u5408\u308f\u305b\uff08\u5927\u5c71\u3055\u3093\uff09',d:'2026-08-07',p:5000,tag:'\u78ba\u5b9a'},
+  {t:'\u6253\u3061\u5408\u308f\u305b\uff08\u5927\u5c71\u3055\u3093\uff09',d:'2026-08-14',p:5000,tag:'\u78ba\u5b9a'},
+  {t:'\u6253\u3061\u5408\u308f\u305b',d:'2026-08-28',p:5000,tag:'\u78ba\u5b9a'},
+  {t:'\u30b7\u30e7\u30fc\u30c8\u52d5\u753b\u5236\u4f5c\uff08\u7b2c1\u5f3e\uff09',d:'',p:80000,tag:'\u627f\u8a8d\u6e08'}
+  ]},
+  {m:'2026\u5e747\u6708',billed:185000,note:'\u4fdd\u5b88 \u00a510,000 \uff0b \u6253\u5408\u305b \u00a515,000 \uff0b Instagram \u00a530,000 \uff0b LINE\u30bb\u30c3\u30c8\u5272 \u00a5130,000',items:[
+    {t:'\u4fdd\u5b88\u30fb\u904b\u7528\u8cbb\uff087\u6708\u5206\uff09',d:'',p:10000,tag:'\u6708\u984d'},
+    {t:'\u6253\u3061\u5408\u308f\u305b\uff08\u4eca\u5f8c\u306e\u4f53\u5236\u30fb\u4fdd\u5b88\u30fb\u79cb\u306e\u5c55\u958b\uff0fHP\u79fb\u7ba1\u306e\u76f8\u8ac7\uff09',d:'2026-07-01',p:5000,tag:'\u78ba\u5b9a'},
+    {t:'\u6253\u3061\u5408\u308f\u305b\uff08LINE\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\u306b\u3064\u3044\u3066\uff09',d:'2026-07-16',p:5000,tag:'\u78ba\u5b9a'},
+    {t:'\u6253\u3061\u5408\u308f\u305b\uff08LINE\u516c\u5f0f\u69cb\u7bc9\u30fbInstagram\u30fbLINE\u30b9\u30bf\u30f3\u30d7\u306e\u4ef6\uff09',d:'2026-07-31',p:5000,tag:'\u78ba\u5b9a'},
+    {t:'Instagram\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8 \u7acb\u3061\u4e0a\u3052',d:'',p:30000,tag:'\u30b9\u30dd\u30c3\u30c8'},
+    {t:'\u3010\u30bb\u30c3\u30c8\u5272\u3011LINE\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\uff0bLINE\u30b9\u30bf\u30f3\u30d7 \u4e00\u5f0f',d:'',p:130000,tag:'\u30b9\u30dd\u30c3\u30c8'}
+  ]},
+  {m:'2026\u5e746\u6708',billed:180000,note:'\u59d4\u8a17\u57fa\u672c\u696d\u52d9 \u00a5100,000 \uff0b \u30b9\u30dd\u30c3\u30c8 \u00a580,000',items:[
+    {t:'\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u6d3b\u7528\u30de\u30cb\u30e5\u30a2\u30eb\u5236\u4f5c\uff08\u7d0d\u54c1\uff09',d:'2026-06-04',p:80000,tag:'\u30b9\u30dd\u30c3\u30c8'},
+    {t:'\u305d\u3070\u4ea4\u63db\u30c1\u30b1\u30c3\u30c8 \u30c7\u30b6\u30a4\u30f3\u4fee\u6b63\u30fb\u5370\u5237\u88fd\u672c\u30fb\u73fe\u7269\u7d0d\u54c1',d:'2026-06-04',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\uff08\u7d0d\u54c1\u30fb\u4eca\u5f8c\u306e\u696d\u52d9\uff09',d:'2026-06-04',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u9762\u8ac7',d:'2026-06-09',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u9762\u8ac7',d:'2026-06-12',p:0,tag:'\u57fa\u672c\u696d\u52d9'}
+  ]},
+  {m:'2026\u5e745\u6708',billed:100000,note:'\u59d4\u8a17\u57fa\u672c\u696d\u52d9 \u00a5100,000',items:[
+    {t:'HP\u516c\u958b\u3084\u308a\u3068\u308a\u30fb\u5f53\u9078\u8005\u30c7\u30fc\u30bf\u4fee\u6b63\u5bfe\u5fdc',d:'2026-04-16',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u9ad8\u6c5f\u6d32\u305d\u3070\u5546\u54c1\u5238\u30c7\u30b6\u30a4\u30f3\u5236\u4f5c',d:'2026-04-23',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\uff08\u4e88\u7b97\u30fb\u30de\u30cb\u30e5\u30a2\u30eb\u9032\u6357\uff09',d:'2026-04-23',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u30df\u30fc\u30c6\u30a3\u30f3\u30b0\uff08\u5f53\u9078\u8005\u767a\u9001\u30fb\u30de\u30cb\u30e5\u30a2\u30eb\u9032\u6357\uff09',d:'2026-05-19',p:0,tag:'\u57fa\u672c\u696d\u52d9'}
+  ]},
+  {m:'2026\u5e744\u6708',billed:300000,note:'\u59d4\u8a17\u57fa\u672c\u696d\u52d9 \u00a5100,000 \uff0b \u524d\u6708\u7e70\u8d8a \u00a5100,000 \uff0b \u5b8c\u4e86\u30b9\u30dd\u30c3\u30c8 \u00a5100,000',items:[
+    {t:'\u30b7\u30e7\u30fc\u30c8\u52d5\u753bA \u5236\u4f5c\u30fb\u914d\u4fe1',d:'2026-04-01',p:80000,tag:'\u30b9\u30dd\u30c3\u30c8'},
+    {t:'\u5f53\u9078\u8005\u767a\u8868\u30da\u30fc\u30b8\u95a2\u9023\uff08\u4f5c\u6210\u30fb\u30ea\u30b9\u30c8\u5c0e\u5165\uff09',d:'2026-04-15',p:20000,tag:'\u30b9\u30dd\u30c3\u30c8'},
+    {t:'\u30cd\u30fc\u30df\u30f3\u30b0\u78ba\u5b9a\u8abf\u6574\u30fb\u30d0\u30ca\u30fc\u30fb\u7d39\u4ecb\u30da\u30fc\u30b8\u30fbWeb\u516c\u958b\u4e00\u5f0f',d:'2026-04-15',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u6253\u3061\u5408\u308f\u305b\uff08\u30bf\u30b9\u30af\u30ea\u30b9\u30c8\u30fb\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u78ba\u8a8d\uff09',d:'2026-04-07',p:0,tag:'\u57fa\u672c\u696d\u52d9'},
+    {t:'\u5f53\u9078\u8005\u767b\u9332Google\u30d5\u30a9\u30fc\u30e0\u5236\u4f5c',d:'2026-04-15',p:0,tag:'\u57fa\u672c\u696d\u52d9'}
+  ]}
+];
+var ARCHIVE_TOTAL=ARCHIVE.reduce(function(s,a){return s+a.billed;},0);
+var JUL_TOTAL=JUL.reduce(function(s,i){return s+(i.p||0);},0);
+var AUG_TOTAL=AUG.reduce(function(s,i){return s+(i.p||0);},0);
+/* ===== \u6765\u6708\uff082026\u5e7410\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
+var SEP=[];
+var SEP_TOTAL=SEP.reduce(function(s,i){return s+(i.p||0);},0);
+
+var user=null,tasks=[],opArch=false;
 function fp(n){var v=(n==null||isNaN(n))?0:Number(n);return'\u00a5'+v.toLocaleString();}
 function fd(d){if(!d)return'';var p=d.split('-');return p.length>=3?(p[1].replace(/^0/,'')+'/'+p[2].replace(/^0/,'')):d;}
 function $(id){return document.getElementById(id);}
 function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function save(){try{localStorage.setItem(SK,JSON.stringify(tasks));}catch(e){}}
 function load(){try{var r=localStorage.getItem(SK);if(r){var p=JSON.parse(r);if(Array.isArray(p)&&p.length>0){tasks=p;return;}}}catch(e){}tasks=JSON.parse(JSON.stringify(DT));save();}
-function gCl(){try{var r=localStorage.getItem(CK);return r?JSON.parse(r):{};}catch(e){return{};}}
-function sCl(m,d){var c=gCl();c[m]=d;try{localStorage.setItem(CK,JSON.stringify(c));}catch(e){}}
+
 window.doLogin=function(){var pw=$('pw').value.trim();var u=PW[pw];if(!u){$('lerr').style.display='block';$('pw').value='';return;}user=u;try{sessionStorage.setItem(SS,pw);}catch(e){}$('login-screen').style.display='none';$('app').style.display='block';$('foot').style.display='flex';load();render();};
 window.doLogout=function(){try{sessionStorage.removeItem(SS);}catch(e){}user=null;$('app').style.display='none';$('foot').style.display='none';$('login-screen').style.display='flex';$('pw').value='';$('lerr').style.display='none';};
 (function(){try{var pw=sessionStorage.getItem(SS);if(pw&&PW[pw]){user=PW[pw];$('login-screen').style.display='none';$('app').style.display='block';$('foot').style.display='flex';load();render();}}catch(e){}})();
+
 window.setStatus=function(id,st){for(var i=0;i<tasks.length;i++){if(tasks[i].id===id){tasks[i].status=st;break;}}save();render();};
-window.toggleS=function(m){opS[m]=!opS[m];render();};
-window.toggleCA=function(){opCA=!opCA;render();};
-window.toggleCM=function(){opCM=!opCM;render();};
-function calc(){var r={};AM.forEach(function(m){var mt=tasks.filter(function(t){return t.month===m;});var ap=mt.filter(function(t){return t.status==='approved';});var pe=mt.filter(function(t){return t.status==='none'||t.status==='held';});var apT=ap.reduce(function(s,t){return s+(t.price||0);},0);var peT=pe.reduce(function(s,t){return s+(t.price||0);},0);var comp=m==='apr'?CA:m==='may'?CM:m==='jun'?CJ:[];var compT=comp.reduce(function(s,c){return s+(c.p||0);},0);var bI=m==='apr'?AB:m==='may'?MB:m==='jun'?MJ:m==='jul'?JB:[];var bH=bI.reduce(function(s,i){return s+(i.h||0);},0);var bP=bI.reduce(function(s,i){return s+(i.p||0);},0);var base=(m==='jul')?0:BC.p;var carry=(CO.m===m)?CO.p:0;var bill=(m==='jul')?(bP+compT+apT):(base+carry+compT+apT);r[m]={tasks:mt,approved:ap,pending:pe,apT:apT,peT:peT,comp:comp,compT:compT,bI:bI,bH:bH,bP:bP,base:base,carry:carry,bill:bill};});return r;}
+window.toggleArch=function(){opArch=!opArch;render();};
+
+function approvedList(){return tasks.filter(function(t){return t.status==='approved';});}
+function approvedTotal(){return approvedList().reduce(function(s,t){return s+(t.price||0);},0);}
+function pendingList(){return tasks.filter(function(t){return t.status==='none'||t.status==='held'||t.status==='adjust'||t.status==='rejected';});}
+function pendingTotal(){return tasks.filter(function(t){return t.status==='none'||t.status==='held';}).reduce(function(s,t){return s+(t.price||0);},0);}
+
 function render(){
-if(!user)return;var isA=user.role==='admin';var d=calc();var cl=gCl();
-$('rbdg').textContent=user.disp;
-$('abar').style.display=isA?'flex':'none';
-var now=new Date();$('dbar').textContent=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日 '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+'現在';
-var jB=d.jun.bill;var julB=d.jul.bill;
-var s='';
-s+='<div class="scb"><div class="sl">'+ML.jun+' 請求額</div><div class="sa">'+fp(jB)+'</div><div class="sd">基本'+fp(d.jun.base)+'+スポット'+fp(d.jun.compT)+'（請求済み）</div></div>';
-s+='<div class="scb"><div class="sl">'+ML.jul+' 請求予定額</div><div class="sa">'+fp(julB)+'</div><div class="sd">都度課金（固定報酬なし）</div></div>';
-$('srow').innerHTML=s;
-if(!isA){$('expl').style.display='block';$('expl').innerHTML='各タスクの内容と金額をご確認いただき<br>「承認して進める」を押していただくと<br>楽しくなる合同会社が制作に着手します。<br>「保留」は検討中、「見送り」は不要な場合にお使いください。';}else{$('expl').style.display='none';}
-var aCnt=tasks.filter(function(t){return t.status==='approved';}).length;var tCnt=tasks.length;var pct=tCnt>0?Math.round(aCnt/tCnt*100):0;
-$('prog').innerHTML='<div class="ph"><span>承認済み '+aCnt+'件 / 全'+tCnt+'件</span><span>'+pct+'%</span></div><div class="pbo"><div class="pbi" style="width:'+pct+'%"></div></div>';
-var h='';
-AM.forEach(function(m){
-  var dd=d[m];var bI=dd.bI;var tH=BC.h;var uH=dd.bH;var rH=tH-uH;var op=opS[m];
-  if(m==='jul'){
-    var jT=dd.bP;var opj=opS[m];
-    h+='<div class="sec"><div class="shdr"><span class="stitle">都度業務（'+ML[m]+'）</span><span class="sbdg gn">請求予定 '+fp(jT)+'</span></div>';
-    h+='<div class="bwc'+(opj?' exp':'')+'" onclick="toggleS(\''+m+'\')">';
-    h+='<div class="bwt">'+ML[m]+' 都度課金（固定報酬なし・'+fp(BC.r)+'/h）</div>';
-    h+='<div class="bws"><span>'+bI.length+'件</span><span>合計 '+fp(jT)+'</span></div>';
-    h+='<span class="bwa">'+(opj?'▼':'▶')+'</span></div>';
-    h+='<div class="bwd'+(opj?' open':'')+'"><table>';
-    bI.forEach(function(i){h+='<tr><td>'+esc(i.t)+'</td><td class="tdd">'+fd(i.d)+'</td><td class="tdh">'+(i.h?i.h+'h':'-')+'</td><td class="tdp">'+fp(i.p)+'</td></tr>';});
-    h+='</table><div class="bsm"><div class="bsr"><span>都度課金・固定報酬なし</span><span class="bsv">合計 '+fp(jT)+'</span></div></div></div></div>';
-    return;
+  if(!user)return;var isA=user.role==='admin';
+  $('rbdg').textContent=user.disp;
+  $('abar').style.display=isA?'flex':'none';
+  var now=new Date();$('dbar').textContent=now.getFullYear()+'\u5e74'+(now.getMonth()+1)+'\u6708'+now.getDate()+'\u65e5 '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+'\u73fe\u5728';
+
+  var apT=approvedTotal();var curBill=AUG_TOTAL+apT;
+  var s='';
+  s+='<div class="scb" style="border-radius:var(--radius)"><div class="sl">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a</div><div class="sa">'+fp(curBill)+'</div><div class="sd">2026\u5e749\u6708 \u8acb\u6c42\u5206</div></div>';
+  $('srow').innerHTML=s;$('srow').style.gridTemplateColumns='1fr';
+
+  if(!isA){$('expl').style.display='block';$('expl').innerHTML='\u5404\u696d\u52d9\u306e\u5185\u5bb9\u3068\u91d1\u984d\u3092\u3054\u78ba\u8a8d\u3044\u305f\u3060\u304d<br>\u300c\u627f\u8a8d\u3057\u3066\u9032\u3081\u308b\u300d\u3092\u62bc\u3057\u3066\u3044\u305f\u3060\u304f\u3068<br>\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\u304c\u5236\u4f5c\u306b\u7740\u624b\u3057\u307e\u3059\u3002<br>\u3054\u627f\u8a8d\u3044\u305f\u3060\u3044\u305f\u5358\u767a\u696d\u52d9\u306e\u307f\u3092\u8acb\u6c42\u3044\u305f\u3057\u307e\u3059\u3002';}else{$('expl').style.display='none';}
+
+  var aCnt=approvedList().length;var tCnt=tasks.length;var pct=tCnt>0?Math.round(aCnt/tCnt*100):0;
+  $('prog').innerHTML='<div class="ph"><span>\u627f\u8a8d\u6e08\u307f '+aCnt+'\u4ef6 / \u5168'+tCnt+'\u4ef6</span><span>'+pct+'%</span></div><div class="pbo"><div class="pbi" style="width:'+pct+'%"></div></div>';
+
+  var h='';
+  /* --- \u4eca\u6708\uff088\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a --- */
+  h+='<div class="sec"><div class="shdr"><span class="stitle">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg gn">\u5c0f\u8a08 '+fp(curBill)+'</span></div>';
+  AUG.forEach(function(i){
+    h+='<div class="cmc"><div class="cmt">'+esc(i.t);
+    if(i.d)h+='<div class="cml">'+fd(i.d)+'</div>';
+    if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
+    h+='</div><div class="cmr">';
+    if(i.tag)h+='<span class="cpb" style="background:var(--navy)">'+esc(i.tag)+'</span>';
+    h+='<span class="cmp">'+fp(i.p)+'</span></div></div>';
+  });
+  approvedList().forEach(function(t){
+    h+='<div class="cmc" style="border-left-color:var(--green)"><div class="cmt">'+esc(t.title)+'<div class="cml">\u627f\u8a8d\u6e08\u307f\u306e\u5358\u767a\u696d\u52d9</div></div><div class="cmr"><span class="cmp">'+fp(t.price)+'</span>';
+    if(isA)h+='<button class="ba bun" style="width:auto;padding:6px 10px;margin:0" onclick="setStatus('+t.id+',\'none\')">\u21a9</button>';
+    h+='</div></div>';
+  });
+  h+='</div>';
+
+  /* --- \u6765\u6708\uff089\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a --- */
+  if(SEP.length>0){
+    h+='<div class="sec"><div class="shdr"><span class="stitle">\u6765\u6708\uff082026\u5e7410\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg bl">\u5c0f\u8a08 '+fp(SEP_TOTAL)+'</span></div>';
+    SEP.forEach(function(i){
+      h+='<div class="cmc" style="border-left-color:var(--gold,#F5C842)"><div class="cmt">'+esc(i.t);
+      if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
+      else if(i.d)h+='<div class="cml">'+fd(i.d)+'</div>';
+      h+='</div><div class="cmr">';
+      if(i.tag)h+='<span class="cpb" style="background:var(--green)">'+esc(i.tag)+'</span>';
+      h+='<span class="cmp">'+fp(i.p)+'</span></div></div>';
+    });
+    h+='</div>';
   }
-  h+='<div class="sec"><div class="shdr"><span class="stitle">基本業務（'+ML[m]+'）</span><span class="sbdg bl">固定 '+fp(BC.p)+'</span></div>';
-  h+='<div class="bwc'+(op?' exp':'')+'" onclick="toggleS(\''+m+'\')">';
-  h+='<div class="bwt">'+ML[m]+' 基本業務 '+fp(BC.p)+'（'+tH+'h・'+fp(BC.r)+'/h）</div>';
-  h+='<div class="bws"><span>消化 '+uH+'h / '+tH+'h</span><span>残り '+rH+'h</span></div>';
-  h+='<span class="bwa">'+(op?'▼':'▶')+'</span></div>';
-  h+='<div class="bwd'+(op?' open':'')+'">';
-  h+='<table>';
-  bI.forEach(function(i){h+='<tr><td>'+esc(i.t)+'</td><td class="tdd">'+fd(i.d)+'</td><td class="tdh">'+i.h+'h</td><td class="tdp">'+fp(i.p)+'</td></tr>';});
-  h+='</table>';
-  h+='<div class="bsm"><div class="bsr"><span>稼働時間 '+uH+'h / '+tH+'h</span><span class="bsv">残り '+rH+'h</span></div>';
-  h+='<div class="bsb"><div class="bsf" style="width:'+Math.min(100,uH/tH*100)+'%"></div></div>';
-  h+='<div class="bst"><span>消化済み：'+uH+'h</span><span style="color:var(--blue);font-weight:700">残り：'+rH+'h</span></div>';
-  h+='</div></div></div>';
-});
-h+='<div class="sec"><div class="coc"><div class="ct">【繰越】3カ月分 超過業務時間（4月のみ）</div><div class="ca">'+fp(CO.p)+'（'+CO.h+'h × '+fp(CO.r)+'）</div><div class="cd">'+esc(CO.tx)+'</div><span class="ctg">繰越済み・4月請求のみ</span></div></div>';
-if(CA.length>0){var caT=CA.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr" style="cursor:pointer" onclick="toggleCA()"><span class="stitle">完了済みスポット案件（4月分） '+(opCA?'▼':'▶')+'</span><span class="sbdg gn">確定 '+fp(caT)+'</span></div>';if(opCA){CA.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});}h+='</div>';}
-if(CM.length>0){var cmT=CM.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">完了済みスポット案件（5月分）</span><span class="sbdg gn">確定 '+fp(cmT)+'</span></div>';CM.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span>完了 '+fd(c.d)+'</span><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});h+='</div>';}
-if(CJ.length>0){var cjT=CJ.reduce(function(s,c){return s+(c.p||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">スポット案件（6月請求予定）</span><span class="sbdg gn">確定 '+fp(cjT)+'</span></div>';CJ.forEach(function(c,i){h+='<div class="cpc"><div class="cpn">'+(i+1)+'</div><div class="cpi"><div class="cit">'+esc(c.t)+'</div><div class="cim"><span class="cpb">'+esc(c.l)+'</span></div></div><div class="cpp">'+fp(c.p)+'</div></div>';});h+='</div>';}
-if(tasks.length>0){var allApT=tasks.filter(function(t){return t.status==='approved';}).reduce(function(s,t){return s+(t.price||0);},0);h+='<div class="sec"><div class="shdr"><span class="stitle">実施予定タスク（スポット）</span><span class="sbdg gd">承認済 '+fp(allApT)+'</span></div>';h+=rC(tasks,false);h+='</div>';}
-h+='<div style="height:60px"></div>';$('main').innerHTML=h;
-var allPe=tasks.filter(function(t){return t.status==='none'||t.status==='held';});var peA=allPe.reduce(function(s,t){return s+(t.price||0);},0);
-var f='';f+='<div class="fi"><div class="fl">6月請求済</div><div class="fa">'+fp(jB)+'</div></div>';f+='<div class="fi"><div class="fl">7月請求予定</div><div class="fa">'+fp(julB)+'</div></div>';f+='<div class="fi"><div class="fl">今月請求予定合計</div><div class="fa wh">'+fp(julB)+'</div></div>';f+='<div class="fsub">確認待ち合計：'+fp(peA)+'</div>';$('foot').innerHTML=f;
+
+  /* --- 対応中（運用サポート内） --- */
+  if(ONGO.length>0){
+    h+='<div class="sec"><div class="shdr"><span class="stitle">対応中（月額の運用サポート内・追加費用なし）</span></div>';
+    ONGO.forEach(function(i){
+      h+='<div class="cmc" style="border-left-color:var(--green)"><div class="cmt">'+esc(i.t);
+      if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
+      h+='</div><div class="cmr"><span class="cpb" style="background:var(--green)">'+esc(i.tag)+'</span></div></div>';
+    });
+    h+='</div>';
+  }
+  /* --- \u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\uff09 --- */
+  var pend=pendingList();
+  h+='<div class="sec"><div class="shdr"><span class="stitle">\u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\uff09</span></div>';
+  if(pend.length>0){h+=rC(pend);}else{h+='<div style="text-align:center;color:var(--tsub);padding:20px;font-size:.85rem">\u672a\u627f\u8a8d\u306e\u5358\u767a\u696d\u52d9\u306f\u3042\u308a\u307e\u305b\u3093</div>';}
+  h+='</div>';
+
+  h+='<div style="height:60px"></div>';$('main').innerHTML=h;
+
+  var f='';
+  f+='<div class="fi"><div class="fl">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a</div><div class="fa wh">'+fp(curBill)+'</div></div>';
+  $('foot').innerHTML=f;
 }
-function rC(list,locked){var h='';var idx=0;list.forEach(function(t){idx++;var cls='tk';if(t.status==='approved')cls+=' ap';else if(t.status==='held')cls+=' ho';else if(t.status==='rejected')cls+=' rj';h+='<div class="'+cls+'"><div class="tkh"><div class="tkn">'+idx+'</div><div class="tkb">';h+='<div class="tp">'+fp(t.price)+'</div>';h+='<div class="tt">'+esc(t.title)+'</div>';if(t.desc)h+='<div class="td">'+esc(t.desc)+'</div>';if(t.status!=='none'){var lb=t.status==='approved'?'承認済み':t.status==='held'?'保留中':'見送り';h+='<div class="sttag '+t.status.substring(0,2)+'">'+lb+'</div>';}h+='</div></div>';if(!locked){if(t.status==='none'){h+='<div class="tka"><button class="ba bap" onclick="setStatus('+t.id+',\'approved\')">承認して進める</button><div class="brow"><button class="ba bho" onclick="setStatus('+t.id+',\'held\')">保留・検討中</button><button class="ba brj" onclick="setStatus('+t.id+',\'rejected\')">今回は見送り</button></div></div>';}else{h+='<div class="tka"><button class="ba bun" onclick="setStatus('+t.id+',\'none\')">↩ 選択を取り消す</button></div>';}}h+='</div>';});return h;}
-window.showClose=function(){var h='<h2>🔒 月末締め</h2><p>締める月を選択</p>';var cl=gCl();AM.forEach(function(m){if(!cl[m])h+='<button class="bad" style="width:100%;margin-bottom:8px" onclick="cfClose(\''+m+'\')">'+ML[m]+'</button>';});h+='<div class="macts"><button class="mb cn" onclick="closeMo()">閉じる</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
-window.cfClose=function(m){var dd=calc()[m];var h='<h2>🔒 '+ML[m]+' 締め確認</h2><p>請求合計: <strong>'+fp(dd.bill)+'</strong></p>';if(dd.pending.length>0)h+='<p style="color:var(--orange)">⚠ 未確認'+dd.pending.length+'件</p>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">キャンセル</button><button class="mb cf" onclick="exClose(\''+m+'\')">締め確定</button></div>';$('mbox').innerHTML=h;};
-window.exClose=function(m){var now=new Date();sCl(m,{at:now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate(),bill:calc()[m].bill});closeMo();render();};
-window.showExport=function(){var h='<h2>📥 CSVエクスポート</h2>';AM.forEach(function(m){h+='<button class="bad gd" style="width:100%;margin-bottom:8px" onclick="doExp(\''+m+'\')">'+ML[m]+'</button>';});h+='<button class="bad" style="width:100%;margin-bottom:8px" onclick="doExp(\'all\')">全期間</button>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">閉じる</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
-window.doExp=function(tgt){var ms=tgt==='all'?AM:[tgt];var lines=['種別,タスク名,金額,日付,ステータス,月'];var dd=calc();ms.forEach(function(m){var x=dd[m];x.bI.forEach(function(b){lines.push('基本業務,"'+(b.t||'').replace(/"/g,'""')+'",'+(b.p||0)+','+(b.d||'')+','+(b.h||0)+'h,'+ML[m]);});x.comp.forEach(function(c){lines.push('完了済み,"'+(c.t||'').replace(/"/g,'""')+'",'+(c.p||0)+','+(c.d||'')+',完了,'+ML[m]);});x.tasks.forEach(function(t){var st=t.status==='approved'?'承認':t.status==='held'?'保留':t.status==='rejected'?'見送り':'未対応';lines.push('発注タスク,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+','+''+','+st+','+ML[m]);});lines.push('請求合計,,'+x.bill+',,'+fp(x.bill)+','+ML[m]);});var blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='東江ガス_タスク管理_'+tgt+'.csv';a.click();URL.revokeObjectURL(u);closeMo();};
+
+function rC(list){var h='';var idx=0;list.forEach(function(t){idx++;var cls='tk';if(t.status==='approved')cls+=' ap';else if(t.status==='held'||t.status==='adjust')cls+=' ho';else if(t.status==='rejected')cls+=' rj';h+='<div class="'+cls+'"><div class="tkh"><div class="tkn">'+idx+'</div><div class="tkb">';h+='<div class="tp">'+(t.price!=null?fp(t.price):'\u8abf\u6574\u4e2d')+'</div>';h+='<div class="tt">'+esc(t.title)+'</div>';if(t.desc)h+='<div class="td">'+esc(t.desc)+'</div>';if(t.status!=='none'){var lb=t.status==='approved'?'\u627f\u8a8d\u6e08\u307f':t.status==='held'?'\u4fdd\u7559\u4e2d':t.status==='adjust'?'金額調整中':'\u898b\u9001\u308a';h+='<div class="sttag '+(t.status==='adjust'?'ho':t.status.substring(0,2))+'">'+lb+'</div>';}h+='</div></div>';if(t.status==='adjust'){}else if(t.status==='none'){h+='<div class="tka"><button class="ba bap" onclick="setStatus('+t.id+',\'approved\')">\u627f\u8a8d\u3057\u3066\u9032\u3081\u308b</button><div class="brow"><button class="ba bho" onclick="setStatus('+t.id+',\'held\')">\u4fdd\u7559\u30fb\u691c\u8a0e\u4e2d</button><button class="ba brj" onclick="setStatus('+t.id+',\'rejected\')">\u4eca\u56de\u306f\u898b\u9001\u308a</button></div></div>';}else{h+='<div class="tka"><button class="ba bun" onclick="setStatus('+t.id+',\'none\')">\u21a9 \u9078\u629e\u3092\u53d6\u308a\u6d88\u3059</button></div>';}h+='</div>';});return h;}
+
+/* ===== \u7ba1\u7406\u8005\u6a5f\u80fd ===== */
+window.showClose=function(){var apT=approvedTotal();var curBill=AUG_TOTAL+apT;var h='<h2>\ud83d\udd12 \u8acb\u6c42\u78ba\u5b9a\uff08\u4eca\u6708\uff09</h2>';h+='<p>\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a\uff1a<strong>'+fp(curBill)+'</strong></p>';var pe=tasks.filter(function(t){return t.status==='none'||t.status==='held';}).length;if(pe>0)h+='<p style="color:var(--orange)">\u26a0 \u672a\u78ba\u8a8d '+pe+'\u4ef6</p>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">\u9589\u3058\u308b</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
+window.showExport=function(){var lines=['\u533a\u5206,\u5185\u5bb9,\u91d1\u984d,\u65e5\u4ed8,\u30b9\u30c6\u30fc\u30bf\u30b9'];AUG.forEach(function(i){lines.push('\u4eca\u6708\uff089\u6708\uff09,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});SEP.forEach(function(i){lines.push('\u6765\u6708\uff0810\u6708\uff09,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});approvedList().forEach(function(t){lines.push('\u4eca\u6708\u627f\u8a8d\u5358\u767a,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,\u627f\u8a8d');});pendingList().forEach(function(t){var st=t.status==='held'?'\u4fdd\u7559':t.status==='rejected'?'\u898b\u9001\u308a':'\u672a\u5bfe\u5fdc';lines.push('\u5358\u767a\u767a\u6ce8,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,'+st);});ARCHIVE.forEach(function(a){lines.push('\u5b9f\u7e3e\u8acb\u6c42\u6e08,"'+a.m+'",'+a.billed+',,\u8acb\u6c42\u6e08\u307f');});var blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='\u6771\u6c5f\u30ac\u30b9_\u5358\u767a\u696d\u52d9_'+(new Date().toISOString().slice(0,10))+'.csv';a.click();URL.revokeObjectURL(u);};
 window.closeMo=function(){$('mo').classList.remove('show');};
 })();
 </script>
