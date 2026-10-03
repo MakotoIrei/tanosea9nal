@@ -192,7 +192,7 @@ section{padding:6.5rem 1.25rem;scroll-margin-top:60px}
 .works-list{display:grid;gap:1.2rem}
 .work{
   display:grid;grid-template-columns:240px 1fr;gap:2rem;align-items:start;
-  border:1px solid var(--line);border-radius:var(--radius);padding:2rem 2rem;background:var(--white)
+  border:1px solid var(--line);border-radius:var(--radius);padding:1.7rem 2rem;background:var(--white)
 }
 .work-client{font-size:1.25rem;font-weight:800;color:var(--navy-deep);line-height:1.5}
 .work-client .sep{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -205,8 +205,11 @@ section{padding:6.5rem 1.25rem;scroll-margin-top:60px}
 .stat-num small{font-size:.85rem;font-weight:600;margin-left:.15rem}
 .stat-label{font-size:.8rem;color:var(--muted)}
 .work-link{display:inline-block;margin-top:1rem;font-size:.88rem;font-weight:600;color:var(--navy);border-bottom:1px solid currentColor}
+.work-links{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-top:1rem}
+.work-links .work-link{margin-top:0}
+.work-links .ended{font-weight:400;color:var(--muted)}
 .works-more{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:1.2rem
+  display:grid;grid-template-columns:1fr;gap:1.2rem;margin-top:1.2rem
 }
 .mini{
   display:block;border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem 1.6rem;background:var(--soft)
@@ -571,7 +574,21 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
     </article>
     <article class="work">
       <div>
-        <h3 class="work-client">沖縄都市モノレール</h3>
+        <h3 class="work-client">琉球銀行<span class="sep">｜</span><span class="work-sub">継続する企業メディアを企画</span></h3>
+        <div class="work-tags"><span>テレビ番組</span><span>企画・制作</span><span>企業メディア</span></div>
+      </div>
+      <div class="work-body">
+        <p>テレビ番組『RYUGIN GOOD NEWS』『RYUGIN GOOD TIME』などを企画・制作。単発の広告ではなく、企業が地域と継続的につながる“番組型の発信”を設計してきました。</p>
+        <div class="work-links">
+          <a href="https://www.ryugin.co.jp/goodnews/" target="_blank" rel="noopener" class="work-link">RYUGIN GOOD NEWS</a>
+          <a href="https://www.ryugin.co.jp/goodtime/" target="_blank" rel="noopener" class="work-link">RYUGIN GOOD TIME</a>
+          <a href="https://www.ryugin.co.jp/goodpr_radio/" target="_blank" rel="noopener" class="work-link">RYUGIN GOOD TIME Radio<span class="ended">（放送終了）</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="work">
+      <div>
+        <h3 class="work-client">沖縄都市モノレール<span class="sep">｜</span><span class="work-sub">導入から発信まで横断</span></h3>
         <div class="work-tags"><span>コンサルティング</span><span>イベント</span><span>デジタル発信</span></div>
       </div>
       <div class="work-body">
@@ -580,7 +597,17 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
     </article>
     <article class="work">
       <div>
-        <h3 class="work-client">沖縄県セルプセンター</h3>
+        <h3 class="work-client">ナンポー<span class="sep">｜</span><span class="work-sub">独立初年度のテレビCM制作</span></h3>
+        <div class="work-tags"><span>テレビCM</span><span>企画</span><span>ディレクション</span></div>
+      </div>
+      <div class="work-body">
+        <p>独立初年度にテレビCMの企画・ディレクションを担当。独立後も企業のブランド発信を映像で支援しています。</p>
+        <a href="https://www.youtube.com/watch?v=htHu4ipfAZE" target="_blank" rel="noopener" class="work-link">CMを見る</a>
+      </div>
+    </article>
+    <article class="work">
+      <div>
+        <h3 class="work-client">沖縄県セルプセンター<span class="sep">｜</span><span class="work-sub">福祉・地域の発信を支援</span></h3>
         <div class="work-tags"><span>取材動画</span><span>SNS研修</span><span>デジタル発信</span></div>
       </div>
       <div class="work-body">
@@ -592,10 +619,6 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
     </article>
   </div>
   <div class="works-more">
-    <a href="https://youtu.be/htHu4ipfAZE" target="_blank" rel="noopener" class="mini">
-      <h3>ナンポー テレビCM制作</h3>
-      <p>沖縄の老舗企業ナンポーのテレビCMをディレクション。</p>
-    </a>
     <a href="https://www.youtube.com/@ryukyutanosea9nal" target="_blank" rel="noopener" class="mini">
       <h3>YouTube総視聴回数 138.7万回</h3>
       <p>自社チャンネルで沖縄63箇所をアーカイブ。運用ノウハウを支援に活かしています。</p>
@@ -640,7 +663,7 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
       <div class="career">
         <p class="career-label">主な経歴</p>
         <ul>
-          <li>沖縄の銀行初のテレビCM「りゅうぎんロボ」を企画</li>
+          <li>琉球銀行の企業キャラクター「りゅうぎんロボ」を企画</li>
           <li>ACC賞 沖縄初のブロンズ賞受賞</li>
           <li>Facebook Workplace 日本の銀行初導入</li>
           <li>AWSサミット大阪でキーノート登壇</li>
@@ -666,8 +689,9 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
     <li><span class="i-num">05</span>月次レビュー</li>
   </ul>
   <div class="included-note">
-    <p>大型動画、Web制作、イベント、広告出稿等は別途お見積りします。</p>
-    <p><strong>追加料金が発生する場合は、必ず着手前に内容と金額をご説明します。</strong></p>
+    <p>具体的な支援範囲は、ご契約時に確認・明文化します。</p>
+    <p>契約範囲を超える制作・撮影や、大型動画、Web制作、イベント、広告出稿等は、着手前にお見積りします。</p>
+    <p><strong>追加料金が発生する場合は、必ず事前に内容と金額をご説明します。</strong></p>
   </div>
 </div>
 </section>
