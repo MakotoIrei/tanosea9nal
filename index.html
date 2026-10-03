@@ -127,6 +127,12 @@ section{padding:6.5rem 1.25rem;scroll-margin-top:60px}
   font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.4rem 1.6rem
 }
 .hero-proof span:first-child{color:var(--ink);font-weight:700}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:4rem;align-items:center}
+.hero-grid h1{font-size:clamp(2.6rem,4.2vw,3.6rem)}
+.hero-card{background:var(--navy);color:#fff;border-radius:var(--radius);padding:2.1rem 1.9rem}
+.hero-card .hc-label{font-size:1.02rem;font-weight:700;color:#fff;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid rgba(217,192,138,.5)}
+.hero-card li{padding:.6rem 0 .6rem 1.1rem;position:relative;font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.92)}
+.hero-card li::before{content:"";position:absolute;left:0;top:1.2rem;width:5px;height:5px;background:#d9c08a;border-radius:50%}
 
 /* ===== PROBLEM ===== */
 .problem{background:var(--soft)}
@@ -143,7 +149,9 @@ section{padding:6.5rem 1.25rem;scroll-margin-top:60px}
 .problem .statement .sub{font-size:1rem;font-weight:400;color:var(--muted);line-height:1.9}
 
 /* ===== SERVICE ===== */
-.service-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:3.5rem;align-items:start}
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
+.service-grid .questions{display:none}
+.direct{margin-top:1.4rem;padding:1.1rem 1.3rem;background:var(--soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;color:var(--navy-deep);font-weight:600}
 .questions{
   background:var(--navy);color:#fff;border-radius:var(--radius);padding:2.2rem 2rem
 }
@@ -187,6 +195,8 @@ section{padding:6.5rem 1.25rem;scroll-margin-top:60px}
   border:1px solid var(--line);border-radius:var(--radius);padding:2rem 2rem;background:var(--white)
 }
 .work-client{font-size:1.25rem;font-weight:800;color:var(--navy-deep);line-height:1.5}
+.work-client .sep{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.work-client .work-sub{display:block;font-size:.95rem;font-weight:700;color:var(--accent);margin-top:.2rem}
 .work-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
 .work-tags span{font-size:.75rem;padding:.2rem .6rem;background:var(--soft);border-radius:4px;color:var(--muted)}
 .work-body p{font-size:1rem;color:var(--ink)}
@@ -245,7 +255,22 @@ a.mini:hover{border-color:var(--navy)}
 }
 .impact-links a:hover{background:rgba(255,255,255,.1)}
 
+/* ===== INCLUDED ===== */
+.included-list{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.included-list li{
+  display:flex;align-items:flex-start;gap:1rem;background:var(--white);border:1px solid var(--line);
+  border-radius:var(--radius);padding:1.3rem 1.4rem;font-size:1.02rem;font-weight:600;color:var(--navy-deep);line-height:1.7
+}
+.included-list .i-num{flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--accent);letter-spacing:.08em;padding-top:.2rem}
+.included-note{margin-top:1.6rem;padding:1.4rem 1.5rem;background:var(--soft);border-radius:10px}
+.included-note p{font-size:1rem}
+.included-note p+p{margin-top:.5rem}
+.included-note strong{color:var(--navy-deep)}
+
 /* ===== PRICE ===== */
+.price{background:var(--soft)}
+.price-note{border-top:1px solid var(--line);padding-top:1.4rem;font-size:.98rem;color:var(--ink)}
+.price-note a{color:var(--navy);font-weight:600;border-bottom:1px solid currentColor}
 .price-card{
   border:2px solid var(--navy);border-radius:var(--radius);padding:2.8rem 2.4rem;max-width:760px;margin:0 auto;background:var(--white)
 }
@@ -321,6 +346,10 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
   .flow-step:nth-child(4){border-radius:0 0 var(--radius) 0!important;border-left:none!important;border-top:none}
   .flow-step::after{display:none}
   .service-grid{grid-template-columns:1fr;gap:2.5rem}
+  .service-grid .questions{display:block}
+  .hero-grid{grid-template-columns:1fr;gap:0}
+  .hero-grid h1{font-size:clamp(2.2rem,6.4vw,4rem)}
+  .hero-card{display:none}
   .work{grid-template-columns:1fr;gap:1rem}
 }
 @media(max-width:768px){
@@ -357,6 +386,7 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
   .flow-axis{display:none}
   .work{padding:1.6rem 1.3rem}
   .works-more{grid-template-columns:1fr}
+  .included-list{grid-template-columns:1fr}
   .about-grid{grid-template-columns:1fr;gap:2rem}
   .about-profile{display:grid;grid-template-columns:120px 1fr;gap:1.2rem;align-items:center}
   .about-name{margin-top:0}
@@ -400,6 +430,8 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
 <!-- 1. HERO -->
 <section class="hero" id="top">
 <div class="inner">
+ <div class="hero-grid">
+ <div class="hero-main">
   <p class="hero-label"><span class="service-name">社長の社外広報室</span><span>楽しくなる合同会社</span></p>
   <h1>発信を、片手間から<br><span class="accent-line">経営の力へ。</span></h1>
   <div class="hero-body">
@@ -410,6 +442,17 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
     <a href="#contact" class="btn btn-primary">まず相談する <span class="arrow">→</span></a>
     <a href="#works" class="btn btn-ghost">実績を見る</a>
   </div>
+ </div>
+  <aside class="hero-card" aria-label="社長に、まず伺うこと">
+    <p class="hc-label">社長に、まず伺うこと。</p>
+    <ul>
+      <li>今、何を売りたいのか。</li>
+      <li>会社をどこへ向かわせたいのか。</li>
+      <li>誰に知ってほしいのか。</li>
+      <li>どんな会社として見られたいのか。</li>
+    </ul>
+  </aside>
+ </div>
   <p class="hero-proof"><span>支援実績</span><span>東江ガス</span><span>沖縄都市モノレール</span><span>沖縄県セルプセンター</span><span>ナンポー ほか</span></p>
 </div>
 </section>
@@ -446,7 +489,10 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
   <div class="service-grid">
     <div class="lead">
       <p>月に一度、まず社長のお話を聞きます。</p>
+      <p class="direct">楽しくなる合同会社では、代表・伊禮が社長と直接お話しします。</p>
       <p>そこから必要な手段を考えます。</p>
+    </div>
+    <div class="lead">
       <p>SNSならSNS。<br>YouTubeならYouTube。<br>動画なら動画。<br>広告なら広告。<br>AIで効率化できるならAI。</p>
       <div class="means" aria-hidden="true">
         <span>SNS</span><span>YouTube</span><span>動画</span><span>広告</span><span>Web</span><span>イベント</span><span>AI活用</span>
@@ -510,15 +556,15 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
   <div class="works-list">
     <article class="work">
       <div>
-        <h3 class="work-client">東江ガス</h3>
+        <h3 class="work-client">東江ガス<span class="sep">｜</span><span class="work-sub">単発制作ではなく継続伴走</span></h3>
         <div class="work-tags"><span>キャラクター</span><span>動画</span><span>SNS</span><span>キャンペーン</span></div>
       </div>
       <div class="work-body">
-        <p>キャラクター、動画、SNS、キャンペーン等を継続支援。キャラクターの開発・命名からディレクションしています。</p>
+        <p>キャラクター、動画、SNS、キャンペーンを横断して継続支援。</p>
         <div class="work-stats">
           <div><div class="stat-num">595<small>件</small></div><div class="stat-label">キャンペーン応募数</div></div>
-          <div><div class="stat-num">5,093</div><div class="stat-label">HP総PV</div></div>
-          <div><div class="stat-num">7,304<small>以上</small></div><div class="stat-label">SNS視聴</div></div>
+          <div><div class="stat-num">5,093<small>PV</small></div><div class="stat-label">HP総PV</div></div>
+          <div><div class="stat-num">7,304<small>回以上</small></div><div class="stat-label">SNS視聴</div></div>
         </div>
         <a href="https://www.agariegas.co.jp/topics/1775204698/" target="_blank" rel="noopener" class="work-link">キャラクター開発について見る</a>
       </div>
@@ -605,7 +651,44 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
 </div>
 </section>
 
-<!-- 7. SOCIAL IMPACT -->
+<!-- 7. INCLUDED -->
+<section class="included" id="included">
+<div class="inner">
+  <div class="sec-head">
+    <p class="eyebrow">Included</p>
+    <h2>月額に含まれること</h2>
+  </div>
+  <ul class="included-list">
+    <li><span class="i-num">01</span>社長との定例ミーティング<span style="white-space:nowrap">（月1回）</span></li>
+    <li><span class="i-num">02</span>発信・販促企画の設計</li>
+    <li><span class="i-num">03</span>一定範囲の制作・実行支援</li>
+    <li><span class="i-num">04</span>SNS、YouTube、動画、AI活用等の相談</li>
+    <li><span class="i-num">05</span>月次レビュー</li>
+  </ul>
+  <div class="included-note">
+    <p>大型動画、Web制作、イベント、広告出稿等は別途お見積りします。</p>
+    <p><strong>追加料金が発生する場合は、必ず着手前に内容と金額をご説明します。</strong></p>
+  </div>
+</div>
+</section>
+
+<!-- 8. PRICE -->
+<section class="price" id="price">
+<div class="inner">
+  <div class="sec-head" style="text-align:center">
+    <p class="eyebrow">Price</p>
+    <h2>料金</h2>
+  </div>
+  <div class="price-card">
+    <p class="price-name">社長の社外広報室</p>
+    <p class="price-amount"><span class="label">月額</span><span class="num">200,000</span><span class="unit">円（税別）〜</span></p>
+    <p class="price-note">含まれる内容は「<a href="#included">月額に含まれること</a>」のとおりです。<br>別途費用が発生する場合は、必ず着手前に内容と金額をご説明します。</p>
+    <div class="price-cta"><a href="#contact" class="btn btn-primary">まず相談する <span class="arrow">→</span></a></div>
+  </div>
+</div>
+</section>
+
+<!-- 9. SOCIAL IMPACT -->
 <section class="impact" id="impact">
 <div class="inner">
   <div class="sec-head">
@@ -630,35 +713,7 @@ footer{background:var(--white);border-top:1px solid var(--line);text-align:cente
 </div>
 </section>
 
-<!-- 8. PRICE -->
-<section class="price" id="price">
-<div class="inner">
-  <div class="sec-head" style="text-align:center">
-    <p class="eyebrow">Price</p>
-    <h2>料金</h2>
-  </div>
-  <div class="price-card">
-    <p class="price-name">社長の社外広報室</p>
-    <p class="price-amount"><span class="label">月額</span><span class="num">200,000</span><span class="unit">円（税別）〜</span></p>
-    <div class="price-includes">
-      <h3>含まれるもの</h3>
-      <ul>
-        <li>社長との定例ミーティング</li>
-        <li>発信企画</li>
-        <li>一定範囲の制作・実行支援</li>
-      </ul>
-    </div>
-    <div class="price-extra">
-      <h3>別途お見積り</h3>
-      <p>大型動画、Web制作、イベント、広告出稿などは別途お見積りします。</p>
-      <p><strong>追加料金が発生する場合は、必ず着手前に内容と金額をご説明します。</strong></p>
-    </div>
-    <div class="price-cta"><a href="#contact" class="btn btn-primary">まず相談する <span class="arrow">→</span></a></div>
-  </div>
-</div>
-</section>
-
-<!-- 9. CONTACT -->
+<!-- 10. CONTACT -->
 <section class="contact" id="contact">
 <div class="inner">
   <div class="sec-head">
