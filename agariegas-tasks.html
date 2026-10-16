@@ -191,7 +191,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v38',SS='agariegas_session',CK='agariegas_closed_v1';
+var SK='agariegas_tasks_v45',SS='agariegas_session',CK='agariegas_closed_v1';
 var PW={
   'makoto2026':{role:'admin',disp:'\u7ba1\u7406\u8005\uff08\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\uff09'},
   'agarie2026':{role:'viewer',disp:'\u6771\u6c5f\u5e38\u52d9\uff08\u6771\u6c5f\u30ac\u30b9\uff09'}
@@ -201,34 +201,56 @@ var PW={
 /* ===== 7\u6708\u5206\u306f\u8acb\u6c42\u30fb\u5165\u91d1\u6e08\u307f\u2192ARCHIVE\u3078\u79fb\u52d5 ===== */
 var JUL=[];
 
-/* ===== \u6765\u6708\uff082026\u5e749\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
+/* ===== 来月（2026年10月）の請求予定\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
 var AUG=[
-  {t:'保守・運用費（9月分）公開ページ／Googleフォーム維持',d:'',p:10000,tag:'月額'},
-  {t:'LINE公式アカウント 運用サポート（9月分）FAQ自動応答内容更新等',d:'',p:15000,tag:'月額'},
-  {t:'打ち合わせ（イベント用動画・ラジオCM）',d:'2026-09-16',p:5000,tag:'確定'},
-  {t:'広告用汎用周年PR動画（イベント用15秒）企画・制作・AIキャラクター生成・BGM制作',d:'',p:100000,tag:'納品済'},
-  {t:'クレジットカード払い 申込フォーム構築',d:'2026-09-30',p:100000,tag:'完了',note:'フォーム構築まで。項目の最適化・カード会社へ渡しやすくするカスタマイズは別途お見積もり'}
+  {t:'保守・運用費（10月分）公開ページ／Googleフォーム維持',d:'',p:10000,tag:'月額'},
+  {t:'LINE公式アカウント 運用サポート（10月分）FAQ自動応答内容更新等',d:'',p:15000,tag:'月額'},
+  {t:'FM沖縄「ハッピーアイランド」ラジオカー出演サポート一式（トークメモ作成・当日現地対応・撮影・編集・Instagramリール／ストーリーズ配信）',d:'2026-10-01',p:50000,tag:'完了'},
+  {t:'HP用 Instagram誘導バナー制作（PC版・SP版）',d:'2026-10-15',p:30000,tag:'納品済'},
+  {t:'HP管理会社（沖縄セルラーアスミュー）との設置調整（Instagramバナー）',d:'2026-10-15',p:10000,tag:'対応中',note:'LINEへのリンクやカード払いボタンの設置調整は、実施時に別途追加します'},
+  {t:'芸大コラボ作品 配信パッケージ（8本）作品の内容確認・キャプション作成・投稿・ストーリーズ',d:'',p:32000,tag:'一式',note:'1本¥4,000×8本。沖縄県立芸術大学の学生作品の配信作業費（作品の対価ではありません）。映り込んだ新聞記事へのモザイク処理を含みます'},
+  {t:'打ち合わせ',d:'2026-10-16',p:5000,tag:'完了'}
 ];
+
+/* ===== 今月 完成しだい計上（仮）承認済み ===== */
+var PROV=[
+  {t:'ラジオCM制作（20秒×4本）',p:280000,tag:'承認済',note:'10/16 ご承認。まず4種類を制作し、声を含めてご確認いただいたうえで放送用を納品します'},
+  {t:'サウンドロゴ制作（全媒体・期限なし）',p:0,tag:'無償',note:'通常 ¥80,000 のところ、今回は無償で制作します'},
+  {t:'カード払いフォーム HP掲載用ボタン制作・HP管理会社との調整',p:20000,tag:'承認済',note:'10/16 ご承認'}
+];
+var WIP=[
+  {t:'LINE内ゲーム「あがりえんのほかほかお風呂」制作・公開',p:150000,tag:'承認済',note:'10/16 ご承認。ラジオCMのご契約にあわせ、通常 ¥200,000 のところ ¥150,000 に減額。ゲーム制作・公開先への設置・リッチメニュー「あそぶ」ボタンまで含みます。11月以降の公開・請求。公開後は管理費として月¥10,000（公開の維持・動作確認・軽微な修正）'}
+];
+var PROV_TOTAL=PROV.reduce(function(s,i){return s+(i.p||0);},0);
 
 /* ===== \u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\u5f85\u3061\uff09 ===== */
 var DT=[
-  {id:12,title:'YouTube\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8\u7acb\u3061\u4e0a\u3052',price:50000,status:'none',desc:'\u98f2\u98df\u5e97\u7d39\u4ecb\u306b\u3088\u308b\u9867\u5ba2\u652f\u63f4\uff1d\u8ca9\u4fc3\u306e\u67f1\u3002\u7acb\u4e0a\u3052\u8cbb\u3068\u52d5\u753b1\u672c\u5236\u4f5c\u8cbb\u306f\u5225'},
-  {id:11,title:'\u5b9a\u671f\u30a2\u30f3\u30b1\u30fc\u30c8\uff08\u590f\uff09',price:30000,status:'none',desc:'\u79cb\u65bd\u7b56\u306e\u88cf\u4ed8\u3051\u30c7\u30fc\u30bf'},
-  {id:13,title:'\u30e9\u30b8\u30aaCM\u5236\u4f5c\uff0820\u79d2\u30fb\u30b5\u30a6\u30f3\u30c9\u30ed\u30b4\u542b\u3080\uff09',price:null,status:'adjust',desc:'9/16 常務より「毎週差し替え」の月額見積もり依頼あり。放送側の条件確認後に提示（金額調整中）'},
-  {id:14,title:'LINEキャンペーン（友だち増加）',price:null,status:'adjust',desc:'8/28 ご依頼。企画内容とあわせて金額調整中'},
-  {id:15,title:'LINE内ゲーム（LIFF）',price:null,status:'adjust',desc:'8/28 ご依頼（ガスボンベを並べるゲーム等）。内容・範囲の確定後にお見積もり'},
-  {id:16,title:'キャラクターグッズ（立体ステッカー・キーホルダー）',price:null,status:'adjust',desc:'ドリームワークそてつの森にサンプル制作を依頼中。サンプル確認後にお見積もり'}
+  {id:19,title:'LINE内ゲーム LINE Developers登録（友だち追加必須・お名前表示・抽選の仕組み）',price:50000,status:'none',desc:'プレゼント企画などで「誰が遊んだか」が必要になった段階で追加します'},
+  {id:16,title:'キャラクターグッズ（立体ステッカー・キーホルダー）',price:null,status:'adjust',desc:'ドリームワークそてつの森のサンプル完成。来週サンプルを受け取り、お見積もりをご提案します。最小ロットは1種類100個'},
+  {id:14,title:'LINEキャンペーン（友だち増加・プレゼント企画）',price:null,status:'adjust',desc:'ゲームとキャラクターグッズを組み合わせたプレゼント企画として、内容とあわせて金額調整中'},
+  {id:12,title:'YouTube公式アカウント立ち上げ',price:50000,status:'none',desc:'飲食店紹介による顧客支援＝販促の柱。立上げ費と動画1本制作費は別'},
+  {id:11,title:'定期アンケート（夏）',price:30000,status:'none',desc:'秋施策の裏付けデータ'}
 ];
 
 /* ===== 対応中（月額の運用サポート内・追加費用なし） ===== */
 var ONGO=[
-  {t:'LINE微調整（リッチメニューの文字拡大・Default応答の文言修正・「料金」キーワード追加）',tag:'運用サポート内'},
-  {t:'LINE認証済みアカウントの申請',tag:'ご承諾待ち',note:'申請のご承諾と、社名・住所・電話番号の表記確認をお願いします'}
+  {t:'カード払いフォームのテスト入力・ご担当者（管理部 事務管理課）への連絡と運用の確認',tag:'保守内',note:'10/16 ご担当者をご紹介いただきました'},
+  {t:'LINE認証済みアカウントの申請',tag:'申請準備中',note:'10/16 申請内容（常務名義）をご了承いただきました'},
+  {t:'LINEスタンプの申請',tag:'口座情報待ち',note:'売上の振込口座は来週金曜にご連絡いただく予定です'},
+  {t:'会社のGoogleアカウント（sns@）のご説明・ログイン情報の管理表お渡し・再設定用連絡先の登録',tag:'説明済み',note:'10/16 ご説明済み'},
+  {t:'LINE微調整（リッチメニューの文字拡大・Default応答の文言修正・「料金」キーワード追加）',tag:'運用サポート内'}
 ];
 
 /* ===== \u59d4\u8a17\u5951\u7d04\u671f\u9593\u306e\u5b9f\u7e3e\uff082026\u5e744\uff5e6\u6708\u30fb\u8acb\u6c42\u6e08\u307f\uff09 =====
    \u6642\u9593\u306f\u8868\u793a\u3057\u306a\u3044\u3002\u5c4a\u3051\u305f\u4ed5\u4e8b\u306e\u4fa1\u5024\u306e\u8a18\u9332\u3068\u3057\u3066\u6b8b\u3059\u3002 */
 var ARCHIVE=[
+  {m:'2026年9月',billed:230000,note:'保守 ¥10,000 ＋ LINE運用サポート ¥15,000 ＋ 打合せ ¥5,000 ＋ イベント用15秒動画 ¥100,000 ＋ カード払い申込フォーム構築 ¥100,000',items:[
+  {t:'保守・運用費（9月分）公開ページ／Googleフォーム維持',d:'',p:10000,tag:'月額'},
+  {t:'LINE公式アカウント 運用サポート（9月分）FAQ自動応答内容更新等',d:'',p:15000,tag:'月額'},
+  {t:'打ち合わせ（イベント用動画・ラジオCM）',d:'2026-09-16',p:5000,tag:'確定'},
+  {t:'広告用汎用周年PR動画（イベント用15秒）企画・制作・AIキャラクター生成・BGM制作',d:'',p:100000,tag:'納品済'},
+  {t:'クレジットカード払い 申込フォーム構築',d:'2026-09-30',p:100000,tag:'完了'}
+  ]},
   {m:'2026年8月',billed:320000,note:'保守 ¥10,000 ＋ LINE構築 ¥200,000 ＋ LINE運用サポート ¥15,000 ＋ 打合せ ¥15,000 ＋ ショート動画 ¥80,000（INV-0000000092・送付済）',items:[
   {t:'\u4fdd\u5b88\u30fb\u904b\u7528\u8cbb\uff088\u6708\u5206\uff09\u516c\u958b\u30da\u30fc\u30b8\uff0fGoogle\u30d5\u30a9\u30fc\u30e0\u7dad\u6301',d:'',p:10000,tag:'\u6708\u984d'},
   {t:'LINE\u516c\u5f0f\u30a2\u30ab\u30a6\u30f3\u30c8 \u69cb\u7bc9\uff08\u7533\u8fbc\u30d5\u30a9\u30fc\u30e0\uff0bFAQ\u81ea\u52d5\u5fdc\u7b54 \u7b49\uff09',d:'',p:200000,tag:'\u627f\u8a8d\u6e08'},
@@ -270,7 +292,7 @@ var ARCHIVE=[
 var ARCHIVE_TOTAL=ARCHIVE.reduce(function(s,a){return s+a.billed;},0);
 var JUL_TOTAL=JUL.reduce(function(s,i){return s+(i.p||0);},0);
 var AUG_TOTAL=AUG.reduce(function(s,i){return s+(i.p||0);},0);
-/* ===== \u6765\u6708\uff082026\u5e7410\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
+/* ===== 来月（2026年11月）\u306e\u8acb\u6c42\u4e88\u5b9a\uff08\u627f\u8a8d\u6e08\u307f\uff09 ===== */
 var SEP=[];
 var SEP_TOTAL=SEP.reduce(function(s,i){return s+(i.p||0);},0);
 
@@ -302,7 +324,7 @@ function render(){
 
   var apT=approvedTotal();var curBill=AUG_TOTAL+apT;
   var s='';
-  s+='<div class="scb" style="border-radius:var(--radius)"><div class="sl">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a</div><div class="sa">'+fp(curBill)+'</div><div class="sd">2026\u5e749\u6708 \u8acb\u6c42\u5206</div></div>';
+  s+='<div class="scb" style="border-radius:var(--radius)"><div class="sl">今月（2026年10月）\u8acb\u6c42\u4e88\u5b9a</div><div class="sa">'+fp(curBill)+'</div><div class="sd">2026年10月 請求分（完成しだい追加：最大 '+fp(curBill+PROV_TOTAL)+'）</div></div>';
   $('srow').innerHTML=s;$('srow').style.gridTemplateColumns='1fr';
 
   if(!isA){$('expl').style.display='block';$('expl').innerHTML='\u5404\u696d\u52d9\u306e\u5185\u5bb9\u3068\u91d1\u984d\u3092\u3054\u78ba\u8a8d\u3044\u305f\u3060\u304d<br>\u300c\u627f\u8a8d\u3057\u3066\u9032\u3081\u308b\u300d\u3092\u62bc\u3057\u3066\u3044\u305f\u3060\u304f\u3068<br>\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\u304c\u5236\u4f5c\u306b\u7740\u624b\u3057\u307e\u3059\u3002<br>\u3054\u627f\u8a8d\u3044\u305f\u3060\u3044\u305f\u5358\u767a\u696d\u52d9\u306e\u307f\u3092\u8acb\u6c42\u3044\u305f\u3057\u307e\u3059\u3002';}else{$('expl').style.display='none';}
@@ -312,7 +334,7 @@ function render(){
 
   var h='';
   /* --- \u4eca\u6708\uff088\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a --- */
-  h+='<div class="sec"><div class="shdr"><span class="stitle">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg gn">\u5c0f\u8a08 '+fp(curBill)+'</span></div>';
+  h+='<div class="sec"><div class="shdr"><span class="stitle">今月（2026年10月）\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg gn">\u5c0f\u8a08 '+fp(curBill)+'</span></div>';
   AUG.forEach(function(i){
     h+='<div class="cmc"><div class="cmt">'+esc(i.t);
     if(i.d)h+='<div class="cml">'+fd(i.d)+'</div>';
@@ -326,15 +348,38 @@ function render(){
     if(isA)h+='<button class="ba bun" style="width:auto;padding:6px 10px;margin:0" onclick="setStatus('+t.id+',\'none\')">\u21a9</button>';
     h+='</div></div>';
   });
+  if(PROV.length>0){
+    h+='<div class="cml" style="margin:14px 4px 8px;font-weight:700;color:var(--navy)">完成しだい今月分に計上（仮）　見込み '+fp(PROV_TOTAL)+'</div>';
+    PROV.forEach(function(i){
+      h+='<div class="cmc" style="border-left-color:var(--gold,#F5C842);border-left-style:dashed"><div class="cmt">'+esc(i.t);
+      if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
+      h+='</div><div class="cmr">';
+      if(i.tag)h+='<span class="cpb" style="background:var(--green)">'+esc(i.tag)+'</span>';
+      h+='<span class="cmp">'+fp(i.p)+'</span></div></div>';
+    });
+  }
   h+='</div>';
 
   /* --- \u6765\u6708\uff089\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a --- */
   if(SEP.length>0){
-    h+='<div class="sec"><div class="shdr"><span class="stitle">\u6765\u6708\uff082026\u5e7410\u6708\uff09\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg bl">\u5c0f\u8a08 '+fp(SEP_TOTAL)+'</span></div>';
+    h+='<div class="sec"><div class="shdr"><span class="stitle">来月（2026年11月）\u306e\u8acb\u6c42\u4e88\u5b9a</span><span class="sbdg bl">\u5c0f\u8a08 '+fp(SEP_TOTAL)+'</span></div>';
     SEP.forEach(function(i){
       h+='<div class="cmc" style="border-left-color:var(--gold,#F5C842)"><div class="cmt">'+esc(i.t);
       if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
       else if(i.d)h+='<div class="cml">'+fd(i.d)+'</div>';
+      h+='</div><div class="cmr">';
+      if(i.tag)h+='<span class="cpb" style="background:var(--green)">'+esc(i.tag)+'</span>';
+      h+='<span class="cmp">'+fp(i.p)+'</span></div></div>';
+    });
+    h+='</div>';
+  }
+
+  /* --- 制作中（承認済み・11月以降に請求） --- */
+  if(WIP.length>0){
+    h+='<div class="sec"><div class="shdr"><span class="stitle">制作中（承認済み・11月以降に請求）</span></div>';
+    WIP.forEach(function(i){
+      h+='<div class="cmc" style="border-left-color:var(--green)"><div class="cmt">'+esc(i.t);
+      if(i.note)h+='<div class="cml">'+esc(i.note)+'</div>';
       h+='</div><div class="cmr">';
       if(i.tag)h+='<span class="cpb" style="background:var(--green)">'+esc(i.tag)+'</span>';
       h+='<span class="cmp">'+fp(i.p)+'</span></div></div>';
@@ -361,15 +406,15 @@ function render(){
   h+='<div style="height:60px"></div>';$('main').innerHTML=h;
 
   var f='';
-  f+='<div class="fi"><div class="fl">\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a</div><div class="fa wh">'+fp(curBill)+'</div></div>';
+  f+='<div class="fi"><div class="fl">今月（2026年10月）\u8acb\u6c42\u4e88\u5b9a</div><div class="fa wh">'+fp(curBill)+'</div></div>';
   $('foot').innerHTML=f;
 }
 
 function rC(list){var h='';var idx=0;list.forEach(function(t){idx++;var cls='tk';if(t.status==='approved')cls+=' ap';else if(t.status==='held'||t.status==='adjust')cls+=' ho';else if(t.status==='rejected')cls+=' rj';h+='<div class="'+cls+'"><div class="tkh"><div class="tkn">'+idx+'</div><div class="tkb">';h+='<div class="tp">'+(t.price!=null?fp(t.price):'\u8abf\u6574\u4e2d')+'</div>';h+='<div class="tt">'+esc(t.title)+'</div>';if(t.desc)h+='<div class="td">'+esc(t.desc)+'</div>';if(t.status!=='none'){var lb=t.status==='approved'?'\u627f\u8a8d\u6e08\u307f':t.status==='held'?'\u4fdd\u7559\u4e2d':t.status==='adjust'?'金額調整中':'\u898b\u9001\u308a';h+='<div class="sttag '+(t.status==='adjust'?'ho':t.status.substring(0,2))+'">'+lb+'</div>';}h+='</div></div>';if(t.status==='adjust'){}else if(t.status==='none'){h+='<div class="tka"><button class="ba bap" onclick="setStatus('+t.id+',\'approved\')">\u627f\u8a8d\u3057\u3066\u9032\u3081\u308b</button><div class="brow"><button class="ba bho" onclick="setStatus('+t.id+',\'held\')">\u4fdd\u7559\u30fb\u691c\u8a0e\u4e2d</button><button class="ba brj" onclick="setStatus('+t.id+',\'rejected\')">\u4eca\u56de\u306f\u898b\u9001\u308a</button></div></div>';}else{h+='<div class="tka"><button class="ba bun" onclick="setStatus('+t.id+',\'none\')">\u21a9 \u9078\u629e\u3092\u53d6\u308a\u6d88\u3059</button></div>';}h+='</div>';});return h;}
 
 /* ===== \u7ba1\u7406\u8005\u6a5f\u80fd ===== */
-window.showClose=function(){var apT=approvedTotal();var curBill=AUG_TOTAL+apT;var h='<h2>\ud83d\udd12 \u8acb\u6c42\u78ba\u5b9a\uff08\u4eca\u6708\uff09</h2>';h+='<p>\u4eca\u6708\uff082026\u5e749\u6708\uff09\u8acb\u6c42\u4e88\u5b9a\uff1a<strong>'+fp(curBill)+'</strong></p>';var pe=tasks.filter(function(t){return t.status==='none'||t.status==='held';}).length;if(pe>0)h+='<p style="color:var(--orange)">\u26a0 \u672a\u78ba\u8a8d '+pe+'\u4ef6</p>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">\u9589\u3058\u308b</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
-window.showExport=function(){var lines=['\u533a\u5206,\u5185\u5bb9,\u91d1\u984d,\u65e5\u4ed8,\u30b9\u30c6\u30fc\u30bf\u30b9'];AUG.forEach(function(i){lines.push('\u4eca\u6708\uff089\u6708\uff09,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});SEP.forEach(function(i){lines.push('\u6765\u6708\uff0810\u6708\uff09,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});approvedList().forEach(function(t){lines.push('\u4eca\u6708\u627f\u8a8d\u5358\u767a,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,\u627f\u8a8d');});pendingList().forEach(function(t){var st=t.status==='held'?'\u4fdd\u7559':t.status==='rejected'?'\u898b\u9001\u308a':'\u672a\u5bfe\u5fdc';lines.push('\u5358\u767a\u767a\u6ce8,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,'+st);});ARCHIVE.forEach(function(a){lines.push('\u5b9f\u7e3e\u8acb\u6c42\u6e08,"'+a.m+'",'+a.billed+',,\u8acb\u6c42\u6e08\u307f');});var blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='\u6771\u6c5f\u30ac\u30b9_\u5358\u767a\u696d\u52d9_'+(new Date().toISOString().slice(0,10))+'.csv';a.click();URL.revokeObjectURL(u);};
+window.showClose=function(){var apT=approvedTotal();var curBill=AUG_TOTAL+apT;var h='<h2>\ud83d\udd12 \u8acb\u6c42\u78ba\u5b9a\uff08\u4eca\u6708\uff09</h2>';h+='<p>今月（2026年10月）\u8acb\u6c42\u4e88\u5b9a\uff1a<strong>'+fp(curBill)+'</strong></p>';var pe=tasks.filter(function(t){return t.status==='none'||t.status==='held';}).length;if(pe>0)h+='<p style="color:var(--orange)">\u26a0 \u672a\u78ba\u8a8d '+pe+'\u4ef6</p>';h+='<div class="macts"><button class="mb cn" onclick="closeMo()">\u9589\u3058\u308b</button></div>';$('mbox').innerHTML=h;$('mo').classList.add('show');};
+window.showExport=function(){var lines=['\u533a\u5206,\u5185\u5bb9,\u91d1\u984d,\u65e5\u4ed8,\u30b9\u30c6\u30fc\u30bf\u30b9'];WIP.forEach(function(i){lines.push('制作中（11月以降）,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+',,'+(i.tag||''));});PROV.forEach(function(i){lines.push('今月（完成しだい）,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+',,'+(i.tag||''));});AUG.forEach(function(i){lines.push('今月（10月）,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});SEP.forEach(function(i){lines.push('来月（11月）,"'+(i.t||'').replace(/"/g,'""')+'",'+(i.p||0)+','+(i.d||'')+','+(i.tag||''));});approvedList().forEach(function(t){lines.push('\u4eca\u6708\u627f\u8a8d\u5358\u767a,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,\u627f\u8a8d');});pendingList().forEach(function(t){var st=t.status==='held'?'\u4fdd\u7559':t.status==='rejected'?'\u898b\u9001\u308a':'\u672a\u5bfe\u5fdc';lines.push('\u5358\u767a\u767a\u6ce8,"'+(t.title||'').replace(/"/g,'""')+'",'+(t.price||0)+',,'+st);});ARCHIVE.forEach(function(a){lines.push('\u5b9f\u7e3e\u8acb\u6c42\u6e08,"'+a.m+'",'+a.billed+',,\u8acb\u6c42\u6e08\u307f');});var blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='\u6771\u6c5f\u30ac\u30b9_\u5358\u767a\u696d\u52d9_'+(new Date().toISOString().slice(0,10))+'.csv';a.click();URL.revokeObjectURL(u);};
 window.closeMo=function(){$('mo').classList.remove('show');};
 })();
 </script>
