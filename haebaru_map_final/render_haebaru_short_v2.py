@@ -1,7 +1,7 @@
 """南風原町 YouTube Shorts v2 — choropleth build.
 
 Motion language adapted from the HyperFrames "spain-map" block (heygen-com/hyperframes,
-Apache-2.0): staggered back-out reveal from the centre, wiped headlines, gradient legend,
+Apache-2.0): staggered back-out reveal from the centre, wiped headlines, a 「41分の1」 dot legend,
 sequential highlight strokes. Data: every municipality is shaded by the share of its
 boundary that faces the sea (国土数値情報 N03 2026). 南風原町 is the only 0 %.
 
@@ -25,7 +25,7 @@ import render_haebaru_short as v1                      # noqa: E402
 from render_haebaru_short import (W, H, FPS, DUR, NF, FONT, CREAM, GOLD, INK,  # noqa: E402
                                   clamp, smooth, ease_out, lerp)
 
-LAND_LO, LAND_MID, LAND_HI = (46, 64, 92), (112, 136, 166), (226, 232, 240)
+LAND_LO, LAND_MID, LAND_HI = (60, 78, 106), (96, 116, 144), (150, 166, 190)   # quiet slate mosaic
 GHOST = (24, 42, 74)                                    # land before it is assembled
 STROKE = (10, 18, 34)
 CYAN = (103, 232, 249)
@@ -129,33 +129,72 @@ def plate(text, border, size=36):
     return spr
 
 
-def legend(lo):
-    """Gradient legend; returns (static parts, bar) so the bar can be wiped in."""
-    wdt, bar_w, bar_h = 760, 560, 16
-    spr = Image.new('RGBA', (wdt, 170), (0, 0, 0, 0))
+def legend_static():
+    """「41分の1」 panel: heading + big ratio (dots are drawn per frame)."""
+    f_head, f_big, f_mid, f_one = (ImageFont.truetype(FONT, n) for n in (34, 150, 70, 190))
+    spr = Image.new('RGBA', (980, 300), (0, 0, 0, 0))
     d = ImageDraw.Draw(spr)
-    ft, fs = ImageFont.truetype(FONT, 30), ImageFont.truetype(FONT, 24)
-    d.text((wdt / 2, 22), '海に面している割合', font=ft, anchor='mm', fill=(203, 213, 225, 255),
+    d.text((490, 40), '沖縄県の41市町村で', font=f_head, anchor='mm', fill=(203, 213, 225, 255),
            stroke_width=1, stroke_fill=(203, 213, 225, 255))
-    bx0 = (wdt - bar_w) // 2
-    d.text((bx0 - 14, 78), '0%', font=fs, anchor='rm', fill=SLATE + (255,))
-    d.text((bx0 + bar_w + 14, 78), '100%', font=fs, anchor='lm', fill=SLATE + (255,))
-    bar = Image.new('RGBA', (bar_w, bar_h), (0, 0, 0, 0))
-    grad = np.zeros((bar_h, bar_w, 4), np.uint8)
-    for x in range(bar_w):
-        grad[:, x, :3] = land_colour(lo + (1 - lo) * x / (bar_w - 1), lo)
-    grad[..., 3] = 255
-    bar.paste(Image.fromarray(grad, 'RGBA'))
-    mask = Image.new('L', (bar_w, bar_h), 0)
-    ImageDraw.Draw(mask).rounded_rectangle([0, 0, bar_w - 1, bar_h - 1], radius=bar_h // 2, fill=255)
-    bar.putalpha(mask)
-    marker = Image.new('RGBA', (wdt, 170), (0, 0, 0, 0))
-    dm = ImageDraw.Draw(marker)
-    mx, my = bx0, 70 + bar_h // 2
-    dm.ellipse([mx - 13, my - 13, mx + 13, my + 13], fill=GOLD + (255,), outline=INK + (255,), width=3)
-    dm.text((mx, my + 44), '南風原町', font=fs, anchor='mm', fill=GOLD + (255,),
-            stroke_width=1, stroke_fill=GOLD + (255,))
-    return spr, bar, (bx0, 70), marker
+    parts = [('41', f_big, CREAM), ('分の', f_mid, (203, 213, 225)), ('1', f_one, GOLD)]
+    total = sum(f.getlength(t) for t, f, _ in parts) + 16
+    x, base = 490 - total / 2, 236
+    for t, f, col in parts:
+        bold = max(1, f.size // 45)
+        d.text((x, base), t, font=f, anchor='ls', fill=col + (255,), stroke_width=bold, stroke_fill=col + (255,))
+        x += f.getlength(t) + 8
+    return spr
+
+
+DOTS, DOT_D, DOT_PITCH = 41, 16, 22.5
+
+
+def draw_legend(frame, t):
+    """2.3–6.1 s: 「41分の1」 + a row of 41 dots, the last one turns gold."""
+    if not 2.25 < t < 6.15:
+        return
+    a = ease_out((t - 2.3) / 0.35) * (1 - smooth((t - 5.7) / 0.4))
+    px, py, pw, ph = 50, 470, 980, 330
+    lay = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    d.rounded_rectangle([px, py, px + pw, py + ph], radius=22, fill=(5, 9, 14, 175),
+                        outline=SLATE + (70,), width=2)
+    frame.alpha_composite(lay if a >= 1 else _fade(lay, a))
+    paste(frame, wipe(G['legend'], power2_inout((t - 2.35) / 0.5)), px, py, a, anchor='tl')
+    x0 = W / 2 - (DOTS - 1) * DOT_PITCH / 2
+    y = py + 292
+    dots = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    dd = ImageDraw.Draw(dots)
+    gold_glow = None
+    for i in range(DOTS):
+        p = (t - (2.55 + i * 0.016)) / 0.25
+        if p <= 0:
+            continue
+        x = x0 + i * DOT_PITCH
+        if i == DOTS - 1:                               # the one: 南風原町
+            g = (t - 3.35) / 0.45
+            if g <= 0:
+                r = DOT_D / 2
+                dd.ellipse([x - r, y - r, x + r, y + r], outline=SLATE + (int(200 * a),), width=2)
+                continue
+            r = DOT_D / 2 * (1 + 0.9 * (1 - back_out(g)) + 0.25)
+            dd.ellipse([x - r, y - r, x + r, y + r], fill=GOLD + (int(255 * a),))
+            gold_glow = (x, y, r)
+            continue
+        r = DOT_D / 2 * (0.4 + 0.6 * back_out(p))
+        dd.ellipse([x - r, y - r, x + r, y + r], fill=land_colour(0.55, 0.15) + (int(255 * a * clamp(p * 3)),))
+    if gold_glow:
+        x, y, r = gold_glow
+        gl = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+        ImageDraw.Draw(gl).ellipse([x - r * 2.2, y - r * 2.2, x + r * 2.2, y + r * 2.2], fill=GOLD + (int(150 * a),))
+        frame.alpha_composite(gl.filter(ImageFilter.GaussianBlur(14)))
+    frame.alpha_composite(dots)
+
+
+def _fade(img, a):
+    out = img.copy()
+    out.putalpha(img.getchannel('A').point(lambda v: int(v * a)))
+    return out
 
 
 def credit():
@@ -345,15 +384,8 @@ def render_frame(i):
 
     frame.alpha_composite(G['vig'])
 
-    if 2.3 < t < 8.9:                                   # legend: fade, bar wipe, marker pop
-        a = ease_out((t - 2.3) / 0.4) * (1 - smooth((t - 8.4) / 0.45))
-        spr, bar, (bx, by), marker = G['legend']
-        lx, ly = (W - spr.width) // 2, 1385
-        paste(frame, spr, lx, ly, a, anchor='tl')
-        paste(frame, wipe(bar, power2_inout((t - 2.4) / 0.7), feather=40), lx + bx, ly + by, a, anchor='tl')
-        if t > 3.0:
-            paste(frame, marker, lx, ly, a * ease_out((t - 3.0) / 0.35), anchor='tl')
-    paste(frame, G['credit'], 56, 1572, ease_out((t - 0.3) / 0.6), anchor='tl')
+    draw_legend(frame, t)
+    paste(frame, G['credit'], 900 - G['credit'].width, 1572, ease_out((t - 0.3) / 0.6), anchor='tl')   # clear of the gold piece and the right-hand UI
 
     for st, en, y, spr in G['caps']:
         if not (st - 0.45 <= t < en + 0.001):
@@ -414,7 +446,7 @@ def setup(n03, boundary):
     plates['南風原町'] = plate('南風原町', GOLD, 38)
     G.update(cam=cam, hb=hb, hc=hc, hb_rp=(rp.x, rp.y), munis=munis, by_name=by_name, dmax=dmax, lo=lo,
              levels=levels, sky=v1.sky(), vig=v1.vignette(), caps=v1.captions(), glint=glint * 0.2,
-             plates=plates, legend=legend(lo), credit=credit())
+             plates=plates, legend=legend_static(), credit=credit())
     print(f'  {len(munis)} municipalities, lowest non-Haebaru sea share {lo * 100:.1f}%', flush=True)
 
 
