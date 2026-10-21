@@ -11,6 +11,7 @@ usage:
 import argparse, json, math, os, subprocess, sys, tempfile
 from multiprocessing import Pool
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from pyproj import Transformer
 from shapely import transform as stransform
@@ -27,7 +28,9 @@ SEA_TOP, SEA_BOT = (11, 36, 76), (4, 17, 42)
 LAND = (50, 64, 56)
 LAND_EDGE = (92, 110, 98)
 COAST = (150, 200, 205)
-SHALLOW = (40, 178, 196)          # soft coastal glow (style only; geometry untouched)
+# Sea tint by distance from the real coastline (style only, not bathymetry; land geometry untouched)
+DEEP, OPEN, TEAL, TURQ = (5, 20, 54), (10, 46, 98), (18, 96, 140), (46, 172, 188)
+SWELL = (176, 224, 238)
 GOLD = (240, 198, 104)
 GOLD_LINE = (250, 214, 128)
 CREAM = (248, 242, 228)
@@ -145,19 +148,60 @@ def render_level(L, region, geoms, ss=2):
     f = lambda c: [((x - x0) / L * ss, (y1 - y) / L * ss) for x, y in c]
     rb = box(*region)
     sel = [g for g in geoms if g.intersects(rb)]
-    halo = Image.new('L', img.size, 0)                  # turquoise shallows glow hugging the coast
-    dh = ImageDraw.Draw(halo)
+    land = Image.new('L', img.size, 0)
+    dl = ImageDraw.Draw(land)
     for g in sel:
-        dh.line(f(g.exterior.coords), fill=255, width=int(ss * 12))
-    halo = halo.filter(ImageFilter.GaussianBlur(ss * 6)).point(lambda v: int(min(255, v * 1.6) * 0.62))
-    img.paste(Image.new('RGBA', img.size, SHALLOW + (255,)), (0, 0), halo)
+        dl.polygon(f(g.exterior.coords), fill=255)
+    land = land.resize((w, h), Image.LANCZOS)
+    near = lambda r_m: np.asarray(land.filter(ImageFilter.GaussianBlur(max(0.5, r_m / L))), np.float32) / 255
+    sea = np.empty((h, w, 3), np.float32)
+    sea[:] = DEEP
+    for col, r_m, gain, k in ((OPEN, 6000, 2.5, 1.0), (TEAL, 1200, 2.2, 0.85), (TURQ, 250, 1.8, 0.75)):
+        a = np.clip(near(r_m) * gain, 0, 1)[..., None] * k
+        sea += (np.array(col, np.float32) - sea) * a
+    base = Image.fromarray(sea.astype(np.uint8), 'RGB').convert('RGBA')
     for g in sel:                                       # coastline: stroke left outside the land
         d.line(f(g.exterior.coords), fill=COAST + (220,), width=4)
     for g in sel:
         d.polygon(f(g.exterior.coords), fill=LAND + (255,))
     for g in sel:                                       # faint municipal edges
         d.line(f(g.exterior.coords), fill=LAND_EDGE + (255,), width=2)
-    return img.resize((w, h), Image.LANCZOS)
+    base.alpha_composite(img.resize((w, h), Image.LANCZOS))
+    return base.convert('RGB'), Image.eval(land, lambda v: 255 - v)
+
+
+# ---------------------------------------------------------------- sea swell
+def make_noise(n=256, cutoff=10, seed=7):
+    """Tileable smooth noise in [0, 1]."""
+    f = np.fft.fft2(np.random.default_rng(seed).standard_normal((n, n)))
+    k = np.hypot(*np.meshgrid(np.fft.fftfreq(n) * n, np.fft.fftfreq(n) * n))
+    t = np.real(np.fft.ifft2(f * np.exp(-(k / cutoff) ** 2)))
+    return ((t - t.min()) / (t.max() - t.min())).astype(np.float32)
+
+
+def sample(T, u, v):
+    n = T.shape[0]
+    u0, v0 = np.floor(u), np.floor(v)
+    fu, fv = u - u0, v - v0
+    i0, j0 = u0.astype(int) % n, v0.astype(int) % n
+    i1, j1 = (i0 + 1) % n, (j0 + 1) % n
+    return ((T[j0, i0] * (1 - fu) + T[j0, i1] * fu) * (1 - fv)
+            + (T[j1, i0] * (1 - fu) + T[j1, i1] * fu) * fv)
+
+
+def swell(cam, t, step=4):
+    """Soft moving highlights anchored to the map; octave blend keeps the scale steady while zooming."""
+    cx, cy, s = cam
+    X = cx + (np.arange(W // step) * step + step / 2 - 540)[None, :] * s
+    Y = cy - (np.arange(H // step) * step + step / 2 - 960)[:, None] * s
+    n = math.log2(s)
+    a, w = 2 ** math.floor(n), n - math.floor(n)
+    acc = 0
+    for sc, ww in ((a, 1 - w), (2 * a, w)):
+        u, v = X / (sc * 8), Y / (sc * 2.5)            # stretched east-west: long, low swells
+        acc = acc + ww * (0.6 * sample(G['noise'], u + t * 1.2, v + t * 0.5)
+                          + 0.4 * sample(G['noise'], u * 1.9 - t * 0.9 + 37, v * 1.9 + t * 0.7 + 11))
+    return np.clip((acc - 0.56) * 4, 0, 1) ** 1.8
 
 
 # ---------------------------------------------------------------- captions
@@ -229,12 +273,17 @@ def label_sprite(text):
 G = {}
 
 
-def background():
-    bg = Image.new('RGB', (W, H))
-    d = ImageDraw.Draw(bg)
-    for y in range(H):
-        d.line([(0, y), (W, y)], fill=tuple(int(lerp(a, b, y / H)) for a, b in zip(SEA_TOP, SEA_BOT)))
-    return bg
+def sky():
+    """Soft light from the upper right, deeper shade toward the bottom (screen space)."""
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    light = np.exp(-(((xx - 880) / 700) ** 2 + ((yy - 200) / 900) ** 2))
+    shade = np.clip((yy - 900) / 1020, 0, 1) ** 1.4
+    out = Image.new('RGBA', (W, H), SEA_BOT + (0,))
+    out.putalpha(Image.fromarray((shade * 110).astype(np.uint8)))
+    lit = Image.new('RGBA', (W, H), (190, 225, 255, 0))
+    lit.putalpha(Image.fromarray((light * 30).astype(np.uint8)))
+    out.alpha_composite(lit)
+    return out
 
 
 def vignette():
@@ -261,9 +310,38 @@ def gold_style(t, s):
     elif t < 3.8:
         e = ease_out((t - 1.8) / 0.6)
         fill_a, glow_a = lerp(70, 205, e), lerp(25, 170, e)
-    if 6.0 < t < 8.2:                                   # boundary moment: a touch more glow
-        glow_a *= 1 + 0.45 * math.sin(math.pi * clamp((t - 6.0) / 2.2))
+    if 3.8 <= t < 6.2:                                  # glow builds while the camera flies in
+        e = smooth((t - 3.8) / 2.4)
+        glow_a, glow_r = glow_a * (1 + 0.8 * e), glow_r * (1 + 0.5 * e)
+    elif 6.2 <= t < 8.6:                                # arrival: soft bloom that settles
+        e = 1 - smooth((t - 6.2) / 2.4)
+        glow_a, glow_r = glow_a * (1 + 0.8 * e), glow_r * (1 + 0.5 * e)
     return fill_a, lw, glow_a, glow_r
+
+
+SWEEP = (5.8, 7.6)                                      # a light runs once around the boundary
+
+
+def sweep_layer(loc, size, t, lw):
+    p = smooth((t - SWEEP[0]) / (SWEEP[1] - SWEEP[0]))
+    seg = np.hypot(*np.diff(np.array(loc), axis=0).T)
+    cum = np.concatenate([[0], np.cumsum(seg)])
+    tail = 0.22 * cum[-1]
+    head = p * (cum[-1] + tail)
+    fade = math.sin(math.pi * p)
+    out = Image.new('RGBA', size, (255, 238, 196, 0))
+    m = Image.new('L', size, 0)
+    dm = ImageDraw.Draw(m)
+    for k in range(12):                                 # tapered tail, brightest at the head
+        lo, hi_ = head - tail * (k + 1) / 12, head - tail * k / 12
+        pts = [loc[i] for i in range(len(loc)) if lo <= cum[i] <= hi_]
+        if len(pts) > 1:
+            dm.line(pts, fill=int(255 * fade * (1 - k / 12)), width=int(lw * 2.2), joint='curve')
+    out.putalpha(Image.eval(m.filter(ImageFilter.GaussianBlur(5)), lambda v: min(255, v * 2)))
+    core = Image.new('RGBA', size, (255, 246, 222, 0))
+    core.putalpha(m.filter(ImageFilter.GaussianBlur(0.8)))
+    out.alpha_composite(core)
+    return out
 
 
 def draw_haebaru(frame, pts, t, s, ss=3):
@@ -285,6 +363,8 @@ def draw_haebaru(frame, pts, t, s, ss=3):
     hi = hi.resize((bw, bh), Image.LANCZOS)
     frame.alpha_composite(glow, (bx0, by0))
     frame.alpha_composite(hi, (bx0, by0))
+    if SWEEP[0] < t < SWEEP[1]:
+        frame.alpha_composite(sweep_layer(loc, (bw, bh), t, lw), (bx0, by0))
 
 
 def paste_sprite(frame, spr, cx, cy, a):
@@ -300,15 +380,21 @@ def render_frame(i):
     t = i / FPS
     cam = G['cam'](t)
     cx, cy, s = cam
-    frame = G['bg'].copy().convert('RGBA')
     x0, y0, x1, y1 = frame_extent(cam, pad=0)
-    layer = None
+    layer = mask = None
     for L, w in level_weights(s):
-        img, (rx0, ry0, rx1, ry1) = G['levels'][L]
+        img, sea, (rx0, ry0, rx1, ry1) = G['levels'][L]
         bx = ((x0 - rx0) / L, (ry1 - y1) / L, (x1 - rx0) / L, (ry1 - y0) / L)
-        crop = img.resize((W, H), Image.LANCZOS if s / L > 1.05 else Image.BICUBIC, box=bx)
+        rs = Image.LANCZOS if s / L > 1.05 else Image.BICUBIC
+        crop, mc = img.resize((W, H), rs, box=bx), sea.resize((W, H), Image.BILINEAR, box=bx)
         layer = crop if layer is None else Image.blend(layer, crop, w)
-    frame.alpha_composite(layer)
+        mask = mc if mask is None else Image.blend(mask, mc, w)
+    frame = Image.alpha_composite(layer.convert('RGBA'), G['sky'])
+    hi = Image.fromarray((swell(cam, t) * 255).astype(np.uint8)).resize((W, H), Image.BILINEAR)
+    a = np.asarray(hi, np.float32) * np.asarray(mask, np.float32) / 255 * G['glint']
+    sw = Image.new('RGBA', (W, H), SWELL + (0,))
+    sw.putalpha(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)))
+    frame.alpha_composite(sw)
 
     scr = lambda p: Camera.screen(p, cam)
     draw_haebaru(frame, [scr(p) for p in G['hb'].exterior.coords], t, s)
@@ -352,16 +438,20 @@ def setup(n03, boundary):
     for i in range(NF):
         c = cam(i / FPS)
         ex = frame_extent(c, pad=8)
+        ex = (ex[0] - 6000, ex[1] - 6000, ex[2] + 6000, ex[3] + 6000)   # room for the coastal tint
         for L, _ in level_weights(c[2]):
             r = regions.get(L)
             regions[L] = ex if r is None else (min(r[0], ex[0]), min(r[1], ex[1]),
                                                max(r[2], ex[2]), max(r[3], ex[3]))
     levels = {}
     for L, r in sorted(regions.items()):
-        levels[L] = (render_level(L, r, geoms), r)
+        levels[L] = (*render_level(L, r, geoms), r)
         print(f'  level {L:>4} m/px  {levels[L][0].size}', flush=True)
     rp = hb.representative_point()
-    G.update(cam=cam, hb=hb, levels=levels, bg=background(), vig=vignette(), caps=captions(),
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    glint = 0.35 + 0.9 * np.exp(-(((xx - 860) / 520) ** 2 + ((yy - 240) / 700) ** 2))
+    G.update(cam=cam, hb=hb, levels=levels, sky=sky(), vig=vignette(), caps=captions(),
+             noise=make_noise(), glint=glint * 0.2,
              labels={'naha': label_sprite('那覇市'), 'hb': label_sprite('南風原町')},
              naha=P(127.6813, 26.2124), hb_label=(hb.bounds[2], rp.y))
 
