@@ -1,33 +1,65 @@
-南風原町 衛星地図制作 QAサマリー
+南風原町 地図制作 QAサマリー
 ====================================
-状態: STOP（STEP 1 で停止）
-実行日時: 2026-10-21 01:41:21〜01:41:39 UTC（開始から約18秒で停止判定）
+状態: STEP 1〜4 完了 / STEP 5 は「衛星画像なし」の範囲で実施（理由は後述）
+処理時刻: 2026-10-21 04:25:00 開始 → 04:27:47 試作PNG完成（約2分47秒）→ 04:28:23 品質修正版
+（※ 01:41 の初回は nlftp.mlit.go.jp がネットワークポリシーで遮断されSTOP。ZIPはユーザー提供で再開）
 
-■ 停止理由: 公的境界データ取得不可
-取得対象: N03-20260101_47_GML.zip（国土数値情報 N03 行政区域 2026年版・沖縄県）
-データ元: https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html
+■ 1. 境界データ出典
+国土数値情報（行政区域データ）国土交通省
+  ファイル: N03-20260101_47_GML.zip（沖縄県版 17,285,048 bytes = 16.48 MiB, sha256 先頭 7970c476e0222b5f）
+  基準日: 令和8年1月1日 / メタデータ作成日 2026-03-06 / 製品仕様書 第4.1版
+  データ元: https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html
+  利用条件: メタデータ記載「国土情報利用約款を参照」。N03 は国土数値情報のオープンデータ
+           （CC BY 4.0 互換・出典明示で商用利用可）として公開されている。
+           ※この実行環境からは nlftp.mlit.go.jp に接続できず約款本文を再確認できていない → 公開前に要最終確認
+  クレジット例: 「出典：国土数値情報（行政区域データ）（国土交通省）を加工して作成」
 
-試行1: https://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-2026/N03-20260101_47_GML.zip
-       → curl: (56) CONNECT tunnel failed, response 403
-       → 実行環境のプロキシ: "gateway answered 403 to CONNECT (policy denial)" host=nlftp.mlit.go.jp:443
-試行2（再試行1回）: http:// 経由
-       → curl: (6) Could not resolve host: nlftp.mlit.go.jp
-作業フォルダ内に既存のZIPは無し（ファイルシステム全体を検索済み）。
+■ 2. 抽出（STEP 2）
+  条件: N03_001=沖縄県 / N03_004=南風原町 / N03_007=47350 → 3属性すべて一致、1フィーチャ（N03_003=島尻郡）
+  ジオメトリ: Polygon 1個（飛地なし）、穴なし、is_valid=True、外周頂点 945
+  範囲: 経度 127.707743–127.748617 / 緯度 26.168351–26.218208、重心 127.72866E 26.19420N
+  座標系: 元データ JGD2011（EPSG:6668）。WGS84 との差は数十cm〜1m 未満のため座標値は変換せず、
+          そのまま WGS84 経緯度（CRS84 / KML 標準）として書き出し。
 
-結論: 実行環境のネットワークポリシーが nlftp.mlit.go.jp を許可していない。
-     指示の厳格停止条件に従い、OSM 等の別ソースでの補完や推測による境界作成は行っていない。
+■ 3. 簡易検証（STEP 3）すべて合格
+  [1] 面積: 10.7568 km²（GRS80楕円体上の測地計算、pyproj.Geod.geometry_area_perimeter）
+      公表値 10.76 km² との差 -0.003 km²（-0.03%）→ 合格。周長 18.34 km
+  [2] 位置: 沖縄本島南部（那覇市の東隣、北緯26.19度）→ 合格
+  [3] 海岸線非接触: 境界全長の 99.9%（計算誤差内で100%）が隣接市町村と共有
+      那覇市28.8% / 南城市26.0% / 八重瀬町18.5% / 与那原町14.3% / 豊見城市8.3% / 西原町4.0%
+      → 海に接する区間なし（内陸の町）→ 合格
 
-■ 未作成ファイル（データ取得後に作成）
-- haebaru_boundary.geojson
-- haebaru_boundary.kml
-- haebaru_map_1080x1920.png
+■ 4. 画像（STEP 4/5）
+  haebaru_map_1080x1920.png（1080×1920）
+  - 上: 沖縄本島全体図（89.0 m/px）、南風原町を金色で塗り＋細線
+  - 下: 拡大図（10.87 m/px）、同一ジオメトリを金色の細線＋弱い発光で描画
+  - 全体図の金枠 = 拡大図の範囲（同じ投影・同じ座標で計算し、引き出し線で接続）
+  - 投影: JGD2011 / UTM 52N（EPSG:6689）。全図・拡大図とも同一変換
+  - 文字は「南風原町」のみ。境界から12px以上内側に入る位置に自動配置
+  - 海岸線は淡いシアン線、町境は金線で区別（海＝濃紺、陸＝暗緑灰）
 
-■ 環境メモ（再開時用）
-- 使用可能: Python3, numpy, Pillow, requests, IPAゴシックフォント
-- 未導入: shapely, pyproj, matplotlib, GDAL（pypi.org はプロキシ許可済み＝小規模 pip 導入は可能）
-- 面積はWGS84楕円体上の測地計算で検証予定（pyproj.Geod または同等の実装）
+  背景素材: 国土数値情報 N03（上記と同一データ）の行政区域ポリゴンから陸地・海岸線・市町村界を描画。
+           境界と完全に同一の座標系のため位置ズレなし。商用利用条件は上記 N03 と同じ（出典明示）。
 
-■ 再開方法（いずれか）
-A) 環境の Network access の Allowed domains に nlftp.mlit.go.jp を追加して再実行
-B) N03-20260101_47_GML.zip（16.48MB）を手動でダウンロードし、
-   リポジトリの haebaru_map_final/ に配置して再実行（再ダウンロードしない）
+  衛星画像を使っていない理由:
+    地理院タイル（cyberjapandata.gsi.go.jp）、EOX Sentinel-2 cloudless、Esri World Imagery、
+    OSMタイルのいずれもこの実行環境のネットワークポリシーで 403 遮断（2026-10-21 04:26）。
+    利用条件・座標を確認できない画像は使わない指示に従い、地図背景に切り替えた。
+    衛星化する場合の推奨: 地理院タイル「全国最新写真（シームレス）」（出典明示で利用可。
+    cyberjapandata.gsi.go.jp を許可ドメインに追加すれば、同じスクリプトでタイルを座標合わせして合成可能）。
+
+  AI生成画像: 使用していない（構図参考も今回は未使用）。動画・BGM・字幕は未レンダリング。
+
+■ 5. 完成ファイル
+  /home/user/tanosea9nal/haebaru_map_final/haebaru_boundary.geojson
+  /home/user/tanosea9nal/haebaru_map_final/haebaru_boundary.kml
+  /home/user/tanosea9nal/haebaru_map_final/haebaru_map_1080x1920.png
+  /home/user/tanosea9nal/haebaru_map_final/qa_summary.txt
+  /home/user/tanosea9nal/haebaru_map_final/scripts/（extract.py / render.py / kml.py 再現用）
+  ※元ZIP（16.48MB）はリポジトリに含めていない
+
+■ 再現手順
+  python3 scripts/extract.py <N03-20260101_47.geojson> haebaru_boundary.geojson
+  python3 scripts/kml.py haebaru_boundary.geojson haebaru_boundary.kml
+  python3 scripts/render.py <N03-20260101_47.geojson> haebaru_boundary.geojson haebaru_map_1080x1920.png
+  （依存: shapely, pyproj, Pillow, IPAゴシック）
