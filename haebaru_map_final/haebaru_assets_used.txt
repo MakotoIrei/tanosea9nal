@@ -44,3 +44,14 @@ render_haebaru_short.py  再編集スクリプト（字幕、時間、カメラ�
 python3 render_haebaru_short.py --n03 N03-20260101_47.geojson \
     --boundary haebaru_boundary.geojson --bgm 20261020南風原001.mp3 --out .
 依存: shapely, pyproj, Pillow, ffmpeg, IPAゴシック
+
+■ v2（haebaru_short_v2.mp4・塗り分け地図版）
+- 演出の参考: HyperFrames「spain-map」ブロック（heygen-com/hyperframes、Apache-2.0）
+  中心から順に弾むように現れる塗り分け地図、左から拭うように出る見出し、グラデーション凡例、
+  白線と発光での強調表示という動きの考え方を参考にした（コードは流用せず、Pythonで書き直した）
+- 色分けの指標: 市町村の境界のうち海に面している割合（N03 2026から算出）
+  南風原町だけが0%（金色）。ほかは最小の嘉手納町15.4%から、離島の100%まで（スレート色の濃淡）
+- 10.0〜12.3秒: 隣接6市町（那覇市、西原町、与那原町、南城市、八重瀬町、豊見城市）の
+  海岸線を順にシアンで光らせる。海岸線はN03の境界から算出（ほかの市町村と接していない区間）
+- 画面下に小さく「出典：国土数値情報（国土交通省）」を表示
+- 再生成: python3 render_haebaru_short_v2.py --n03 … --boundary … --bgm … --out .（4コアで約4分半）
