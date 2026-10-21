@@ -1,0 +1,33 @@
+南風原町 衛星地図制作 QAサマリー
+====================================
+状態: STOP（STEP 1 で停止）
+実行日時: 2026-10-21 01:41:21〜01:41:39 UTC（開始から約18秒で停止判定）
+
+■ 停止理由: 公的境界データ取得不可
+取得対象: N03-20260101_47_GML.zip（国土数値情報 N03 行政区域 2026年版・沖縄県）
+データ元: https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html
+
+試行1: https://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-2026/N03-20260101_47_GML.zip
+       → curl: (56) CONNECT tunnel failed, response 403
+       → 実行環境のプロキシ: "gateway answered 403 to CONNECT (policy denial)" host=nlftp.mlit.go.jp:443
+試行2（再試行1回）: http:// 経由
+       → curl: (6) Could not resolve host: nlftp.mlit.go.jp
+作業フォルダ内に既存のZIPは無し（ファイルシステム全体を検索済み）。
+
+結論: 実行環境のネットワークポリシーが nlftp.mlit.go.jp を許可していない。
+     指示の厳格停止条件に従い、OSM 等の別ソースでの補完や推測による境界作成は行っていない。
+
+■ 未作成ファイル（データ取得後に作成）
+- haebaru_boundary.geojson
+- haebaru_boundary.kml
+- haebaru_map_1080x1920.png
+
+■ 環境メモ（再開時用）
+- 使用可能: Python3, numpy, Pillow, requests, IPAゴシックフォント
+- 未導入: shapely, pyproj, matplotlib, GDAL（pypi.org はプロキシ許可済み＝小規模 pip 導入は可能）
+- 面積はWGS84楕円体上の測地計算で検証予定（pyproj.Geod または同等の実装）
+
+■ 再開方法（いずれか）
+A) 環境の Network access の Allowed domains に nlftp.mlit.go.jp を追加して再実行
+B) N03-20260101_47_GML.zip（16.48MB）を手動でダウンロードし、
+   リポジトリの haebaru_map_final/ に配置して再実行（再ダウンロードしない）
