@@ -492,7 +492,7 @@ def main():
     ap.add_argument('--bgm')
     ap.add_argument('--out', default='.')
     a = ap.parse_args()
-    mp4 = os.path.join(a.out, 'haebaru_short_final.mp4')
+    mp4 = os.path.join(a.out, 'haebaru_short_v1.mp4')
     print('setup', flush=True)
     setup(a.n03, a.boundary)
     with tempfile.TemporaryDirectory() as td:
@@ -515,7 +515,7 @@ def main():
         enc.stdin.close()
         if enc.wait():
             sys.exit('ffmpeg failed')
-    contact_sheet(mp4, os.path.join(a.out, 'haebaru_short_qa.jpg'))
+    contact_sheet(mp4, os.path.join(a.out, 'haebaru_short_v1_qa.jpg'))
     print('done', mp4)
 
 

@@ -60,3 +60,7 @@ python3 render_haebaru_short.py --n03 N03-20260101_47.geojson \
   海岸線を順にシアンで光らせる。海岸線はN03の境界から算出（ほかの市町村と接していない区間）
 - 画面下に小さく「出典：国土数値情報（国土交通省）」を表示
 - 再生成: python3 render_haebaru_short_v2.py --n03 … --boundary … --bgm … --out .（4コアで約4分半）
+
+■ 採用（2026-10-22）
+v2を採用。haebaru_short_final.mp4 = haebaru_short_v2.mp4 と同一。
+v1（海の表現強化版）は haebaru_short_v1.mp4 として保存。
