@@ -198,7 +198,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v48',SS='agariegas_session',CK='agariegas_closed_v1';
+var SK='agariegas_tasks_v49',SS='agariegas_session',CK='agariegas_closed_v1';
 var PW={
   'makoto2026':{role:'admin',disp:'\u7ba1\u7406\u8005\uff08\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\uff09'},
   'agarie2026':{role:'viewer',disp:'\u6771\u6c5f\u5e38\u52d9\uff08\u6771\u6c5f\u30ac\u30b9\uff09'}
@@ -236,10 +236,11 @@ var PROV_TOTAL=PROV.reduce(function(s,i){return s+(i.p||0);},0);
 
 /* ===== \u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\u5f85\u3061\uff09 ===== */
 var DT=[
+  {id:21,title:'HP停止中のお客さま支援：メンテナンス画面に「カード払い申込」ボタンとLINE・Instagramボタンを追加（HP管理会社との調整・HP再開後のHP内への設置し直しまで）',price:10000,status:'none',desc:'10/27ご提案。HPが止まっている間も、お客さまがカード払いを申し込めるようにします。ボタンの制作は承認済みの「カード払いボタン」の項目で行い、こちらはメンテナンス画面への追加分とHP再開後の設置し直し分です。メールでのお申し込みはやめて、フォームに一本化します'},
   {id:19,title:'LINE内ゲーム LINE Developers登録（友だち追加必須・お名前表示・抽選の仕組み）',price:50000,status:'none',desc:'プレゼント企画などで「誰が遊んだか」が必要になった段階で追加します'},
   {id:16,title:'キャラクターグッズ（立体ステッカー・キーホルダー）',price:null,status:'adjust',desc:'10/26 見本の実物とお見積もりをご説明。ドロップスステッカーは「5つのキャラクターを1シートに入れたもの」のご要望をいただき、製作元に仕様と金額を確認中です。最小ロットは1種類100個'},
   {id:14,title:'LINEキャンペーン（友だち増加・プレゼント企画）',price:null,status:'adjust',desc:'ゲームとキャラクターグッズを組み合わせたプレゼント企画として、内容とあわせて金額調整中'},
-  {id:20,title:'AI勉強会（社内スタッフ向け）',price:null,status:'adjust',desc:'10/26 ご依頼。御社で導入されているAIサービス（NTTドコモ）のアカウントを1つお借りし、使える範囲を確認したうえで内容をご提案します'},
+  {id:20,title:'AI勉強会（社内スタッフ向け）',price:null,status:'adjust',desc:'10/26 ご依頼。半年ほどの講座を想定。導入済みのAIサービス（ドコモ「Stella AI for Biz」）のアカウントを1つご用意いただき、使える範囲を確認したうえで、受講人数に合わせて内容と日程をご提案します'},
   {id:12,title:'YouTube公式アカウント立ち上げ',price:50000,status:'none',desc:'飲食店紹介による顧客支援＝販促の柱。立上げ費と動画1本制作費は別'},
   {id:11,title:'定期アンケート（夏）',price:30000,status:'none',desc:'秋施策の裏付けデータ'}
 ];
