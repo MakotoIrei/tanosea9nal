@@ -43,6 +43,10 @@ h1 span{color:var(--gold)}
 .dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--gold);display:inline-block}
 .dot.done{background:var(--gold)}
 .dot.now{box-shadow:0 0 0 3px rgba(245,200,66,.35)}
+.mk{min-width:20px;text-align:center;font-size:17px;font-weight:800;color:var(--gold);line-height:1}
+.mk.x{color:#FFB3A3}
+.rules{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--ink-soft);margin-top:4px}
+.rules b{color:var(--gold);font-size:15px;margin-right:2px}
 
 .talk{display:flex;align-items:flex-end;gap:8px;min-height:70px}
 .talk img{height:74px;width:auto;max-width:none;flex:none;transform-origin:50% 100%}
@@ -86,7 +90,7 @@ h1 span{color:var(--gold)}
 .tipcard b{display:block;color:var(--navy);font-size:13px;letter-spacing:.06em;margin-bottom:2px}
 .result{display:flex;flex-direction:column;gap:8px;text-align:center}
 .rank{font-size:clamp(26px,8vw,34px);font-weight:800;color:var(--gold);margin:0}
-.score{margin:0;font-size:15px;font-weight:700;color:var(--ink-soft)}
+.score{margin:0;font-size:30px;letter-spacing:.25em;font-weight:800;color:var(--gold)}
 .share{appearance:none;border:2px solid #06C755;background:transparent;color:#fff;font-family:var(--font);font-size:16px;font-weight:700;border-radius:30px;min-height:50px;cursor:pointer}
 .share:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .note{font-size:12px;color:var(--ink-soft);min-height:1.2em;margin:0}
@@ -94,7 +98,9 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
 .happy{animation:hop .45s ease-in-out 3}
 @keyframes hop{50%{transform:translateY(-12px)}}
 .timerow{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--ink-soft)}
-.tbar{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.18);overflow:hidden}
+.tbar{position:relative;flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.18);overflow:hidden}
+.tmark{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1px;background:#fff;opacity:.9}
+.tmk{font-size:12px;color:var(--gold)}
 .tfill{height:100%;width:100%;background:var(--gold);border-radius:7px}
 .tnum{min-width:5.4em;text-align:right;font-variant-numeric:tabular-nums;color:#fff}
 .twarn .tfill{background:#F0603C}.twarn .tnum{color:#FFB3A3}
@@ -131,7 +137,7 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     <div class="bubble" id="bubble" aria-live="polite">ボンベから おうちまで、ガスの通り道を つなげてね！</div>
   </div>
 
-  <div class="timerow" id="timerow"><span>のこり</span><div class="tbar"><div class="tfill" id="tfill"></div></div><span class="tnum" id="tnum"></span></div>
+  <div class="timerow" id="timerow"><span>のこり</span><div class="tbar"><div class="tfill" id="tfill"></div><div class="tmark" title="ここまでに つなげば◎"></div></div><span class="tnum" id="tnum"></span></div>
   <div class="board"><div class="grid" id="grid" role="grid" aria-label="パズルのます目"></div></div>
 
   <p class="hint" id="hint"></p>
@@ -174,7 +180,7 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
 
   var $=function(id){return document.getElementById(id)};
   var grid=$('grid'), bubble=$('bubble'), hint=$('hint'), btn=$('btn'), tip=$('tip'), result=$('result'), agarien=$('agarien');
-  var stageIdx=0, cells=[], taps=0, totalTaps=0, totalMin=0, solved=false, state='play', stars=[];
+  var stageIdx=0, cells=[], taps=0, totalTaps=0, totalMin=0, solved=false, state='play', marks=[];
   var tLeft=0, tTotal=0, tRun=false, tRaf=0, tLast=0, tTick=0, totalLeft=0, timerow=$('timerow'), tfill=$('tfill'), tnum=$('tnum');
 
   /* ---- sound (same system as the bath game) ---- */
@@ -287,7 +293,9 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     taps=0; solved=false; state='play';
     stopTimer(); tTotal=st.time; tLeft=tTotal; tTick=Math.ceil(tLeft); paintTimer(); timerow.hidden=false;
     bubble.textContent=st.msg; tip.hidden=true; btn.hidden=true; hint.hidden=false; result.hidden=true;
-    hint.innerHTML='パネルを<em>タップ</em>すると まわるよ。<em>'+st.time+'びょう</em>いないに つなげよう！<br>さいしょに タップしたら タイマー スタート！';
+    var half=Math.floor(st.time/2);
+    hint.innerHTML='パネルを<em>タップ</em>すると まわるよ。さいしょに タップしたら タイマー スタート！'+
+      '<span class="rules"><span><b>◎</b>'+half+'びょう いない</span><span><b>○</b>'+st.time+'びょう いない</span><span><b>✕</b>じかんぎれ</span></span>';
     dots(); if(flowCheck().all){ buildStage(i); return }
   }
 
@@ -319,10 +327,12 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     paintTimer(); if(tLeft<=0){ timeUp(); return } tRaf=requestAnimationFrame(tickLoop);
   }
   function timeUp(){
-    stopTimer(); state='timeup';
+    stopTimer(); state='timeup'; var st=STAGES[stageIdx]; marks.push('✕');
     tone([392,330,262],.14,'triangle',.14);
-    bubble.textContent='じかんぎれ〜！ だいじょうぶ、もういちど チャレンジしよう！';
-    hint.hidden=true; btn.textContent='もういちど チャレンジ'; btn.hidden=false;
+    bubble.textContent='じかんぎれ〜！ ✕だけど だいじょうぶ。つぎは がんばろう！';
+    hint.hidden=true;
+    tip.innerHTML='<b>ほかまるの まめちしき　'+st.tip.h+'</b>'+st.tip.t; tip.hidden=false;
+    btn.textContent=stageIdx<STAGES.length-1?'つぎのステージへ':'けっかを見る'; btn.hidden=false; dots();
   }
   function pop(c){
     var el=c.el; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
@@ -348,11 +358,12 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
   function clear(){
     state='clear'; var st=STAGES[stageIdx];
     stopTimer(); totalTaps+=taps; totalMin+=st.minTaps; totalLeft+=Math.ceil(tLeft);
-    var ratio=tLeft/tTotal, s=ratio>=.5?3:ratio>=.25?2:1; stars.push(s);
+    var mk=tLeft>=tTotal/2?'◎':'○'; marks.push(mk);
     cells.forEach(function(c){ c.el.classList.add('flow') });
     setTimeout(function(){tone([784,1047,1319],.11,'triangle',.2)},500);
     agarien.classList.remove('happy'); void agarien.offsetWidth; agarien.classList.add('happy');
-    setTimeout(function(){ bubble.textContent=(st.edges?'台所にも お風呂にも ':'')+'ガスが とどいたよ！ のこり '+Math.ceil(tLeft)+'びょうで クリア！' },1200);
+    var used=Math.round(tTotal-tLeft);
+    setTimeout(function(){ bubble.textContent=(mk==='◎'?'◎ はやわざ！ ':'○ クリア！ ')+used+'びょうで '+(st.edges?'台所にも お風呂にも ':'')+'とどいたよ！' },1200);
     hint.hidden=true;
     tip.innerHTML='<b>ほかまるの まめちしき　'+st.tip.h+'</b>'+st.tip.t; tip.hidden=false;
     btn.textContent=stageIdx<STAGES.length-1?'つぎのステージへ':'けっかを見る'; btn.hidden=false;
@@ -360,9 +371,9 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
   }
   function showFinal(){
     state='final';
-    var total=stars.reduce(function(a,b){return a+b},0);
-    $('rank').textContent=total>=9?'ガスつなぎ名人！':total>=6?'ほかほか上手！':'よくできました！';
-    $('score').textContent=stars.map(function(s){return '★'.repeat(s)+'☆'.repeat(3-s)}).join('　')+'（のこり時間 あわせて '+totalLeft+'びょう）';
+    var dbl=marks.filter(function(m){return m==='◎'}).length, ok=marks.filter(function(m){return m!=='✕'}).length;
+    $('rank').textContent=dbl===3?'ガスつなぎ名人！':ok===3?'ほかほか上手！':ok===2?'あと ひといき！':'また あそんでね！';
+    $('score').textContent=marks.join('　');
     bubble.textContent='ボンベから おうちまで、ガスは こうやって とどくんだね！';
     tip.innerHTML='<b>ほかまるの まめちしき　LPガスのこと</b>LPガスは 空気より重くて、もれると 床のほうに たまるよ。だから ガス警報器は 床の近くに つけるんだ。';
     tip.hidden=false; result.hidden=false; timerow.hidden=true; $('note').textContent='';
@@ -372,15 +383,19 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
   function dots(){
     var el=$('rounds'); el.innerHTML='';
     var lb=document.createElement('span'); lb.textContent='ステージ'; el.appendChild(lb);
-    for(var i=0;i<STAGES.length;i++){ var d=document.createElement('span'); d.className='dot'+(i<stars.length?' done':'')+(i===stageIdx&&state==='play'?' now':''); el.appendChild(d) }
+    for(var i=0;i<STAGES.length;i++){
+      var d=document.createElement('span');
+      if(i<marks.length){ d.className='mk'+(marks[i]==='✕'?' x':''); d.textContent=marks[i] }
+      else d.className='dot'+(i===stageIdx&&state==='play'?' now':'');
+      el.appendChild(d);
+    }
   }
   var guard=0;
   btn.addEventListener('pointerdown',function(e){
     e.preventDefault(); var now=performance.now(); if(now<guard) return; guard=now+350;
     initAudio(); startBgm();
-    if(state==='clear'){ if(stageIdx<STAGES.length-1){ stageIdx++; lastHit=0; buildStage(stageIdx) } else showFinal() }
-    else if(state==='timeup'){ lastHit=0; buildStage(stageIdx) }
-    else if(state==='final'){ stageIdx=0; stars=[]; totalTaps=0; totalMin=0; totalLeft=0; lastHit=0; buildStage(0) }
+    if(state==='clear'||state==='timeup'){ if(stageIdx<STAGES.length-1){ stageIdx++; lastHit=0; buildStage(stageIdx) } else showFinal() }
+    else if(state==='final'){ stageIdx=0; marks=[]; totalTaps=0; totalMin=0; totalLeft=0; lastHit=0; buildStage(0) }
   });
   btn.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); btn.dispatchEvent(new PointerEvent('pointerdown')) } });
   $('share').addEventListener('click',function(){ $('note').textContent='本番版では、ここからLINEの友だちに結果を送れます。' });
