@@ -198,7 +198,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--gbg);color:var(--tex
 <script>
 (function(){
 'use strict';
-var SK='agariegas_tasks_v61',SS='agariegas_session',CK='agariegas_closed_v1';
+var SK='agariegas_tasks_v62',SS='agariegas_session',CK='agariegas_closed_v1';
 var PW={
   'makoto2026':{role:'admin',disp:'\u7ba1\u7406\u8005\uff08\u697d\u3057\u304f\u306a\u308b\u5408\u540c\u4f1a\u793e\uff09'},
   'agarie2026':{role:'viewer',disp:'\u6771\u6c5f\u5e38\u52d9\uff08\u6771\u6c5f\u30ac\u30b9\uff09'}
@@ -231,6 +231,7 @@ var PROV_TOTAL=PROV.reduce(function(s,i){return s+(i.p||0);},0);
 
 /* ===== \u5358\u767a\u696d\u52d9\uff08\u767a\u6ce8\u30fb\u627f\u8a8d\u5f85\u3061\uff09 ===== */
 var DT=[
+  {id:24,title:'LINE内ゲーム 2本目「あがりえんのガスつなぎパズル」',price:150000,status:'none',desc:'ボンベからおうちまでガスの通り道をつなぐパズル（3ステージ・まめちしき付き）。いまは試作版で、分岐のところなどを修正中です。社内でご確認いただいたご意見を反映し、正式に公開するときにご請求します（それまではご請求しません）。公開後の管理費は、ゲームが2本になっても月¥10,000のままです'},
   {id:22,title:'正月のテレビCM（RBC・QAB 賀正スポット・10秒・各局10本 計20本）の制作一式',price:201000,status:'none',desc:'1/1〜1/7の賀正スポットに、あがりえん・ほかまるのオリジナルCMを流します。【内訳】CMの制作 ¥150,000（絵コンテ・考査への対応・キャラクターの動き・声・BGM・サウンドロゴ）＋局へ納める放送用素材の作成 ¥51,000（映像会社での放送用ディスクへの書き出し・音量の調整・局の規定に合わせた調整。2局分の実費で、いまは見積もり中の目安のため前後する可能性があります。決まりしだい直します）。放送枠の追加費用はかかりません（代理店に確認済み）。局への入稿締め切りは12/10(木)です。11/30(月)ごろまでにご判断いただければ、納期に間に合わせます'},
   {id:19,title:'LINE内ゲーム LINE Developers登録（友だち追加必須・お名前表示・抽選の仕組み）',price:50000,status:'none',desc:'プレゼント企画などで「誰が遊んだか」が必要になった段階で追加します'},
   {id:16,title:'キャラクターグッズ（立体ステッカー・キーホルダー）',price:null,status:'adjust',desc:'10/26 見本の実物とお見積もりをご説明。5つのキャラクターを1シートに入れたドロップスシール（大・小）とキーホルダーのサンプルを11/20に依頼しました。サンプルが届いてから、本番の数量と金額をご相談します'},
