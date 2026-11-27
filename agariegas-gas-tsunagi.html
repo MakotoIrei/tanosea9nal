@@ -233,6 +233,7 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     [1,2,4,8].forEach(function(d){ var e=ends[d]; s+='<g class="gs" data-d="'+d+'"><line class="gp" x1="50" y1="50" x2="'+e[0]+'" y2="'+e[1]+'"/><line class="gpi" x1="50" y1="50" x2="'+e[0]+'" y2="'+e[1]+'"/></g>' });
     return s+'</svg>';
   }
+  function hasMeter(st){ for(var k in st.fixed){ if(st.fixed[k].k==='meter') return true } return false }
   function isGoal(c){ return c.kind==='bath'||c.kind==='kitchen' }
   function fixedSvg(k,bits){
     var stub=pipeSvg(bits);
@@ -306,34 +307,46 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     bubble.textContent=st.msg; tip.hidden=true; btn.hidden=true; hint.hidden=false; result.hidden=true;
     var half=Math.floor(st.time/2);
     hint.innerHTML='パネルを<em>タップ</em>すると まわるよ。さいしょに タップしたら タイマー スタート！<br>'+(st.edges?'台所や':'')+'お風呂には、<em>どの向きから</em> つないでも OK！'+
+      (hasMeter(st)?'<br>ガスは かならず <em>メーター</em>を 通るよ。'+(st.edges?'メーターの先は 2つに <em>分けて</em> OK！':''):'')+
       '<span class="rules"><span><b>◎</b>'+half+'びょう いない</span><span><b>○</b>'+st.time+'びょう いない</span><span><b>✕</b>じかんぎれ</span></span>';
     dots(); if(flowCheck().all){ buildStage(i); return }
   }
 
   function bitsOf(cell){ if(isGoal(cell)) return 15; return cell.fixed?cell.base:rotBits(cell.base,cell.rot) }
+  /* ガスの流れ：ボンベ → メーター → （分岐して）お風呂・台所。メーターを通らないガスは届かない */
   function flowCheck(){
-    var st=STAGES[stageIdx], R=st.rows, C=st.cols, on={}, q=[];
-    cells.forEach(function(c,i){ if(c.kind==='src'){on[i]=1;q.push(i)} });
+    var st=STAGES[stageIdx], R=st.rows, C=st.cols, A={}, B={}, q=[], mi=-1;
+    function nb(i,d){ var c=cells[i], r=c.r+d[1], cc=c.c+d[2]; if(r<0||cc<0||r>=R||cc>=C) return -1; var j=r*C+cc; return (bitsOf(cells[j])&d[3])?j:-1 }
+    cells.forEach(function(c,i){ if(c.kind==='src'){A[i]=1;q.push(i)} if(c.kind==='meter') mi=i });
+    /* A：ボンベからメーターまで（メーターの先へは進まない） */
     while(q.length){
-      var i=q.shift(), c=cells[i]; if(isGoal(c)) continue; var b=bitsOf(c);
-      DIRS.forEach(function(d){
-        if(!(b&d[0])) return; var r=c.r+d[1], cc=c.c+d[2]; if(r<0||cc<0||r>=R||cc>=C) return;
-        var j=r*C+cc; if(on[j]) return; if(bitsOf(cells[j])&d[3]){on[j]=1;q.push(j)}
-      });
+      var i=q.shift(), c=cells[i]; if(isGoal(c)||c.kind==='meter') continue; var b=bitsOf(c);
+      DIRS.forEach(function(d){ if(!(b&d[0])) return; var j=nb(i,d); if(j<0||A[j]) return; A[j]=1; q.push(j) });
     }
-    var goals=0, hit=0;
-    cells.forEach(function(c,i){
-      c.el.classList.toggle('on',!!on[i]);
-      if(isGoal(c)){
-        goals++; if(on[i]){hit++; if(!c.wasOn&&state==='play') pop(c)} c.wasOn=!!on[i];
-        DIRS.forEach(function(d){
-          var r=c.r+d[1], cc=c.c+d[2], lit=false;
-          if(r>=0&&cc>=0&&r<R&&cc<C){ var j=r*C+cc; lit=!!on[j]&&!isGoal(cells[j])&&!!(bitsOf(cells[j])&d[3]) }
-          var g=c.el.querySelector('.gs[data-d="'+d[0]+'"]'); if(g) g.classList.toggle('lit',lit);
-        });
+    /* B：メーターを通ったあと（メーターの手前の管には戻らない） */
+    if(mi>=0&&A[mi]){
+      var mb=bitsOf(cells[mi]);
+      DIRS.forEach(function(d){ if(!(mb&d[0])) return; var j=nb(mi,d); if(j<0||A[j]||B[j]) return; B[j]=1; q.push(j) });
+      while(q.length){
+        var i2=q.shift(), c2=cells[i2]; if(isGoal(c2)) continue; var b2=bitsOf(c2);
+        DIRS.forEach(function(d){ if(!(b2&d[0])) return; var j=nb(i2,d); if(j<0||A[j]||B[j]||j===mi) return; B[j]=1; q.push(j) });
       }
+    }
+    var OK=mi>=0?B:A, goals=0, hit=0, bypass=false;
+    cells.forEach(function(c,i){
+      var lit=!!(A[i]||B[i]);
+      if(isGoal(c)){
+        goals++; var got=!!OK[i]; if(mi>=0&&A[i]) bypass=true;
+        c.el.classList.toggle('on',got);
+        if(got){hit++; if(!c.wasOn&&state==='play') pop(c)} c.wasOn=got;
+        DIRS.forEach(function(d){
+          var r=c.r+d[1], cc=c.c+d[2], gl=false;
+          if(r>=0&&cc>=0&&r<R&&cc<C){ var j=r*C+cc; gl=!!OK[j]&&!isGoal(cells[j])&&!!(bitsOf(cells[j])&d[3]) }
+          var g=c.el.querySelector('.gs[data-d="'+d[0]+'"]'); if(g) g.classList.toggle('lit',gl);
+        });
+      } else c.el.classList.toggle('on',lit);
     });
-    return {all:goals>0&&hit===goals, hit:hit};
+    return {all:goals>0&&hit===goals, hit:hit, bypass:bypass};
   }
 
   function paintTimer(){
@@ -373,7 +386,8 @@ footer{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.6}
     tone([520],.05,'triangle',.12);
     var f=flowCheck();
     lastHit=f.hit;
-    if(f.all) clear();
+    if(f.all){ clear(); return }
+    bubble.textContent=f.bypass?'メーターを 通らないと、ガスは とどかないよ！':STAGES[stageIdx].msg;
   }
 
   function clear(){
